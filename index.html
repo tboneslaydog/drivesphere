@@ -34,12 +34,11 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 60% 60%, rgba(255, 255, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 123, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 191, 255, 0.05) 0%, transparent 50%),
                 linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0a0a0a 100%);
-            color: #00ffff;
+            color: #00bfff;
             min-height: 100vh;
             line-height: 1.5;
             position: relative;
@@ -76,14 +75,13 @@
         .navbar {
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(26, 26, 46, 0.9) 50%, rgba(22, 33, 62, 0.9) 100%);
             backdrop-filter: blur(20px);
-            border-bottom: 2px solid #00ffff;
-            border-image: linear-gradient(90deg, #00ffff, #ff00ff, #00ff00, #ffff00) 1;
+            border-bottom: 2px solid #00bfff;
             padding: 0.75rem 1rem;
             position: sticky;
             top: 0;
             z-index: 100;
             box-shadow: 
-                0 8px 32px rgba(0, 255, 255, 0.3),
+                0 8px 32px rgba(0, 191, 255, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
@@ -109,16 +107,16 @@
         .logo {
             font-size: 1.25rem;
             font-weight: 700;
-            background: linear-gradient(45deg, #00ffff, #ff00ff, #00ff00, #ffff00, #00ffff);
-            background-size: 300% 300%;
+            background: linear-gradient(45deg, #00bfff, #007bff, #00bfff);
+            background-size: 200% 200%;
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.025em;
             position: relative;
             transition: all 0.3s ease;
-            animation: gradientShift 3s ease-in-out infinite;
-            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: gradientShift 4s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
         }
 
         .logo::after {
@@ -142,7 +140,7 @@
         }
 
         .nav-link {
-            color: #00ffff;
+            color: #00bfff;
             text-decoration: none;
             padding: 0.75rem 1.25rem;
             border-radius: 0.75rem;
@@ -152,9 +150,9 @@
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(0, 123, 255, 0.1));
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            box-shadow: 0 0 8px rgba(0, 191, 255, 0.15);
         }
 
         .nav-link::before {
@@ -173,17 +171,17 @@
         }
 
         .nav-link:hover {
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(255, 0, 255, 0.3));
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.25), rgba(0, 123, 255, 0.25));
             color: #ffffff;
-            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.5);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.3);
             transform: translateY(-2px);
         }
 
         .nav-link.active {
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.4), rgba(255, 0, 255, 0.4));
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.3), rgba(0, 123, 255, 0.3));
             color: #ffffff;
-            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.6);
-            border-color: #00ffff;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
+            border-color: #00bfff;
         }
 
         /* Main Layout */
@@ -452,15 +450,15 @@
         }
 
         @keyframes neonPulse {
-            0% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(255, 0, 255, 0.6); }
-            100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+            0% { box-shadow: 0 0 5px rgba(0, 191, 255, 0.4); }
+            50% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.6), 0 0 25px rgba(0, 123, 255, 0.4); }
+            100% { box-shadow: 0 0 5px rgba(0, 191, 255, 0.4); }
         }
 
         @keyframes techGlow {
-            0% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
-            50% { text-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 25px rgba(255, 0, 255, 0.6); }
-            100% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+            0% { text-shadow: 0 0 4px rgba(0, 191, 255, 0.4); }
+            50% { text-shadow: 0 0 12px rgba(0, 191, 255, 0.6), 0 0 20px rgba(0, 123, 255, 0.4); }
+            100% { text-shadow: 0 0 4px rgba(0, 191, 255, 0.4); }
         }
 
         /* Mobile G-Force Styles */
@@ -1720,13 +1718,12 @@
         .card {
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(26, 26, 46, 0.8) 50%, rgba(22, 33, 62, 0.8) 100%);
             backdrop-filter: blur(20px);
-            border: 2px solid transparent;
-            border-image: linear-gradient(45deg, #00ffff, #ff00ff, #00ff00, #ffff00) 1;
+            border: 2px solid rgba(0, 191, 255, 0.3);
             border-radius: 1.5rem;
             padding: 2rem;
             margin-bottom: 2rem;
             box-shadow: 
-                0 8px 32px rgba(0, 255, 255, 0.3),
+                0 8px 32px rgba(0, 191, 255, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
@@ -1753,9 +1750,9 @@
         .card-title {
             font-size: 1.125rem;
             font-weight: 600;
-            color: #00ffff;
+            color: #00bfff;
             margin-bottom: 1rem;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            text-shadow: 0 0 8px rgba(0, 191, 255, 0.4);
         }
 
         /* Dashboard Grid */
@@ -1775,8 +1772,7 @@
 
         .status-item {
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(26, 26, 46, 0.6) 100%);
-            border: 2px solid transparent;
-            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            border: 2px solid rgba(0, 191, 255, 0.3);
             border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
@@ -1784,7 +1780,7 @@
             overflow: hidden;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.15);
         }
 
         .status-item::before {
@@ -1810,18 +1806,18 @@
 
         .status-label {
             font-size: 0.75rem;
-            color: #00ffff;
+            color: #00bfff;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-bottom: 0.25rem;
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            text-shadow: 0 0 4px rgba(0, 191, 255, 0.4);
         }
 
         .status-value {
             font-size: 1.5rem;
             font-weight: 700;
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .status-unit {
@@ -2147,19 +2143,18 @@
 
         /* Buttons */
         .btn {
-            border: 2px solid transparent;
-            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            border: 2px solid rgba(0, 191, 255, 0.4);
             border-radius: 0.75rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.875rem;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
-            color: #00ffff;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(0, 123, 255, 0.15));
+            color: #00bfff;
             padding: 0.875rem 1.75rem;
             position: relative;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+            text-shadow: 0 0 4px rgba(0, 191, 255, 0.4);
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
@@ -2180,11 +2175,11 @@
         }
 
         .btn:hover {
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.4), rgba(255, 0, 255, 0.4));
-            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.6);
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.3), rgba(0, 123, 255, 0.3));
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.4);
             transform: translateY(-2px);
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .btn:active {
@@ -2370,26 +2365,25 @@
 
         .feed-post {
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(26, 26, 46, 0.8) 100%);
-            border: 2px solid transparent;
-            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            border: 2px solid rgba(0, 191, 255, 0.3);
             border-radius: 1rem;
             padding: 1.5rem;
             margin-bottom: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.15);
         }
         
         .route-post {
-            border-left: 4px solid #00ffff;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 0, 0, 0.8));
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+            border-left: 4px solid #00bfff;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(0, 0, 0, 0.8));
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
         }
         
         .live-post {
-            border-left: 4px solid #ff00ff;
-            background: linear-gradient(135deg, rgba(255, 0, 255, 0.2), rgba(0, 0, 0, 0.8));
+            border-left: 4px solid #007bff;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.15), rgba(0, 0, 0, 0.8));
             animation: neonPulse 2s infinite;
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
         }
         
         .post-type-badge {
@@ -2494,14 +2488,14 @@
 
         .post-username {
             font-weight: 600;
-            color: #00ffff;
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            color: #00bfff;
+            text-shadow: 0 0 4px rgba(0, 191, 255, 0.4);
         }
 
         .post-time {
             font-size: 0.875rem;
-            color: #00ffff;
-            text-shadow: 0 0 3px rgba(0, 255, 255, 0.3);
+            color: #00bfff;
+            text-shadow: 0 0 3px rgba(0, 191, 255, 0.3);
         }
 
         .post-content {
