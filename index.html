@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>DriverHub - Social GPS Tracking</title>
+    <title>DriveSphere - Social GPS Tracking</title>
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#1e293b">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="DriverHub">
+    <meta name="apple-mobile-web-app-title" content="DriveSphere">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="msapplication-TileColor" content="#1e293b">
     <meta name="msapplication-tap-highlight" content="no">
@@ -2829,7 +2829,7 @@
 <body>
     <nav class="navbar" id="mainNavbar" style="display: none;">
         <div class="nav-container">
-            <div class="logo">DriverHub</div>
+            <div class="logo">DriveSphere</div>
             <div class="nav-links">
                 <a href="#" class="nav-link active" onclick="showPage('dashboard')">Dashboard</a>
                 <a href="#" class="nav-link" onclick="showPage('routes')">Routes</a>
@@ -2854,7 +2854,7 @@
         <div id="loginPage" class="auth-page active">
             <div class="auth-card">
                 <div class="auth-header">
-                    <h1>🚗 DriverHub</h1>
+                    <h1>🚗 DriveSphere</h1>
                     <p>Welcome back! Sign in to continue your driving journey.</p>
                 </div>
                 
@@ -2888,7 +2888,7 @@
         <div id="registerPage" class="auth-page">
             <div class="auth-card">
                 <div class="auth-header">
-                    <h1>🚗 Join DriverHub</h1>
+                    <h1>🚗 Join DriveSphere</h1>
                     <p>Create your account and start tracking your drives!</p>
                 </div>
                 
@@ -3651,7 +3651,7 @@
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             const startTime = performance.now();
-            console.log('DriverHub initializing...');
+            console.log('DriveSphere initializing...');
             
             // Check authentication first
             checkAuthStatus();
@@ -3666,7 +3666,7 @@
             
             // Record load time
             performanceMetrics.loadTime = performance.now() - startTime;
-            console.log(`DriverHub loaded in ${performanceMetrics.loadTime.toFixed(2)}ms`);
+            console.log(`DriveSphere loaded in ${performanceMetrics.loadTime.toFixed(2)}ms`);
         });
         
         function initializeApp() {
@@ -3737,7 +3737,7 @@
                         });
                 }
                 
-                console.log('DriverHub initialized successfully');
+                console.log('DriveSphere initialized successfully');
             } catch (error) {
                 console.error('Error during app initialization:', error);
             }
@@ -4117,7 +4117,7 @@
             if (navigator.share) {
                 navigator.share({
                     title: 'Check out this drive!',
-                    text: 'Awesome driving post from DriverHub',
+                    text: 'Awesome driving post from DriveSphere',
                     url: window.location.href
                 }).catch(console.error);
             } else {
@@ -5819,7 +5819,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
             `;
-            successToast.textContent = 'Welcome to DriverHub! 🚗';
+            successToast.textContent = 'Welcome to DriveSphere! 🚗';
             document.body.appendChild(successToast);
             
             setTimeout(() => {

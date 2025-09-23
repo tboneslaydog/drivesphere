@@ -1,8 +1,8 @@
-# 🚗 DriverHub
+# 🚗 DriveSphere
 
 A modern social media platform for drivers to share routes, track performance, and connect with friends. Built with cutting-edge web technologies and mobile-first design.
 
-![DriverHub Preview](https://img.shields.io/badge/Status-Live-brightgreen) ![Version](https://img.shields.io/badge/Version-1.0.0-blue) ![License](https://img.shields.io/badge/License-MIT-yellow)
+![DriveSphere Preview](https://img.shields.io/badge/Status-Live-brightgreen) ![Version](https://img.shields.io/badge/Version-1.0.0-blue) ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## ✨ Features
 

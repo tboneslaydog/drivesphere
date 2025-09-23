@@ -1,6 +1,6 @@
 {
-  "name": "DriverHub - Social GPS Tracking",
-  "short_name": "DriverHub",
+  "name": "DriveSphere - Social GPS Tracking",
+  "short_name": "DriveSphere",
   "description": "A social media platform for drivers to share routes, speed, and GPS data",
   "start_url": "/",
   "display": "standalone",
