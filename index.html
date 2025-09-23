@@ -1297,6 +1297,59 @@
         .username-validation.checking .validation-message::before {
             content: '⏳';
         }
+        
+        /* Remember Me Checkbox Styles */
+        .remember-me {
+            margin: 1rem 0;
+        }
+        
+        .remember-me-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            user-select: none;
+        }
+        
+        .remember-me-checkbox {
+            display: none;
+        }
+        
+        .checkmark {
+            position: relative;
+            width: 18px;
+            height: 18px;
+            margin-right: 0.75rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .remember-me-checkbox:checked + .checkmark {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        
+        .remember-me-checkbox:checked + .checkmark::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        .remember-me-label:hover .checkmark {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
 
         .user-list {
             max-height: 300px;
@@ -2869,6 +2922,14 @@
                         <input type="password" id="loginPassword" required placeholder="Enter your password">
                     </div>
                     
+                    <div class="form-group remember-me">
+                        <label class="remember-me-label">
+                            <input type="checkbox" id="rememberMe" class="remember-me-checkbox">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                    </div>
+                    
                     <button type="submit" class="auth-btn">Sign In</button>
                     
                     <div class="auth-divider">
@@ -3652,6 +3713,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             const startTime = performance.now();
             console.log('DriveSphere initializing...');
+            
+            // Initialize session persistence first
+            initializeSessionPersistence();
             
             // Check authentication first
             checkAuthStatus();
@@ -5475,6 +5539,31 @@
         }
 
         // Authentication Functions
+        function initializeSessionPersistence() {
+            // Check if user has Remember Me enabled and session is still valid
+            const userPrefs = localStorage.getItem('userPreferences');
+            if (userPrefs) {
+                try {
+                    const preferences = JSON.parse(userPrefs);
+                    if (preferences.rememberMe && preferences.lastLogin) {
+                        const lastLogin = new Date(preferences.lastLogin);
+                        const now = new Date();
+                        const daysSinceLogin = (now - lastLogin) / (1000 * 60 * 60 * 24);
+                        
+                        // If it's been more than 7 days, require re-authentication
+                        if (daysSinceLogin > 7) {
+                            localStorage.removeItem('currentUser');
+                            localStorage.removeItem('rememberMeData');
+                            localStorage.removeItem('userPreferences');
+                            console.log('Session expired - please log in again');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error checking session persistence:', error);
+                }
+            }
+        }
+        
         function checkAuthStatus() {
             const savedUser = localStorage.getItem('currentUser');
             const savedUsers = localStorage.getItem('users');
@@ -5488,8 +5577,105 @@
                 showMainApp();
                 updateUserUI();
             } else {
+                // Check for Remember Me data
+                checkRememberMeData();
                 showAuthPages();
             }
+        }
+        
+        function checkRememberMeData() {
+            const rememberMeData = localStorage.getItem('rememberMeData');
+            const userPrefs = localStorage.getItem('userPreferences');
+            
+            if (rememberMeData && userPrefs) {
+                try {
+                    const loginData = JSON.parse(rememberMeData);
+                    const preferences = JSON.parse(userPrefs);
+                    
+                    // Check if Remember Me is still valid (within 30 days)
+                    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+                    if (loginData.timestamp > thirtyDaysAgo && preferences.rememberMe) {
+                        // Auto-fill the login form
+                        document.getElementById('loginEmail').value = loginData.emailOrUsername;
+                        document.getElementById('rememberMe').checked = true;
+                        
+                        // Show a subtle notification that form was auto-filled
+                        showRememberMeNotification();
+                        
+                        // Optionally auto-login if user prefers
+                        if (preferences.autoLogin) {
+                            setTimeout(() => {
+                                showAutoLoginNotification();
+                                // Auto-submit the form (user still needs to enter password)
+                                document.getElementById('loginPassword').focus();
+                            }, 1000);
+                        }
+                    } else {
+                        // Clear expired Remember Me data
+                        localStorage.removeItem('rememberMeData');
+                        localStorage.removeItem('userPreferences');
+                    }
+                } catch (error) {
+                    console.error('Error parsing Remember Me data:', error);
+                    // Clear corrupted data
+                    localStorage.removeItem('rememberMeData');
+                    localStorage.removeItem('userPreferences');
+                }
+            }
+        }
+        
+        function showAutoLoginNotification() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(16, 185, 129, 0.2);
+            `;
+            notification.innerHTML = '⚡ Just enter your password to continue';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+        
+        function showRememberMeNotification() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(59, 130, 246, 0.2);
+            `;
+            notification.innerHTML = '🔐 Login form auto-filled from Remember Me';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
 
         function setupAuthHandlers() {
@@ -5586,6 +5772,7 @@
         function handleLogin() {
             const emailOrUsername = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
             
             // Check if login is by email or username
             const user = users.find(u => 
@@ -5596,6 +5783,36 @@
             if (user) {
                 currentUser = user;
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // Handle Remember Me functionality
+                if (rememberMe) {
+                    // Store login credentials securely (in a real app, you'd encrypt this)
+                    const loginData = {
+                        emailOrUsername: emailOrUsername,
+                        rememberMe: true,
+                        timestamp: Date.now(),
+                        userAgent: navigator.userAgent,
+                        lastIP: 'local' // In a real app, you'd get this from the server
+                    };
+                    localStorage.setItem('rememberMeData', JSON.stringify(loginData));
+                    
+                    // Store user preferences
+                    const userPrefs = {
+                        rememberMe: true,
+                        lastLogin: new Date().toISOString(),
+                        autoLogin: true,
+                        sessionId: generateSessionId()
+                    };
+                    localStorage.setItem('userPreferences', JSON.stringify(userPrefs));
+                    
+                    // Show Remember Me success notification
+                    showRememberMeSuccessNotification();
+                } else {
+                    // Clear Remember Me data if unchecked
+                    localStorage.removeItem('rememberMeData');
+                    localStorage.removeItem('userPreferences');
+                }
+                
                 showLoginSuccess();
                 setTimeout(() => {
                     showMainApp();
@@ -5605,6 +5822,37 @@
             } else {
                 showAuthError('Invalid email/username or password');
             }
+        }
+        
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        function showRememberMeSuccessNotification() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(16, 185, 129, 0.2);
+            `;
+            notification.innerHTML = '🔐 Remember Me enabled - you\'ll stay logged in';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
 
         function handleRegister() {
@@ -5744,6 +5992,10 @@
             // Clear localStorage
             localStorage.removeItem('currentUser');
             currentUser = null;
+            
+            // Clear Remember Me data on logout
+            localStorage.removeItem('rememberMeData');
+            localStorage.removeItem('userPreferences');
             
             // Show auth pages
             showAuthPages();
