@@ -165,7 +165,6 @@
         .nav-link:hover {
             background: rgba(59, 130, 246, 0.15);
             color: #3b82f6;
-            transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
         }
 
@@ -224,15 +223,7 @@
             100% { transform: scale(1); }
         }
 
-        /* Floating elements */
-        .floating {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
+        /* Floating elements removed */
 
         /* Scroll reveal animation */
         .reveal {
@@ -424,6 +415,970 @@
             }
         }
 
+        /* XP System Styles */
+        .xp-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .xp-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .level-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 1rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .level-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            position: relative;
+        }
+
+        .level-circle::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #3b82f6);
+            border-radius: 50%;
+            z-index: -1;
+            animation: levelGlow 2s ease-in-out infinite alternate;
+        }
+
+        .level-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .level-info {
+            flex: 1;
+        }
+
+        .level-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 0.25rem;
+        }
+
+        .next-level {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .xp-progress {
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 1rem;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .xp-bar-container {
+            position: relative;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 1rem;
+            height: 2rem;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .xp-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669, #047857);
+            border-radius: 1rem;
+            transition: width 0.8s ease;
+            position: relative;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .xp-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .xp-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .xp-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .xp-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .xp-stat:hover {
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+        }
+
+        .xp-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.25rem;
+        }
+
+        .xp-stat-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .recent-achievements h4 {
+            margin: 0 0 1rem 0;
+            color: #f59e0b;
+            font-size: 1rem;
+        }
+
+        .achievement-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* XP Animations */
+        @keyframes levelGlow {
+            from {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            }
+            to {
+                box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            }
+        }
+
+        @keyframes xpGainSlide {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            10% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            90% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes achievementSlide {
+            0% {
+                transform: translateX(100%) scale(0.8);
+                opacity: 0;
+            }
+            15% {
+                transform: translateX(0) scale(1.05);
+                opacity: 1;
+            }
+            20% {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+            85% {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        @keyframes levelUpBounce {
+            0% {
+                transform: scale(0.3) rotate(-5deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1) rotate(2deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile XP Styles */
+        @media (max-width: 480px) {
+            .level-display {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+            
+            .level-circle {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .level-number {
+                font-size: 1.5rem;
+            }
+            
+            .xp-stats {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .xp-stat {
+                padding: 0.75rem;
+            }
+            
+            .xp-stat-value {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Authentication Styles */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem;
+        }
+
+        .auth-page {
+            display: none;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .auth-page.active {
+            display: block;
+        }
+
+        .auth-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #f1f5f9;
+        }
+
+        .form-group input {
+            padding: 0.875rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 0.75rem;
+            color: #f1f5f9;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #64748b;
+        }
+
+        .form-group small {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .auth-btn {
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .auth-btn:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .admin-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .admin-btn:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .auth-divider {
+            text-align: center;
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(148, 163, 184, 0.2);
+        }
+
+        .auth-divider span {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 0 1rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .auth-footer p {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .auth-footer a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        /* User Menu */
+        .user-menu {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-menu:hover .user-dropdown {
+            display: block;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 0.75rem;
+            padding: 0.5rem 0;
+            min-width: 150px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #f1f5f9;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown a:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        /* Profile Styles */
+        .profile-info {
+            margin-bottom: 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .profile-details h2 {
+            margin: 0 0 0.5rem 0;
+            color: #f1f5f9;
+            font-size: 1.5rem;
+        }
+
+        .profile-details p {
+            margin: 0 0 0.5rem 0;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .role-badge.admin {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        /* Admin Panel Styles */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .backup-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .backup-status {
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .backup-status p {
+            margin: 0.5rem 0;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+        
+        .backup-status strong {
+            color: #f1f5f9;
+        }
+        
+        .desktop-gforce-message {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 1rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .desktop-message-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+        
+        .desktop-message-content h4 {
+            color: #f1f5f9;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .desktop-message-content p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .desktop-feature-preview {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .preview-stat {
+            text-align: center;
+        }
+        
+        .preview-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+        
+        .preview-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        /* Live Tracking Styles */
+        .live-sharing-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .live-sharing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .live-sharing-header h4 {
+            margin: 0;
+            color: #f1f5f9;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .live-status {
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .live-status.active {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        
+        .live-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .live-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .live-btn.active {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+        
+        .live-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .live-btn:hover::before {
+            left: 100%;
+        }
+        
+        .live-info {
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        
+        .live-info p {
+            margin: 0.5rem 0;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+        
+        .live-info strong {
+            color: #f1f5f9;
+        }
+        
+        .live-friends-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .live-stats {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .live-stat {
+            text-align: center;
+        }
+        
+        .live-count {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .live-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        .live-friends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .live-friend-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .live-friend-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            background: rgba(30, 41, 59, 0.6);
+        }
+        
+        .live-friend-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .live-friend-name {
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+        
+        .live-friend-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .live-friend-status.driving {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .live-friend-status.idle {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        .live-friend-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .live-friend-stat {
+            text-align: center;
+        }
+        
+        .live-friend-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        
+        .live-friend-label {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+        
+        .live-friend-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .live-map-container {
+            position: relative;
+        }
+        
+        .live-map {
+            height: 400px;
+            border-radius: 0.75rem;
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+        }
+        
+        .live-map-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* Username Validation Styles */
+        .username-validation {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .username-validation.valid {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        
+        .username-validation.invalid {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .username-validation.checking {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+        
+        .validation-message::before {
+            margin-right: 0.5rem;
+        }
+        
+        .username-validation.valid .validation-message::before {
+            content: '✅';
+        }
+        
+        .username-validation.invalid .validation-message::before {
+            content: '❌';
+        }
+        
+        .username-validation.checking .validation-message::before {
+            content: '⏳';
+        }
+
+        .user-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .user-details h4 {
+            margin: 0 0 0.25rem 0;
+            color: #f1f5f9;
+            font-size: 0.875rem;
+        }
+
+        .user-details p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 0.75rem;
+        }
+
+        .system-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .system-info p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .system-info strong {
+            color: #f1f5f9;
+        }
+
+        /* Mobile Auth Styles */
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 1rem;
+            }
+            
+            .auth-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .admin-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Cards */
         .card {
             background: rgba(30, 41, 59, 0.6);
@@ -451,7 +1406,6 @@
         }
 
         .card:hover {
-            transform: translateY(-5px);
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.4),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -509,7 +1463,6 @@
         }
 
         .status-item:hover {
-            transform: translateY(-5px);
             border-color: rgba(59, 130, 246, 0.3);
             box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
         }
@@ -573,7 +1526,6 @@
         }
 
         .track-button:hover {
-            transform: translateY(-4px) scale(1.02);
             box-shadow: 0 12px 30px 0 rgba(59, 130, 246, 0.6);
         }
 
@@ -626,7 +1578,6 @@
 
         .map-controls .btn:hover {
             background: rgba(59, 130, 246, 0.2);
-            transform: translateY(-1px);
         }
 
         .map-controls .btn.active {
@@ -655,7 +1606,6 @@
 
         .route-overlay .btn:hover {
             background: rgba(34, 197, 94, 0.2);
-            transform: translateY(-1px);
         }
 
         /* Route Comparison Modal */
@@ -885,12 +1835,10 @@
 
         .btn:hover {
             background: linear-gradient(135deg, #2563eb, #1e40af);
-            transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
         }
 
         .btn:active {
-            transform: translateY(-1px);
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
@@ -1197,7 +2145,6 @@
         .post-action:hover {
             background: rgba(59, 130, 246, 0.1);
             color: #3b82f6;
-            transform: translateY(-1px);
         }
 
         .post-action.liked {
@@ -1880,7 +2827,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="navbar" id="mainNavbar" style="display: none;">
         <div class="nav-container">
             <div class="logo">DriverHub</div>
             <div class="nav-links">
@@ -1889,11 +2836,122 @@
                 <a href="#" class="nav-link" onclick="showPage('analytics')">Analytics</a>
                 <a href="#" class="nav-link" onclick="showPage('feed')">Feed</a>
                 <a href="#" class="nav-link" onclick="showPage('profile')">Profile</a>
+                <div class="user-menu">
+                    <span id="userDisplayName">User</span>
+                    <div class="user-dropdown">
+                        <a href="#" onclick="showProfile()">👤 Profile</a>
+                        <a href="#" onclick="showAdminPanel()" id="adminLink" style="display: none;">⚙️ Admin</a>
+                        <a href="#" onclick="logout()">🚪 Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container">
+    <!-- Authentication Pages -->
+    <div id="authContainer" class="auth-container">
+        <!-- Login Page -->
+        <div id="loginPage" class="auth-page active">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>🚗 DriverHub</h1>
+                    <p>Welcome back! Sign in to continue your driving journey.</p>
+                </div>
+                
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email or Username</label>
+                        <input type="text" id="loginEmail" required placeholder="Enter your email or username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">Sign In</button>
+                    
+                    <div class="auth-divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <button type="button" onclick="adminLogin()" class="admin-btn">Admin Login</button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="#" onclick="switchToRegister()">Sign up here</a></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Register Page -->
+        <div id="registerPage" class="auth-page">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>🚗 Join DriverHub</h1>
+                    <p>Create your account and start tracking your drives!</p>
+                </div>
+                
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" id="registerName" required placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerUsername">Username</label>
+                        <input type="text" id="registerUsername" required placeholder="Choose a unique username" pattern="[A-Za-z0-9_]{3,20}" title="Username must be 3-20 characters, letters, numbers, and underscores only">
+                        <div class="username-validation" id="usernameValidation" style="display: none;">
+                            <span class="validation-message" id="usernameMessage"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required placeholder="Enter your email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" required placeholder="Create a password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required placeholder="Confirm your password">
+                    </div>
+                    
+                    <button type="submit" class="auth-btn" id="registerSubmitBtn">Create Account</button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="#" onclick="switchToLogin()">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Login Modal -->
+        <div id="adminModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>⚙️ Admin Access</h3>
+                    <button onclick="closeAdminModal()" class="close-btn">×</button>
+                </div>
+                
+                <form id="adminLoginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="adminKey">Admin Key</label>
+                        <input type="password" id="adminKey" required placeholder="Enter admin key">
+                        <small>Hint: Your special admin access code</small>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">Access Admin Panel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="mainContainer" style="display: none;">
         <!-- Dashboard Page -->
         <div id="dashboard" class="page">
             <div class="dashboard-grid">
@@ -1930,6 +2988,26 @@
                         <div id="trackingInfo" class="tracking-info hidden">
                             <div>Recording route...</div>
                             <div id="routePoints">0 points</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Live Sharing Controls -->
+                    <div class="live-sharing-section">
+                        <div class="live-sharing-header">
+                            <h4>🔴 Live Drive Mode</h4>
+                            <div class="live-status" id="liveStatus">Offline</div>
+                        </div>
+                        <div class="live-controls">
+                            <button id="liveModeBtn" class="btn live-btn" onclick="toggleLiveMode()">
+                                📡 Start Live Sharing
+                            </button>
+                            <button class="btn btn-secondary" onclick="openPrivacySettings()">
+                                🔒 Privacy
+                            </button>
+                        </div>
+                        <div class="live-info" id="liveInfo" style="display: none;">
+                            <p><strong>Sharing with:</strong> <span id="sharingWith">0 friends</span></p>
+                            <p><strong>Duration:</strong> <span id="sharingDuration">0:00</span></p>
                         </div>
                     </div>
                 </div>
@@ -1982,6 +3060,7 @@
                 <div style="display: flex; gap: 1rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 1rem;">
                     <button class="route-tab active" onclick="showRouteTab('my-routes')">My Routes</button>
                     <button class="route-tab" onclick="showRouteTab('friends-routes')">Friends' Routes</button>
+                    <button class="route-tab" onclick="showRouteTab('live-friends')">🔴 Live Friends</button>
                     <button class="route-tab" onclick="showRouteTab('public-routes')">Public Routes</button>
                 </div>
                 
@@ -2017,6 +3096,43 @@
                     <h3 class="card-title">Discover Public Routes</h3>
                     <div class="routes-grid" id="publicRoutes">
                         <!-- Public routes will be populated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Live Friends Tab -->
+            <div id="live-friends" class="route-tab-content hidden">
+                <div class="card">
+                    <h3 class="card-title">🔴 Live Friends Activity</h3>
+                    <div class="live-friends-header">
+                        <div class="live-stats">
+                            <div class="live-stat">
+                                <span class="live-count" id="liveCount">0</span>
+                                <span class="live-label">Friends Online</span>
+                            </div>
+                            <div class="live-stat">
+                                <span class="live-count" id="drivingCount">0</span>
+                                <span class="live-label">Currently Driving</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="refreshLiveFriends()">🔄 Refresh</button>
+                    </div>
+                    <div class="live-friends-grid" id="liveFriendsGrid">
+                        <!-- Live friends will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Live Map -->
+                <div class="card">
+                    <h3 class="card-title">Live Friends Map</h3>
+                    <div class="live-map-container">
+                        <div id="liveMap" class="live-map">
+                            <!-- Live map will be rendered here -->
+                        </div>
+                        <div class="live-map-controls">
+                            <button class="btn btn-secondary" onclick="focusOnFriends()">📍 Focus All</button>
+                            <button class="btn btn-secondary" onclick="toggleMapMode()">🗺️ Toggle View</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2259,19 +3375,99 @@
         <!-- Profile Page -->
         <div id="profile" class="page hidden">
             <div class="card">
-                <h3 class="card-title">Driver Profile</h3>
+                <h3 class="card-title">👤 Driver Profile</h3>
+                <div class="profile-info">
+                    <div class="profile-header">
+                        <div class="avatar-circle">👤</div>
+                        <div class="profile-details">
+                            <h2 id="profileName">User</h2>
+                            <p><strong>@<span id="profileUsername">username</span></strong></p>
+                            <p id="profileEmail">user@example.com</p>
+                            <span id="profileRole" class="role-badge">Driver</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="status-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 1rem;">
                     <div class="status-item">
                         <div class="status-label">Total Distance</div>
-                        <div class="status-value">1,250<span class="status-unit">mi</span></div>
+                        <div class="status-value" id="profileMiles">0<span class="status-unit">mi</span></div>
                     </div>
                     <div class="status-item">
-                        <div class="status-label">Total Time</div>
-                        <div class="status-value">72<span class="status-unit">hrs</span></div>
+                        <div class="status-label">Level</div>
+                        <div class="status-value" id="profileLevel">1</div>
                     </div>
                     <div class="status-item">
-                        <div class="status-label">Avg Speed</div>
-                        <div class="status-value">40<span class="status-unit">mph</span></div>
+                        <div class="status-label">Total XP</div>
+                        <div class="status-value" id="profileXP">0<span class="status-unit">XP</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Panel -->
+        <div id="admin" class="page hidden">
+            <div class="admin-grid">
+                <div class="card">
+                    <h3 class="card-title">⚙️ Admin Dashboard</h3>
+                    <div class="admin-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalUsers">1</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalRoutes">0</div>
+                            <div class="stat-label">Total Routes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalPosts">0</div>
+                            <div class="stat-label">Total Posts</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">👥 User Management</h3>
+                    <div class="user-list" id="userList">
+                        <!-- Users will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">🗺️ System Management</h3>
+                    <div class="admin-actions">
+                        <button class="btn" onclick="clearAllRoutes()">🗑️ Clear All Routes</button>
+                        <button class="btn" onclick="exportData()">📤 Export Data</button>
+                        <button class="btn btn-secondary" onclick="resetAnalytics()">🔄 Reset Analytics</button>
+                        <button class="btn btn-secondary" onclick="clearAllPosts()">🧹 Clear All Posts</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">💾 Data Backup & Restore</h3>
+                    <div class="backup-status" id="backupStatus">
+                        <p><strong>Last Backup:</strong> <span id="lastBackup">Never</span></p>
+                        <p><strong>Backup Size:</strong> <span id="backupSize">0 KB</span></p>
+                        <p><strong>Auto Backup:</strong> <span id="autoBackupStatus">Enabled</span></p>
+                    </div>
+                    <div class="backup-actions">
+                        <button class="btn" onclick="createBackup()">💾 Create Backup</button>
+                        <button class="btn btn-secondary" onclick="restoreFromFile()">📂 Restore from File</button>
+                        <input type="file" id="restoreFile" accept=".json" style="display: none;" onchange="handleRestore(event)">
+                        <button class="btn btn-secondary" onclick="toggleAutoBackup()">⚙️ Toggle Auto Backup</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">📊 System Info</h3>
+                    <div class="system-info">
+                        <p><strong>App Version:</strong> 1.0.0</p>
+                        <p><strong>Last Updated:</strong> <span id="lastUpdate">Today</span></p>
+                        <p><strong>Storage Used:</strong> <span id="storageUsed">Loading...</span></p>
+                        <p><strong>Active Since:</strong> <span id="sessionStart">Session start</span></p>
+                        <p><strong>Load Time:</strong> <span id="loadTime">0ms</span></p>
+                        <p><strong>Errors Count:</strong> <span id="errorsCount">0</span></p>
+                        <p><strong>Routes Saved:</strong> <span id="routesSaved">0</span></p>
+                        <p><strong>Last Error:</strong> <span id="lastError">None</span></p>
                     </div>
                 </div>
             </div>
@@ -2333,11 +3529,147 @@
         };
         let gForceHistory = [];
         let maxGForce = 0;
+        
+        // XP and Leveling System
+        let playerData = {
+            xp: 0,
+            level: 1,
+            totalDistance: 0,
+            totalDrives: 0,
+            achievements: [],
+            dailyXP: 0,
+            weeklyXP: 0,
+            lastActive: new Date().toDateString()
+        };
+        
+        // Authentication System
+        let currentUser = null;
+        let users = [];
+        const ADMIN_KEY = "driverhub2025"; // Your admin password
+        
+        // Session management
+        let sessionStart = new Date();
+        let socialInterval = null;
+        let leaderboardInterval = null;
+        let gforceInterval = null;
+        
+        // Performance monitoring
+        let performanceMetrics = {
+            loadTime: 0,
+            routesSaved: 0,
+            errorsCount: 0,
+            lastError: null
+        };
+        
+        // Backup system
+        let backupSettings = {
+            autoBackup: true,
+            lastBackup: null,
+            backupInterval: null
+        };
+        
+        // Live tracking system
+        let liveTracking = {
+            isActive: false,
+            startTime: null,
+            interval: null,
+            sharingWith: [],
+            currentLocation: null,
+            lastUpdate: null,
+            emergencyMode: false,
+            privacySettings: {
+                shareWithAll: false,
+                allowedFriends: [],
+                autoExpire: true,
+                expireAfter: 2 * 60 * 60 * 1000 // 2 hours
+            }
+        };
+        
+        let liveFriends = {};
+        let liveMapInstance = null;
+        
+        // XP Configuration
+        const XP_CONFIG = {
+            // Base XP per activity
+            DISTANCE_PER_MILE: 10,
+            DRIVE_COMPLETION: 50,
+            SAFE_DRIVE_BONUS: 25,
+            SPEED_LIMIT_BONUS: 15,
+            ECO_DRIVE_BONUS: 30,
+            PHOTO_SHARE: 20,
+            ROUTE_SHARE: 35,
+            COMMENT_POST: 5,
+            LIKE_RECEIVE: 3,
+            DAILY_STREAK: 100,
+            ACHIEVEMENT_UNLOCK: 200,
+            
+            // Level progression (XP needed for each level)
+            LEVEL_THRESHOLDS: [0, 100, 250, 450, 700, 1000, 1400, 1850, 2350, 2900, 3500, 4200, 5000, 6000, 7200, 8600, 10200, 12000, 14000, 16500, 19500, 23000, 27000, 31500, 36500, 42000, 48000, 54500, 61500, 69000, 77000, 85500, 94500, 104000, 114000, 124500, 135500, 147000, 159000, 171500, 184500, 198000, 212000, 226500, 241500, 257000, 273000, 289500, 306500, 324000],
+            
+            // Achievements
+            ACHIEVEMENTS: {
+                'first_drive': { name: 'First Steps', description: 'Complete your first drive', xp: 100, icon: '🚗' },
+                'distance_10': { name: 'Explorer', description: 'Drive 10 miles total', xp: 150, icon: '🗺️' },
+                'distance_50': { name: 'Road Warrior', description: 'Drive 50 miles total', xp: 300, icon: '⚔️' },
+                'distance_100': { name: 'Century Club', description: 'Drive 100 miles total', xp: 500, icon: '💯' },
+                'distance_500': { name: 'Highway Hero', description: 'Drive 500 miles total', xp: 1000, icon: '🦸' },
+                'drives_10': { name: 'Regular Driver', description: 'Complete 10 drives', xp: 200, icon: '🔄' },
+                'drives_50': { name: 'Veteran Driver', description: 'Complete 50 drives', xp: 750, icon: '🎖️' },
+                'safe_driver': { name: 'Safety First', description: 'Complete 10 drives without hard events', xp: 400, icon: '🛡️' },
+                'speed_demon': { name: 'Speed Demon', description: 'Reach 80+ mph', xp: 250, icon: '⚡' },
+                'photographer': { name: 'Photographer', description: 'Share 10 photos', xp: 300, icon: '📸' },
+                'social_butterfly': { name: 'Social Butterfly', description: 'Get 50 likes total', xp: 350, icon: '🦋' },
+                'streak_7': { name: 'Weekly Warrior', description: 'Drive 7 days in a row', xp: 600, icon: '🔥' },
+                'level_10': { name: 'Rising Star', description: 'Reach level 10', xp: 1000, icon: '⭐' },
+                'level_25': { name: 'Elite Driver', description: 'Reach level 25', xp: 2500, icon: '👑' },
+                'gforce_master': { name: 'G-Force Master', description: 'Experience 3.0+ G-force', xp: 400, icon: '🚀' }
+            }
+        };
+
+        // Global error handler
+        window.addEventListener('error', function(event) {
+            performanceMetrics.errorsCount++;
+            performanceMetrics.lastError = {
+                message: event.message,
+                filename: event.filename,
+                lineno: event.lineno,
+                timestamp: new Date().toISOString()
+            };
+            console.error('Global error caught:', event.error);
+        });
+        
+        window.addEventListener('unhandledrejection', function(event) {
+            performanceMetrics.errorsCount++;
+            performanceMetrics.lastError = {
+                message: event.reason.toString(),
+                type: 'Promise rejection',
+                timestamp: new Date().toISOString()
+            };
+            console.error('Unhandled promise rejection:', event.reason);
+        });
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
+            const startTime = performance.now();
             console.log('DriverHub initializing...');
             
+            // Check authentication first
+            checkAuthStatus();
+            
+            // Setup auth form handlers
+            setupAuthHandlers();
+            
+            // Only initialize if authenticated
+            if (currentUser) {
+                initializeApp();
+            }
+            
+            // Record load time
+            performanceMetrics.loadTime = performance.now() - startTime;
+            console.log(`DriverHub loaded in ${performanceMetrics.loadTime.toFixed(2)}ms`);
+        });
+        
+        function initializeApp() {
             try {
                 // Make sure save modal is hidden on startup
                 const saveModal = document.getElementById('saveModal');
@@ -2357,6 +3689,16 @@
                 loadSampleRoutes();
                 loadFeed();
                 
+                // Initialize XP system
+                loadPlayerData();
+                initializeXPSystem();
+                
+                // Initialize backup system
+                initializeBackupSystem();
+                
+                // Initialize live tracking system
+                initializeLiveTracking();
+                
                 // Initialize mobile features
                 initializeSwipeGestures();
                 initializePullToRefresh();
@@ -2368,8 +3710,7 @@
                 // Initialize scroll animations
                 initializeScrollAnimations();
                 
-                // Add floating and glow effects
-                addFloatingEffects();
+                // Add glow effects (floating effects removed)
                 addGlowEffects();
                 
                 // Add haptic feedback to buttons
@@ -2400,7 +3741,7 @@
             } catch (error) {
                 console.error('Error during app initialization:', error);
             }
-        });
+        }
 
         // Photo upload handling
         function handlePhotoUpload(event) {
@@ -2459,6 +3800,11 @@
             const savedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
             savedPosts.unshift(post);
             localStorage.setItem('posts', JSON.stringify(savedPosts));
+
+            // Award XP for photo sharing if photos were included
+            if (selectedPhotos.length > 0) {
+                addXP(XP_CONFIG.PHOTO_SHARE * selectedPhotos.length, `Shared ${selectedPhotos.length} photo${selectedPhotos.length > 1 ? 's' : ''}`);
+            }
 
             // Reset form
             document.getElementById('postText').value = '';
@@ -3640,17 +4986,39 @@
 
         // Social Simulation Features
         function simulateSocialUpdates() {
+            // Clear existing intervals
+            clearSocialIntervals();
+            
             // Simulate new posts from friends
-            setInterval(() => {
+            socialInterval = setInterval(() => {
                 if (Math.random() < 0.3) { // 30% chance every 30 seconds
                     addMockPost();
                 }
             }, 30000);
 
             // Simulate live leaderboard updates
-            setInterval(() => {
+            leaderboardInterval = setInterval(() => {
                 updateLiveLeaderboard();
             }, 15000);
+        }
+        
+        function clearSocialIntervals() {
+            if (socialInterval) {
+                clearInterval(socialInterval);
+                socialInterval = null;
+            }
+            if (leaderboardInterval) {
+                clearInterval(leaderboardInterval);
+                leaderboardInterval = null;
+            }
+            if (gforceInterval) {
+                clearInterval(gforceInterval);
+                gforceInterval = null;
+            }
+            if (backupSettings.backupInterval) {
+                clearInterval(backupSettings.backupInterval);
+                backupSettings.backupInterval = null;
+            }
         }
 
         function addMockPost() {
@@ -3772,15 +5140,9 @@
             });
         }
 
-        // Add floating animation to random elements
+        // Floating effects removed for cleaner UI
         function addFloatingEffects() {
-            const elements = document.querySelectorAll('.card, .status-item');
-            elements.forEach((el, index) => {
-                if (Math.random() < 0.3) { // 30% chance
-                    el.classList.add('floating');
-                    el.style.animationDelay = `${index * 0.5}s`;
-                }
-            });
+            // Function disabled - floating effects removed
         }
 
         // Add glow effects on hover
@@ -4071,21 +5433,1562 @@
         }
 
         function showAccelerometerFallback() {
-            console.log('Accelerometer not available - using simulated data');
-            // Simulate G-force data for testing
-            setInterval(() => {
-                accelerometerData.x = (Math.random() - 0.5) * 2;
-                accelerometerData.y = (Math.random() - 0.5) * 2;
-                accelerometerData.z = 9.81 + (Math.random() - 0.5) * 2;
-                accelerometerData.totalG = Math.sqrt(
-                    Math.pow(accelerometerData.x, 2) + 
-                    Math.pow(accelerometerData.y, 2) + 
-                    Math.pow(accelerometerData.z - 9.81, 2)
-                ) / 9.81;
+            console.log('Accelerometer not available - showing desktop message');
+            
+            // Add desktop-friendly G-force display
+            addDesktopGForceDisplay();
+        }
+        
+        function addDesktopGForceDisplay() {
+            const dashboard = document.querySelector('#dashboard');
+            if (dashboard) {
+                const gForceCard = document.createElement('div');
+                gForceCard.className = 'card';
+                gForceCard.innerHTML = `
+                    <h3 class="card-title">🚀 G-Force Monitor</h3>
+                    <div class="desktop-gforce-message">
+                        <div class="desktop-message-icon">📱</div>
+                        <div class="desktop-message-content">
+                            <h4>Mobile Feature</h4>
+                            <p>G-Force monitoring is available on mobile devices with accelerometer sensors.</p>
+                            <p>Open this app on your phone to track acceleration forces while driving!</p>
+                        </div>
+                        <div class="desktop-feature-preview">
+                            <div class="preview-stat">
+                                <div class="preview-value">2.5G</div>
+                                <div class="preview-label">Max G-Force</div>
+                            </div>
+                            <div class="preview-stat">
+                                <div class="preview-value">1.2G</div>
+                                <div class="preview-label">Avg G-Force</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
                 
-                updateGForceDisplay();
-                updateGForceChart();
-            }, 100);
+                // Insert after the first card
+                const firstCard = dashboard.querySelector('.card');
+                if (firstCard) {
+                    firstCard.insertAdjacentElement('afterend', gForceCard);
+                }
+            }
+        }
+
+        // Authentication Functions
+        function checkAuthStatus() {
+            const savedUser = localStorage.getItem('currentUser');
+            const savedUsers = localStorage.getItem('users');
+            
+            if (savedUsers) {
+                users = JSON.parse(savedUsers);
+            }
+            
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showMainApp();
+                updateUserUI();
+            } else {
+                showAuthPages();
+            }
+        }
+
+        function setupAuthHandlers() {
+            // Login form handler
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleLogin();
+            });
+            
+            // Register form handler
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleRegister();
+            });
+            
+            // Admin login form handler
+            document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleAdminLogin();
+            });
+            
+            // Add real-time username validation
+            const usernameInput = document.getElementById('registerUsername');
+            if (usernameInput) {
+                let usernameTimeout;
+                usernameInput.addEventListener('input', (e) => {
+                    clearTimeout(usernameTimeout);
+                    usernameTimeout = setTimeout(() => {
+                        validateUsername(e.target.value);
+                    }, 500); // Check 500ms after user stops typing
+                });
+                
+                usernameInput.addEventListener('blur', (e) => {
+                    validateUsername(e.target.value);
+                });
+            }
+        }
+        
+        function validateUsername(username) {
+            const validationEl = document.getElementById('usernameValidation');
+            const messageEl = document.getElementById('usernameMessage');
+            const submitBtn = document.getElementById('registerSubmitBtn');
+            
+            if (!username) {
+                validationEl.style.display = 'none';
+                if (submitBtn) submitBtn.disabled = false;
+                return;
+            }
+            
+            validationEl.style.display = 'block';
+            
+            // Show checking state
+            validationEl.className = 'username-validation checking';
+            messageEl.textContent = 'Checking username availability...';
+            
+            setTimeout(() => {
+                // Check format first
+                if (username.length < 3) {
+                    validationEl.className = 'username-validation invalid';
+                    messageEl.textContent = 'Username must be at least 3 characters';
+                    if (submitBtn) submitBtn.disabled = true;
+                    return;
+                }
+                
+                if (username.length > 20) {
+                    validationEl.className = 'username-validation invalid';
+                    messageEl.textContent = 'Username must be 20 characters or less';
+                    if (submitBtn) submitBtn.disabled = true;
+                    return;
+                }
+                
+                if (!/^[A-Za-z0-9_]+$/.test(username)) {
+                    validationEl.className = 'username-validation invalid';
+                    messageEl.textContent = 'Username can only contain letters, numbers, and underscores';
+                    if (submitBtn) submitBtn.disabled = true;
+                    return;
+                }
+                
+                // Check if username is taken
+                if (users.find(u => u.username === username)) {
+                    validationEl.className = 'username-validation invalid';
+                    messageEl.textContent = 'Username is already taken';
+                    if (submitBtn) submitBtn.disabled = true;
+                    return;
+                }
+                
+                // Username is valid and available
+                validationEl.className = 'username-validation valid';
+                messageEl.textContent = 'Username is available!';
+                if (submitBtn) submitBtn.disabled = false;
+            }, 300); // Simulate checking delay
+        }
+
+        function handleLogin() {
+            const emailOrUsername = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Check if login is by email or username
+            const user = users.find(u => 
+                (u.email === emailOrUsername || u.username === emailOrUsername) && 
+                u.password === password
+            );
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showLoginSuccess();
+                setTimeout(() => {
+                    showMainApp();
+                    initializeApp();
+                    updateUserUI();
+                }, 1500);
+            } else {
+                showAuthError('Invalid email/username or password');
+            }
+        }
+
+        function handleRegister() {
+            const name = document.getElementById('registerName').value;
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validate username format
+            if (!username || username.length < 3 || username.length > 20) {
+                showAuthError('Username must be 3-20 characters long');
+                return;
+            }
+            
+            if (!/^[A-Za-z0-9_]+$/.test(username)) {
+                showAuthError('Username can only contain letters, numbers, and underscores');
+                return;
+            }
+            
+            // Check if username is already taken
+            if (users.find(u => u.username === username)) {
+                showAuthError('Username is already taken');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showAuthError('Passwords do not match');
+                return;
+            }
+            
+            if (users.find(u => u.email === email)) {
+                showAuthError('Email already exists');
+                return;
+            }
+            
+            const newUser = {
+                id: Date.now().toString(),
+                name: name,
+                username: username,
+                email: email,
+                password: password,
+                role: 'user',
+                joinDate: new Date().toISOString(),
+                isActive: true
+            };
+            
+            users.push(newUser);
+            try {
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                currentUser = newUser;
+            } catch (error) {
+                console.error('Failed to save user data:', error);
+                if (error.name === 'QuotaExceededError') {
+                    showStorageQuotaError();
+                    return;
+                }
+            }
+            
+            showRegisterSuccess();
+            setTimeout(() => {
+                showMainApp();
+                initializeApp();
+                updateUserUI();
+            }, 1500);
+        }
+
+        function handleAdminLogin() {
+            const adminKey = document.getElementById('adminKey').value;
+            
+            if (adminKey === ADMIN_KEY) {
+                const adminUser = {
+                    id: 'admin',
+                    name: 'Administrator',
+                    email: 'admin@driverhub.com',
+                    role: 'admin',
+                    joinDate: new Date().toISOString(),
+                    isActive: true
+                };
+                
+                currentUser = adminUser;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                closeAdminModal();
+                showLoginSuccess();
+                setTimeout(() => {
+                    showMainApp();
+                    initializeApp();
+                    updateUserUI();
+                }, 1500);
+            } else {
+                showAuthError('Invalid admin key');
+            }
+        }
+
+        function showMainApp() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            document.getElementById('mainNavbar').style.display = 'block';
+        }
+
+        function showAuthPages() {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('mainNavbar').style.display = 'none';
+        }
+
+        function updateUserUI() {
+            if (currentUser) {
+                document.getElementById('userDisplayName').textContent = currentUser.username || currentUser.name;
+                
+                // Update profile page
+                document.getElementById('profileName').textContent = currentUser.name;
+                document.getElementById('profileUsername').textContent = currentUser.username || 'Not set';
+                document.getElementById('profileEmail').textContent = currentUser.email;
+                const roleElement = document.getElementById('profileRole');
+                roleElement.textContent = currentUser.role === 'admin' ? 'Administrator' : 'Driver';
+                roleElement.className = currentUser.role === 'admin' ? 'role-badge admin' : 'role-badge';
+                
+                // Show admin link if admin
+                if (currentUser.role === 'admin') {
+                    document.getElementById('adminLink').style.display = 'block';
+                }
+                
+                // Update profile stats
+                document.getElementById('profileMiles').innerHTML = `${Math.round(playerData.totalDistance)}<span class="status-unit">mi</span>`;
+                document.getElementById('profileLevel').textContent = playerData.level;
+                document.getElementById('profileXP').innerHTML = `${playerData.xp}<span class="status-unit">XP</span>`;
+            }
+        }
+
+        function logout() {
+            // Clear intervals to prevent memory leaks
+            clearSocialIntervals();
+            
+            // Clear localStorage
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            
+            // Show auth pages
+            showAuthPages();
+            switchToLogin();
+        }
+
+        function switchToLogin() {
+            document.getElementById('loginPage').classList.add('active');
+            document.getElementById('registerPage').classList.remove('active');
+        }
+
+        function switchToRegister() {
+            document.getElementById('registerPage').classList.add('active');
+            document.getElementById('loginPage').classList.remove('active');
+        }
+
+        function adminLogin() {
+            document.getElementById('adminModal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+            document.getElementById('adminKey').value = '';
+        }
+
+        function showProfile() {
+            showPage('profile');
+        }
+
+        function showAdminPanel() {
+            if (currentUser && currentUser.role === 'admin') {
+                showPage('admin');
+                updateAdminPanel();
+            }
+        }
+
+        function showAuthError(message) {
+            const errorToast = document.createElement('div');
+            errorToast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+            `;
+            errorToast.textContent = message;
+            document.body.appendChild(errorToast);
+            
+            setTimeout(() => {
+                errorToast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => errorToast.remove(), 300);
+            }, 3000);
+        }
+
+        function showLoginSuccess() {
+            const successToast = document.createElement('div');
+            successToast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            `;
+            successToast.textContent = 'Welcome to DriverHub! 🚗';
+            document.body.appendChild(successToast);
+            
+            setTimeout(() => {
+                successToast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => successToast.remove(), 300);
+            }, 1500);
+        }
+
+        function showRegisterSuccess() {
+            const successToast = document.createElement('div');
+            successToast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            `;
+            successToast.textContent = 'Account created successfully! 🎉';
+            document.body.appendChild(successToast);
+            
+            setTimeout(() => {
+                successToast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => successToast.remove(), 300);
+            }, 1500);
+        }
+
+        // Admin Panel Functions
+        function updateAdminPanel() {
+            if (currentUser && currentUser.role === 'admin') {
+                // Update stats
+                document.getElementById('totalUsers').textContent = users.length;
+                document.getElementById('totalRoutes').textContent = JSON.parse(localStorage.getItem('routes') || '[]').length;
+                document.getElementById('totalPosts').textContent = JSON.parse(localStorage.getItem('posts') || '[]').length;
+                
+                // Update system info
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString();
+                document.getElementById('sessionStart').textContent = sessionStart.toLocaleTimeString();
+                document.getElementById('loadTime').textContent = `${performanceMetrics.loadTime.toFixed(2)}ms`;
+                document.getElementById('errorsCount').textContent = performanceMetrics.errorsCount;
+                document.getElementById('routesSaved').textContent = performanceMetrics.routesSaved;
+                document.getElementById('lastError').textContent = performanceMetrics.lastError ? 
+                    performanceMetrics.lastError.message.substring(0, 50) + '...' : 'None';
+                
+                // Calculate storage usage
+                let totalStorage = 0;
+                for (let key in localStorage) {
+                    if (localStorage.hasOwnProperty(key)) {
+                        totalStorage += localStorage[key].length;
+                    }
+                }
+                document.getElementById('storageUsed').textContent = `${Math.round(totalStorage / 1024)} KB`;
+                
+                // Update user list
+                updateUserList();
+                
+                // Update backup status
+                updateBackupStatus();
+            }
+        }
+
+        function updateUserList() {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '';
+            
+            users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <div class="user-info">
+                        <div class="user-avatar">${user.name.charAt(0).toUpperCase()}</div>
+                        <div class="user-details">
+                            <h4>${user.name}</h4>
+                            <p>${user.email} • ${user.role}</p>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <span class="role-badge ${user.role}">${user.role}</span>
+                    </div>
+                `;
+                userList.appendChild(userItem);
+            });
+        }
+
+        function clearAllRoutes() {
+            if (confirm('Are you sure you want to clear all routes? This cannot be undone.')) {
+                localStorage.removeItem('routes');
+                showAdminNotification('All routes cleared successfully');
+                updateAdminPanel();
+            }
+        }
+
+        function clearAllPosts() {
+            if (confirm('Are you sure you want to clear all posts? This cannot be undone.')) {
+                localStorage.removeItem('posts');
+                showAdminNotification('All posts cleared successfully');
+                updateAdminPanel();
+            }
+        }
+
+        function exportData() {
+            const data = {
+                users: users,
+                routes: JSON.parse(localStorage.getItem('routes') || '[]'),
+                posts: JSON.parse(localStorage.getItem('posts') || '[]'),
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `driverhub-data-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showAdminNotification('Data exported successfully');
+        }
+
+        function resetAnalytics() {
+            if (confirm('Are you sure you want to reset all analytics data? This cannot be undone.')) {
+                localStorage.removeItem('playerData');
+                playerData = {
+                    xp: 0,
+                    level: 1,
+                    totalDistance: 0,
+                    totalDrives: 0,
+                    achievements: [],
+                    dailyXP: 0,
+                    weeklyXP: 0,
+                    lastActive: new Date().toDateString()
+                };
+                savePlayerData();
+                showAdminNotification('Analytics data reset successfully');
+                updateAdminPanel();
+            }
+        }
+
+        function showAdminNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #f59e0b, #d97706);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+            `;
+            notification.textContent = `⚙️ ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Data Backup & Restore Functions
+        function initializeBackupSystem() {
+            // Load backup settings
+            const savedSettings = localStorage.getItem('backupSettings');
+            if (savedSettings) {
+                backupSettings = { ...backupSettings, ...JSON.parse(savedSettings) };
+            }
+            
+            // Start auto backup if enabled
+            if (backupSettings.autoBackup) {
+                startAutoBackup();
+            }
+            
+            // Update backup status in admin panel
+            updateBackupStatus();
+        }
+
+        function createBackup() {
+            try {
+                const backupData = {
+                    version: "1.0.0",
+                    timestamp: new Date().toISOString(),
+                    userData: {
+                        currentUser: currentUser,
+                        users: users,
+                        playerData: playerData,
+                        routes: JSON.parse(localStorage.getItem('routes') || '[]'),
+                        posts: JSON.parse(localStorage.getItem('posts') || '[]'),
+                        performanceMetrics: performanceMetrics
+                    },
+                    settings: backupSettings
+                };
+                
+                // Save backup to localStorage
+                localStorage.setItem('driverhub_backup', JSON.stringify(backupData));
+                
+                // Update backup timestamp
+                backupSettings.lastBackup = new Date().toISOString();
+                localStorage.setItem('backupSettings', JSON.stringify(backupSettings));
+                
+                // Download backup file
+                const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `driverhub-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                updateBackupStatus();
+                showBackupNotification('Backup created successfully! 💾');
+                
+            } catch (error) {
+                console.error('Backup failed:', error);
+                showBackupNotification('Backup failed! ❌', 'error');
+            }
+        }
+
+        function restoreFromFile() {
+            document.getElementById('restoreFile').click();
+        }
+
+        function handleRestore(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backupData = JSON.parse(e.target.result);
+                    
+                    if (!backupData.version || !backupData.userData) {
+                        throw new Error('Invalid backup file format');
+                    }
+                    
+                    // Confirm restoration
+                    if (!confirm('⚠️ This will replace ALL your current data with the backup. Are you sure?')) {
+                        return;
+                    }
+                    
+                    // Restore data
+                    const userData = backupData.userData;
+                    
+                    // Restore user data
+                    if (userData.users) {
+                        users = userData.users;
+                        localStorage.setItem('users', JSON.stringify(users));
+                    }
+                    
+                    if (userData.currentUser) {
+                        currentUser = userData.currentUser;
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    }
+                    
+                    if (userData.playerData) {
+                        playerData = userData.playerData;
+                        localStorage.setItem('playerData', JSON.stringify(playerData));
+                    }
+                    
+                    if (userData.routes) {
+                        localStorage.setItem('routes', JSON.stringify(userData.routes));
+                    }
+                    
+                    if (userData.posts) {
+                        localStorage.setItem('posts', JSON.stringify(userData.posts));
+                    }
+                    
+                    // Update backup settings
+                    if (backupData.settings) {
+                        backupSettings = { ...backupSettings, ...backupData.settings };
+                        localStorage.setItem('backupSettings', JSON.stringify(backupSettings));
+                    }
+                    
+                    showBackupNotification('Data restored successfully! Refreshing app... 🔄');
+                    
+                    // Refresh the app after 2 seconds
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Restore failed:', error);
+                    showBackupNotification('Restore failed! Invalid backup file ❌', 'error');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Clear the input
+            event.target.value = '';
+        }
+
+        function toggleAutoBackup() {
+            backupSettings.autoBackup = !backupSettings.autoBackup;
+            localStorage.setItem('backupSettings', JSON.stringify(backupSettings));
+            
+            if (backupSettings.autoBackup) {
+                startAutoBackup();
+                showBackupNotification('Auto backup enabled ✅');
+            } else {
+                stopAutoBackup();
+                showBackupNotification('Auto backup disabled ❌');
+            }
+            
+            updateBackupStatus();
+        }
+
+        function startAutoBackup() {
+            // Clear existing interval
+            if (backupSettings.backupInterval) {
+                clearInterval(backupSettings.backupInterval);
+            }
+            
+            // Create backup every 30 minutes
+            backupSettings.backupInterval = setInterval(() => {
+                createAutoBackup();
+            }, 30 * 60 * 1000); // 30 minutes
+        }
+
+        function stopAutoBackup() {
+            if (backupSettings.backupInterval) {
+                clearInterval(backupSettings.backupInterval);
+                backupSettings.backupInterval = null;
+            }
+        }
+
+        function createAutoBackup() {
+            try {
+                const backupData = {
+                    version: "1.0.0",
+                    timestamp: new Date().toISOString(),
+                    userData: {
+                        currentUser: currentUser,
+                        users: users,
+                        playerData: playerData,
+                        routes: JSON.parse(localStorage.getItem('routes') || '[]'),
+                        posts: JSON.parse(localStorage.getItem('posts') || '[]'),
+                        performanceMetrics: performanceMetrics
+                    },
+                    settings: backupSettings,
+                    autoBackup: true
+                };
+                
+                // Save backup to localStorage (auto backups don't download)
+                localStorage.setItem('driverhub_backup', JSON.stringify(backupData));
+                localStorage.setItem('driverhub_backup_auto', JSON.stringify(backupData));
+                
+                // Update timestamp
+                backupSettings.lastBackup = new Date().toISOString();
+                localStorage.setItem('backupSettings', JSON.stringify(backupSettings));
+                
+                updateBackupStatus();
+                console.log('Auto backup completed');
+                
+            } catch (error) {
+                console.error('Auto backup failed:', error);
+            }
+        }
+
+        function updateBackupStatus() {
+            const lastBackupEl = document.getElementById('lastBackup');
+            const backupSizeEl = document.getElementById('backupSize');
+            const autoBackupStatusEl = document.getElementById('autoBackupStatus');
+            
+            if (lastBackupEl && backupSettings.lastBackup) {
+                const lastBackupDate = new Date(backupSettings.lastBackup);
+                lastBackupEl.textContent = lastBackupDate.toLocaleString();
+            }
+            
+            if (backupSizeEl) {
+                // Calculate backup size
+                const backup = localStorage.getItem('driverhub_backup');
+                if (backup) {
+                    const sizeKB = Math.round(backup.length / 1024);
+                    backupSizeEl.textContent = `${sizeKB} KB`;
+                }
+            }
+            
+            if (autoBackupStatusEl) {
+                autoBackupStatusEl.textContent = backupSettings.autoBackup ? 'Enabled' : 'Disabled';
+                autoBackupStatusEl.style.color = backupSettings.autoBackup ? '#10b981' : '#ef4444';
+            }
+        }
+
+        function showBackupNotification(message, type = 'success') {
+            const color = type === 'error' ? '#ef4444' : '#10b981';
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, ${color}, ${color}dd);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                max-width: 350px;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Live Tracking Functions
+        function toggleLiveMode() {
+            if (liveTracking.isActive) {
+                stopLiveTracking();
+            } else {
+                startLiveTracking();
+            }
+        }
+        
+        function startLiveTracking() {
+            // Check location permissions first
+            if (!navigator.geolocation) {
+                showLiveNotification('Geolocation not supported by this browser', 'error');
+                return;
+            }
+            
+            // Request location permission
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    liveTracking.isActive = true;
+                    liveTracking.startTime = new Date();
+                    liveTracking.currentLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                        timestamp: Date.now()
+                    };
+                    
+                    // Update UI
+                    updateLiveTrackingUI();
+                    
+                    // Start location tracking interval
+                    liveTracking.interval = setInterval(() => {
+                        updateCurrentLocation();
+                        broadcastLocation();
+                        checkForEmergency();
+                    }, 30000); // Update every 30 seconds
+                    
+                    // Load friend list for sharing permissions
+                    loadSharingPermissions();
+                    
+                    showLiveNotification('Live tracking started! 📡', 'success');
+                    
+                    // Add XP for starting live mode
+                    addXP(XP_CONFIG.SOCIAL_INTERACTION, 'Started live sharing');
+                },
+                (error) => {
+                    console.error('Location permission denied:', error);
+                    showLiveNotification('Location permission required for live tracking', 'error');
+                }
+            );
+        }
+        
+        function stopLiveTracking() {
+            liveTracking.isActive = false;
+            liveTracking.startTime = null;
+            liveTracking.currentLocation = null;
+            
+            if (liveTracking.interval) {
+                clearInterval(liveTracking.interval);
+                liveTracking.interval = null;
+            }
+            
+            // Update UI
+            updateLiveTrackingUI();
+            
+            // Broadcast offline status
+            broadcastOfflineStatus();
+            
+            showLiveNotification('Live tracking stopped', 'success');
+        }
+        
+        function updateCurrentLocation() {
+            if (!liveTracking.isActive) return;
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const newLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                        speed: position.coords.speed || 0,
+                        heading: position.coords.heading || 0,
+                        timestamp: Date.now()
+                    };
+                    
+                    // Check if location has significantly changed
+                    if (liveTracking.currentLocation) {
+                        const distance = getDistanceFromLatLonInMiles(
+                            liveTracking.currentLocation.lat,
+                            liveTracking.currentLocation.lng,
+                            newLocation.lat,
+                            newLocation.lng
+                        );
+                        
+                        // Only update if moved more than 50 feet (0.01 miles)
+                        if (distance > 0.01) {
+                            liveTracking.currentLocation = newLocation;
+                            liveTracking.lastUpdate = Date.now();
+                        }
+                    } else {
+                        liveTracking.currentLocation = newLocation;
+                        liveTracking.lastUpdate = Date.now();
+                    }
+                },
+                (error) => {
+                    console.error('Location update failed:', error);
+                }
+            );
+        }
+        
+        function broadcastLocation() {
+            if (!liveTracking.isActive || !liveTracking.currentLocation) return;
+            
+            const locationData = {
+                userId: currentUser.username,
+                location: liveTracking.currentLocation,
+                status: liveTracking.currentLocation.speed > 5 ? 'driving' : 'idle',
+                timestamp: Date.now(),
+                sharingWith: liveTracking.sharingWith
+            };
+            
+            // In a real app, this would send to a WebSocket server
+            // For demo, we'll store in localStorage and simulate
+            const liveData = JSON.parse(localStorage.getItem('liveTrackingData') || '{}');
+            liveData[currentUser.username] = locationData;
+            localStorage.setItem('liveTrackingData', JSON.stringify(liveData));
+            
+            console.log('Broadcasting location:', locationData);
+        }
+        
+        function broadcastOfflineStatus() {
+            const liveData = JSON.parse(localStorage.getItem('liveTrackingData') || '{}');
+            if (liveData[currentUser.username]) {
+                delete liveData[currentUser.username];
+                localStorage.setItem('liveTrackingData', JSON.stringify(liveData));
+            }
+        }
+        
+        function loadSharingPermissions() {
+            // Load privacy settings
+            const savedSettings = localStorage.getItem('livePrivacySettings');
+            if (savedSettings) {
+                liveTracking.privacySettings = { ...liveTracking.privacySettings, ...JSON.parse(savedSettings) };
+            }
+            
+            // Determine who can see location based on privacy settings
+            if (liveTracking.privacySettings.shareWithAll) {
+                liveTracking.sharingWith = ['all'];
+            } else {
+                liveTracking.sharingWith = liveTracking.privacySettings.allowedFriends;
+            }
+        }
+        
+        function updateLiveTrackingUI() {
+            const liveStatusEl = document.getElementById('liveStatus');
+            const liveBtnEl = document.getElementById('liveModeBtn');
+            const liveInfoEl = document.getElementById('liveInfo');
+            const sharingWithEl = document.getElementById('sharingWith');
+            const durationEl = document.getElementById('sharingDuration');
+            
+            if (liveTracking.isActive) {
+                liveStatusEl.textContent = 'Live';
+                liveStatusEl.classList.add('active');
+                liveBtnEl.textContent = '🔴 Stop Live Sharing';
+                liveBtnEl.classList.add('active');
+                liveInfoEl.style.display = 'block';
+                
+                if (sharingWithEl) {
+                    const count = liveTracking.sharingWith.includes('all') ? 'All friends' : `${liveTracking.sharingWith.length} friends`;
+                    sharingWithEl.textContent = count;
+                }
+                
+                // Update duration
+                if (durationEl && liveTracking.startTime) {
+                    const duration = Math.floor((Date.now() - liveTracking.startTime.getTime()) / 1000);
+                    const minutes = Math.floor(duration / 60);
+                    const seconds = duration % 60;
+                    durationEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+            } else {
+                liveStatusEl.textContent = 'Offline';
+                liveStatusEl.classList.remove('active');
+                liveBtnEl.textContent = '📡 Start Live Sharing';
+                liveBtnEl.classList.remove('active');
+                liveInfoEl.style.display = 'none';
+            }
+        }
+        
+        function checkForEmergency() {
+            // Check G-force data for potential crash
+            if (accelerometerData && accelerometerData.totalG > 4.0) {
+                if (!liveTracking.emergencyMode) {
+                    liveTracking.emergencyMode = true;
+                    triggerEmergencySharing();
+                }
+            }
+        }
+        
+        function triggerEmergencySharing() {
+            // Override privacy settings in emergency
+            liveTracking.sharingWith = ['all'];
+            
+            // Broadcast emergency location
+            const emergencyData = {
+                userId: currentUser.username,
+                location: liveTracking.currentLocation,
+                status: 'emergency',
+                emergencyType: 'high_gforce',
+                timestamp: Date.now(),
+                message: 'Emergency detected - High G-force impact'
+            };
+            
+            // Store emergency data
+            const emergencyAlerts = JSON.parse(localStorage.getItem('emergencyAlerts') || '[]');
+            emergencyAlerts.push(emergencyData);
+            localStorage.setItem('emergencyAlerts', JSON.stringify(emergencyAlerts));
+            
+            showLiveNotification('🚨 Emergency detected! Location shared with all contacts', 'error');
+            
+            console.log('Emergency sharing activated:', emergencyData);
+        }
+        
+        function openPrivacySettings() {
+            // Create privacy modal
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>🔒 Live Sharing Privacy</h3>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="privacy-section">
+                            <h4>Who can see your live location?</h4>
+                            <label class="privacy-option">
+                                <input type="radio" name="shareMode" value="all" ${liveTracking.privacySettings.shareWithAll ? 'checked' : ''}>
+                                <span>All friends</span>
+                            </label>
+                            <label class="privacy-option">
+                                <input type="radio" name="shareMode" value="selected" ${!liveTracking.privacySettings.shareWithAll ? 'checked' : ''}>
+                                <span>Selected friends only</span>
+                            </label>
+                        </div>
+                        
+                        <div class="privacy-section">
+                            <h4>Auto-stop after:</h4>
+                            <select id="autoExpireSelect">
+                                <option value="3600000" ${liveTracking.privacySettings.expireAfter === 3600000 ? 'selected' : ''}>1 hour</option>
+                                <option value="7200000" ${liveTracking.privacySettings.expireAfter === 7200000 ? 'selected' : ''}>2 hours</option>
+                                <option value="14400000" ${liveTracking.privacySettings.expireAfter === 14400000 ? 'selected' : ''}>4 hours</option>
+                                <option value="0" ${liveTracking.privacySettings.expireAfter === 0 ? 'selected' : ''}>Never</option>
+                            </select>
+                        </div>
+                        
+                        <div class="privacy-section">
+                            <label class="privacy-option">
+                                <input type="checkbox" id="emergencyOverride" checked>
+                                <span>Allow emergency override (recommended)</span>
+                                <small>Automatically share with all contacts if crash detected</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" onclick="savePrivacySettings()">Save Settings</button>
+                        <button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function savePrivacySettings() {
+            const shareMode = document.querySelector('input[name="shareMode"]:checked').value;
+            const autoExpire = document.getElementById('autoExpireSelect').value;
+            
+            liveTracking.privacySettings.shareWithAll = shareMode === 'all';
+            liveTracking.privacySettings.expireAfter = parseInt(autoExpire);
+            
+            localStorage.setItem('livePrivacySettings', JSON.stringify(liveTracking.privacySettings));
+            
+            // Update sharing permissions
+            loadSharingPermissions();
+            
+            showLiveNotification('Privacy settings saved', 'success');
+            
+            // Close modal
+            document.querySelector('.modal').remove();
+        }
+        
+        function showLiveNotification(message, type = 'success') {
+            const color = type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#22c55e';
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, ${color}, ${color}dd);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                max-width: 350px;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+        
+        function initializeLiveTracking() {
+            // Load saved live tracking settings
+            const savedSettings = localStorage.getItem('livePrivacySettings');
+            if (savedSettings) {
+                liveTracking.privacySettings = { ...liveTracking.privacySettings, ...JSON.parse(savedSettings) };
+            }
+            
+            // Update UI with current state
+            updateLiveTrackingUI();
+            
+            // Set up duration counter update
+            setInterval(() => {
+                if (liveTracking.isActive) {
+                    updateLiveTrackingUI();
+                }
+            }, 1000);
+            
+            console.log('Live tracking system initialized');
+        }
+
+        // XP and Leveling System Functions
+        function loadPlayerData() {
+            const savedData = localStorage.getItem('playerData');
+            if (savedData) {
+                playerData = { ...playerData, ...JSON.parse(savedData) };
+            }
+            
+            // Check for daily reset
+            const today = new Date().toDateString();
+            if (playerData.lastActive !== today) {
+                playerData.dailyXP = 0;
+                playerData.lastActive = today;
+                savePlayerData();
+            }
+        }
+
+        function savePlayerData() {
+            try {
+                localStorage.setItem('playerData', JSON.stringify(playerData));
+            } catch (error) {
+                console.error('Failed to save player data:', error);
+                if (error.name === 'QuotaExceededError') {
+                    showStorageQuotaError();
+                }
+            }
+        }
+        
+        function showStorageQuotaError() {
+            const errorToast = document.createElement('div');
+            errorToast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+                max-width: 300px;
+            `;
+            errorToast.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.2rem;">⚠️</span>
+                    <div>
+                        <div style="font-size: 0.9rem;">Storage Full</div>
+                        <div style="font-size: 0.75rem; opacity: 0.9;">Please clear some data in admin panel</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(errorToast);
+            
+            setTimeout(() => {
+                errorToast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => errorToast.remove(), 300);
+            }, 5000);
+        }
+
+        function initializeXPSystem() {
+            addXPDisplay();
+            updateXPDisplay();
+            checkLevelUp();
+        }
+
+        function addXPDisplay() {
+            const dashboard = document.querySelector('#dashboard');
+            if (dashboard) {
+                const xpCard = document.createElement('div');
+                xpCard.className = 'card xp-card';
+                xpCard.innerHTML = `
+                    <h3 class="card-title">🎮 Player Progress</h3>
+                    <div class="xp-container">
+                        <div class="level-display">
+                            <div class="level-circle">
+                                <div class="level-number" id="playerLevel">${playerData.level}</div>
+                            </div>
+                            <div class="level-info">
+                                <div class="level-title" id="levelTitle">Driver Level ${playerData.level}</div>
+                                <div class="next-level">Next: Level ${playerData.level + 1}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="xp-progress">
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" id="xpBar"></div>
+                                <div class="xp-text">
+                                    <span id="currentXP">${playerData.xp}</span> / <span id="nextLevelXP">${getNextLevelXP()}</span> XP
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="xp-stats">
+                            <div class="xp-stat">
+                                <div class="xp-stat-value" id="dailyXP">${playerData.dailyXP}</div>
+                                <div class="xp-stat-label">Daily XP</div>
+                            </div>
+                            <div class="xp-stat">
+                                <div class="xp-stat-value" id="totalDrives">${playerData.totalDrives}</div>
+                                <div class="xp-stat-label">Total Drives</div>
+                            </div>
+                            <div class="xp-stat">
+                                <div class="xp-stat-value" id="totalDistance">${Math.round(playerData.totalDistance)}</div>
+                                <div class="xp-stat-label">Miles Driven</div>
+                            </div>
+                        </div>
+                        
+                        <div class="recent-achievements" id="recentAchievements">
+                            <h4>🏆 Recent Achievements</h4>
+                            <div class="achievement-list" id="achievementList"></div>
+                        </div>
+                    </div>
+                `;
+                
+                // Insert as first card
+                const firstCard = dashboard.querySelector('.card');
+                if (firstCard) {
+                    firstCard.insertAdjacentElement('beforebegin', xpCard);
+                } else {
+                    dashboard.appendChild(xpCard);
+                }
+            }
+        }
+
+        function updateXPDisplay() {
+            const levelEl = document.getElementById('playerLevel');
+            const levelTitleEl = document.getElementById('levelTitle');
+            const currentXPEl = document.getElementById('currentXP');
+            const nextLevelXPEl = document.getElementById('nextLevelXP');
+            const dailyXPEl = document.getElementById('dailyXP');
+            const totalDrivesEl = document.getElementById('totalDrives');
+            const totalDistanceEl = document.getElementById('totalDistance');
+            const xpBar = document.getElementById('xpBar');
+            
+            if (levelEl) levelEl.textContent = playerData.level;
+            if (levelTitleEl) levelTitleEl.textContent = getLevelTitle(playerData.level);
+            if (currentXPEl) currentXPEl.textContent = playerData.xp;
+            if (nextLevelXPEl) nextLevelXPEl.textContent = getNextLevelXP();
+            if (dailyXPEl) dailyXPEl.textContent = playerData.dailyXP;
+            if (totalDrivesEl) totalDrivesEl.textContent = playerData.totalDrives;
+            if (totalDistanceEl) totalDistanceEl.textContent = Math.round(playerData.totalDistance);
+            
+            // Update XP bar
+            if (xpBar) {
+                const currentLevelXP = getCurrentLevelXP();
+                const nextLevelXP = getNextLevelXP();
+                const progressXP = playerData.xp - currentLevelXP;
+                const neededXP = nextLevelXP - currentLevelXP;
+                const percentage = Math.min((progressXP / neededXP) * 100, 100);
+                xpBar.style.width = percentage + '%';
+            }
+            
+            updateAchievementsList();
+        }
+
+        function addXP(amount, reason) {
+            const oldLevel = playerData.level;
+            playerData.xp += amount;
+            playerData.dailyXP += amount;
+            
+            // Show XP gain animation
+            showXPGain(amount, reason);
+            
+            // Check for level up
+            const newLevel = calculateLevel(playerData.xp);
+            if (newLevel > oldLevel) {
+                playerData.level = newLevel;
+                showLevelUp(newLevel);
+                checkAchievements();
+            }
+            
+            updateXPDisplay();
+            savePlayerData();
+        }
+
+        function calculateLevel(xp) {
+            for (let i = XP_CONFIG.LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
+                if (xp >= XP_CONFIG.LEVEL_THRESHOLDS[i]) {
+                    return i + 1;
+                }
+            }
+            return 1;
+        }
+
+        function getCurrentLevelXP() {
+            return XP_CONFIG.LEVEL_THRESHOLDS[playerData.level - 1] || 0;
+        }
+
+        function getNextLevelXP() {
+            return XP_CONFIG.LEVEL_THRESHOLDS[playerData.level] || XP_CONFIG.LEVEL_THRESHOLDS[XP_CONFIG.LEVEL_THRESHOLDS.length - 1];
+        }
+
+        function getLevelTitle(level) {
+            if (level >= 50) return "🏆 Legend";
+            if (level >= 40) return "👑 Elite Master";
+            if (level >= 30) return "⭐ Elite Driver";
+            if (level >= 25) return "🎖️ Master Driver";
+            if (level >= 20) return "🦸 Hero Driver";
+            if (level >= 15) return "⚔️ Veteran Driver";
+            if (level >= 10) return "🛡️ Experienced Driver";
+            if (level >= 5) return "🚗 Skilled Driver";
+            return "🔰 Novice Driver";
+        }
+
+        function showXPGain(amount, reason) {
+            const xpToast = document.createElement('div');
+            xpToast.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 0.75rem 1.25rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: xpGainSlide 3s ease forwards;
+                box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            `;
+            xpToast.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.2rem;">⭐</span>
+                    <div>
+                        <div style="font-size: 0.9rem;">+${amount} XP</div>
+                        <div style="font-size: 0.75rem; opacity: 0.9;">${reason}</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(xpToast);
+            
+            setTimeout(() => xpToast.remove(), 3000);
+        }
+
+        function showLevelUp(newLevel) {
+            const levelUpModal = document.createElement('div');
+            levelUpModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1002;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            levelUpModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+                    padding: 3rem 2rem;
+                    border-radius: 1.5rem;
+                    text-align: center;
+                    color: white;
+                    max-width: 400px;
+                    width: 90%;
+                    animation: levelUpBounce 0.6s ease;
+                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+                ">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                    <h2 style="margin: 0 0 0.5rem 0; font-size: 2rem;">LEVEL UP!</h2>
+                    <div style="font-size: 3rem; font-weight: bold; margin: 1rem 0;">${newLevel}</div>
+                    <div style="font-size: 1.2rem; margin-bottom: 2rem;">${getLevelTitle(newLevel)}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: rgba(255, 255, 255, 0.2);
+                        border: 1px solid rgba(255, 255, 255, 0.3);
+                        color: white;
+                        padding: 0.75rem 2rem;
+                        border-radius: 0.75rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        font-size: 1rem;
+                    ">Continue</button>
+                </div>
+            `;
+            
+            document.body.appendChild(levelUpModal);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (levelUpModal.parentElement) {
+                    levelUpModal.remove();
+                }
+            }, 5000);
+        }
+
+        function checkAchievements() {
+            Object.keys(XP_CONFIG.ACHIEVEMENTS).forEach(achievementId => {
+                if (!playerData.achievements.includes(achievementId)) {
+                    if (isAchievementUnlocked(achievementId)) {
+                        unlockAchievement(achievementId);
+                    }
+                }
+            });
+        }
+
+        function isAchievementUnlocked(achievementId) {
+            switch (achievementId) {
+                case 'first_drive':
+                    return playerData.totalDrives >= 1;
+                case 'distance_10':
+                    return playerData.totalDistance >= 10;
+                case 'distance_50':
+                    return playerData.totalDistance >= 50;
+                case 'distance_100':
+                    return playerData.totalDistance >= 100;
+                case 'distance_500':
+                    return playerData.totalDistance >= 500;
+                case 'drives_10':
+                    return playerData.totalDrives >= 10;
+                case 'drives_50':
+                    return playerData.totalDrives >= 50;
+                case 'level_10':
+                    return playerData.level >= 10;
+                case 'level_25':
+                    return playerData.level >= 25;
+                default:
+                    return false;
+            }
+        }
+
+        function unlockAchievement(achievementId) {
+            const achievement = XP_CONFIG.ACHIEVEMENTS[achievementId];
+            playerData.achievements.push(achievementId);
+            
+            // Award achievement XP
+            addXP(achievement.xp, `Achievement: ${achievement.name}`);
+            
+            // Show achievement notification
+            showAchievementUnlocked(achievement);
+            
+            savePlayerData();
+        }
+
+        function showAchievementUnlocked(achievement) {
+            const achievementToast = document.createElement('div');
+            achievementToast.style.cssText = `
+                position: fixed;
+                top: 140px;
+                right: 20px;
+                background: linear-gradient(135deg, #f59e0b, #d97706);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: achievementSlide 4s ease forwards;
+                box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                max-width: 300px;
+            `;
+            achievementToast.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="font-size: 2rem;">${achievement.icon}</span>
+                    <div>
+                        <div style="font-size: 1rem; font-weight: bold;">Achievement Unlocked!</div>
+                        <div style="font-size: 0.9rem; margin: 0.25rem 0;">${achievement.name}</div>
+                        <div style="font-size: 0.75rem; opacity: 0.9;">${achievement.description}</div>
+                        <div style="font-size: 0.75rem; opacity: 0.9;">+${achievement.xp} XP</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(achievementToast);
+            
+            setTimeout(() => achievementToast.remove(), 4000);
+        }
+
+        function updateAchievementsList() {
+            const achievementList = document.getElementById('achievementList');
+            if (!achievementList) return;
+            
+            const recentAchievements = playerData.achievements.slice(-3);
+            achievementList.innerHTML = '';
+            
+            if (recentAchievements.length === 0) {
+                achievementList.innerHTML = '<div style="color: #94a3b8; font-size: 0.875rem;">Complete your first drive to unlock achievements!</div>';
+                return;
+            }
+            
+            recentAchievements.forEach(achievementId => {
+                const achievement = XP_CONFIG.ACHIEVEMENTS[achievementId];
+                if (achievement) {
+                    const achievementEl = document.createElement('div');
+                    achievementEl.style.cssText = `
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        padding: 0.5rem;
+                        background: rgba(59, 130, 246, 0.1);
+                        border-radius: 0.5rem;
+                        margin-bottom: 0.5rem;
+                        border: 1px solid rgba(59, 130, 246, 0.2);
+                    `;
+                    achievementEl.innerHTML = `
+                        <span style="font-size: 1.5rem;">${achievement.icon}</span>
+                        <div>
+                            <div style="font-size: 0.875rem; font-weight: 600;">${achievement.name}</div>
+                            <div style="font-size: 0.75rem; color: #94a3b8;">${achievement.description}</div>
+                        </div>
+                    `;
+                    achievementList.appendChild(achievementEl);
+                }
+            });
+        }
+
+        function checkLevelUp() {
+            const currentLevel = calculateLevel(playerData.xp);
+            if (currentLevel > playerData.level) {
+                playerData.level = currentLevel;
+                showLevelUp(currentLevel);
+                savePlayerData();
+            }
         }
 
         // Initialize map
@@ -4485,6 +7388,21 @@
                 
                 console.log('Route saved successfully:', route);
                 
+                // Track performance
+                performanceMetrics.routesSaved++;
+                
+                // Award XP for completing drive
+                const distance = calculateTotalDistance();
+                const distanceXP = Math.round(distance * XP_CONFIG.DISTANCE_PER_MILE);
+                addXP(XP_CONFIG.DRIVE_COMPLETION + distanceXP, `Drive Completed (${Math.round(distance)} mi)`);
+                
+                // Update player stats
+                playerData.totalDrives++;
+                playerData.totalDistance += distance;
+                
+                // Check for achievements
+                checkAchievements();
+                
                 closeSaveModal();
                 loadSampleRoutes();
                 
@@ -4683,6 +7601,191 @@
             
             // Show selected tab
             document.getElementById(tabId).classList.remove('hidden');
+            
+            // Load specific content for live friends tab
+            if (tabId === 'live-friends') {
+                loadLiveFriends();
+            }
+        }
+        
+        function loadLiveFriends() {
+            const liveData = JSON.parse(localStorage.getItem('liveTrackingData') || '{}');
+            const liveFriendsGrid = document.getElementById('liveFriendsGrid');
+            const liveCountEl = document.getElementById('liveCount');
+            const drivingCountEl = document.getElementById('drivingCount');
+            
+            if (!liveFriendsGrid) return;
+            
+            liveFriendsGrid.innerHTML = '';
+            
+            const friends = Object.values(liveData).filter(friend => friend.userId !== currentUser.username);
+            const drivingFriends = friends.filter(friend => friend.status === 'driving');
+            
+            liveCountEl.textContent = friends.length;
+            drivingCountEl.textContent = drivingFriends.length;
+            
+            if (friends.length === 0) {
+                liveFriendsGrid.innerHTML = `
+                    <div class="no-live-friends" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                        <div class="no-content-message">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📡</div>
+                            <h3 style="color: #f1f5f9; margin-bottom: 0.5rem;">No friends are live sharing</h3>
+                            <p style="color: #94a3b8; margin-bottom: 1.5rem;">When your friends start live sharing, you'll see them here!</p>
+                            <button class="btn btn-primary" onclick="toggleLiveMode()">Start Live Sharing</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            friends.forEach(friend => {
+                const friendCard = createLiveFriendCard(friend);
+                liveFriendsGrid.appendChild(friendCard);
+            });
+            
+            // Update live map
+            updateLiveMap(friends);
+        }
+        
+        function createLiveFriendCard(friend) {
+            const card = document.createElement('div');
+            card.className = 'live-friend-card';
+            
+            const timeSince = Math.floor((Date.now() - friend.timestamp) / 1000);
+            const timeString = timeSince < 60 ? `${timeSince}s ago` : `${Math.floor(timeSince / 60)}m ago`;
+            
+            card.innerHTML = `
+                <div class="live-friend-header">
+                    <div class="live-friend-name">${friend.userId}</div>
+                    <div class="live-friend-status ${friend.status}">${friend.status.toUpperCase()}</div>
+                </div>
+                <div class="live-friend-info">
+                    <div class="live-friend-stat">
+                        <div class="live-friend-value">${friend.location.speed ? (friend.location.speed * 0.621371).toFixed(0) : '0'}</div>
+                        <div class="live-friend-label">mph</div>
+                    </div>
+                    <div class="live-friend-stat">
+                        <div class="live-friend-value">${timeString}</div>
+                        <div class="live-friend-label">Last Update</div>
+                    </div>
+                </div>
+                <div class="live-friend-actions">
+                    <button class="btn btn-sm btn-primary" onclick="focusOnFriend('${friend.userId}')">📍 Locate</button>
+                    <button class="btn btn-sm btn-secondary" onclick="followFriend('${friend.userId}')">🚗 Follow</button>
+                    ${friend.status === 'emergency' ? '<button class="btn btn-sm" style="background: #ef4444;" onclick="respondToEmergency(\'' + friend.userId + '\')">🚨 Emergency</button>' : ''}
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function refreshLiveFriends() {
+            // Simulate new data for demo
+            generateMockLiveData();
+            loadLiveFriends();
+            showLiveNotification('Live friends data refreshed', 'success');
+        }
+        
+        function generateMockLiveData() {
+            const mockFriends = ['Alex', 'Sarah', 'Mike', 'Emma', 'John'];
+            const liveData = JSON.parse(localStorage.getItem('liveTrackingData') || '{}');
+            
+            // Add some mock live friends (but not if user hasn't started live mode)
+            if (Math.random() > 0.5) {
+                mockFriends.slice(0, Math.floor(Math.random() * 3) + 1).forEach(friend => {
+                    if (friend !== currentUser.username) {
+                        liveData[friend] = {
+                            userId: friend,
+                            location: {
+                                lat: 40.7128 + (Math.random() - 0.5) * 0.1,
+                                lng: -74.0060 + (Math.random() - 0.5) * 0.1,
+                                speed: Math.random() * 60,
+                                accuracy: 10 + Math.random() * 20,
+                                timestamp: Date.now()
+                            },
+                            status: Math.random() > 0.3 ? 'driving' : 'idle',
+                            timestamp: Date.now() - Math.random() * 300000, // Within last 5 minutes
+                            sharingWith: ['all']
+                        };
+                    }
+                });
+                
+                localStorage.setItem('liveTrackingData', JSON.stringify(liveData));
+            }
+        }
+        
+        function focusOnFriend(friendId) {
+            const liveData = JSON.parse(localStorage.getItem('liveTrackingData') || '{}');
+            const friend = liveData[friendId];
+            
+            if (friend && friend.location) {
+                showLiveNotification(`Focused on ${friendId}'s location`, 'success');
+                // In a real app, this would center the map on the friend's location
+                console.log('Focusing on friend:', friend.location);
+            }
+        }
+        
+        function followFriend(friendId) {
+            const liveData = JSON.parse(localStorage.getItem('liveTrackingData') || '{}');
+            const friend = liveData[friendId];
+            
+            if (friend && friend.location) {
+                showLiveNotification(`Following ${friendId} - tap to get directions`, 'success');
+                // In a real app, this would start navigation to the friend's location
+                console.log('Following friend:', friend.location);
+                
+                // Add XP for social interaction
+                addXP(XP_CONFIG.SOCIAL_INTERACTION, `Following ${friendId}`);
+            }
+        }
+        
+        function respondToEmergency(friendId) {
+            showLiveNotification(`Emergency response initiated for ${friendId}`, 'warning');
+            // In a real app, this would call emergency services or send alerts
+            console.log('Emergency response for:', friendId);
+        }
+        
+        function updateLiveMap(friends) {
+            const liveMap = document.getElementById('liveMap');
+            if (!liveMap) return;
+            
+            if (friends.length === 0) {
+                liveMap.innerHTML = '<div style="color: #94a3b8;">No friends to display on map</div>';
+                return;
+            }
+            
+            // Simple text-based map for demo
+            liveMap.innerHTML = `
+                <div style="padding: 2rem; text-align: center;">
+                    <h4 style="color: #f1f5f9; margin-bottom: 1rem;">Live Friends Map</h4>
+                    <div style="margin: 1rem 0;">
+                        ${friends.map(friend => `
+                            <div style="margin: 0.5rem 0; padding: 0.5rem; background: rgba(59, 130, 246, 0.1); border-radius: 0.5rem; border: 1px solid rgba(59, 130, 246, 0.2);">
+                                <strong style="color: #f1f5f9;">${friend.userId}</strong> - <span style="color: ${friend.status === 'driving' ? '#22c55e' : '#fbbf24'};">${friend.status}</span>
+                                <br>
+                                <small style="color: #94a3b8;">Lat: ${friend.location.lat.toFixed(4)}, Lng: ${friend.location.lng.toFixed(4)}</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <small style="color: #94a3b8;">Interactive map integration available in mobile app</small>
+                </div>
+            `;
+        }
+        
+        function focusOnFriends() {
+            const liveData = JSON.parse(localStorage.getItem('liveTrackingData') || '{}');
+            const friends = Object.values(liveData).filter(friend => friend.userId !== currentUser.username);
+            
+            if (friends.length > 0) {
+                updateLiveMap(friends);
+                showLiveNotification(`Focused on ${friends.length} friends`, 'success');
+            } else {
+                showLiveNotification('No friends currently sharing location', 'warning');
+            }
+        }
+        
+        function toggleMapMode() {
+            showLiveNotification('Map mode toggle - Feature available in mobile app', 'success');
         }
 
         // Filter routes based on search
