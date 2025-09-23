@@ -184,6 +184,12 @@
         .page {
             margin-top: 1rem;
             animation: fadeInUp 0.6s ease-out;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .page.hidden {
+            display: none !important;
         }
 
         @keyframes fadeInUp {
@@ -194,6 +200,44 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
             }
         }
 
@@ -419,6 +463,34 @@
         .xp-card {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
             border: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .help-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            color: #3b82f6;
+        }
+        
+        .help-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+            transform: scale(1.1);
         }
 
         .xp-container {
@@ -6897,7 +6969,10 @@
                 const xpCard = document.createElement('div');
                 xpCard.className = 'card xp-card';
                 xpCard.innerHTML = `
-                    <h3 class="card-title">🎮 Player Progress</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">🎮 Player Progress</h3>
+                        <button class="help-btn" onclick="showXPExplanation()" title="How does XP work?">❓</button>
+                    </div>
                     <div class="xp-container">
                         <div class="level-display">
                             <div class="level-circle">
@@ -8068,28 +8143,178 @@
 
         // Show page
         function showPage(pageId) {
-            // Update nav links
+            // Prevent multiple rapid clicks
+            if (window.isPageTransitioning) return;
+            window.isPageTransitioning = true;
+            
+            // Update nav links with smooth transition
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.add('hidden');
+                link.style.transition = 'all 0.3s ease';
             });
             
-            // Show selected page
-            document.getElementById(pageId).classList.remove('hidden');
+            // Find the clicked nav link and make it active
+            const clickedLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if (clickedLink) {
+                clickedLink.classList.add('active');
+            }
             
-            // Load page-specific data
+            // Get current and target pages
+            const currentPage = document.querySelector('.page:not(.hidden)');
+            const targetPage = document.getElementById(pageId);
+            
+            if (currentPage && targetPage && currentPage !== targetPage) {
+                // Add fade out effect to current page
+                currentPage.style.transition = 'opacity 0.2s ease-out';
+                currentPage.style.opacity = '0';
+                
+                // After fade out, switch pages
+                setTimeout(() => {
+                    // Hide all pages
+                    document.querySelectorAll('.page').forEach(page => {
+                        page.classList.add('hidden');
+                        page.style.opacity = '1'; // Reset opacity
+                    });
+                    
+                    // Show target page with fade in
+                    targetPage.classList.remove('hidden');
+                    targetPage.style.transition = 'opacity 0.3s ease-in';
+                    targetPage.style.opacity = '0';
+                    
+                    // Trigger fade in
+                    setTimeout(() => {
+                        targetPage.style.opacity = '1';
+                    }, 10);
+                    
+                    // Load page-specific data
+                    loadPageData(pageId);
+                    
+                    // Reset transition lock
+                    setTimeout(() => {
+                        window.isPageTransitioning = false;
+                    }, 300);
+                }, 200);
+            } else {
+                // Direct switch if no current page or same page
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.add('hidden');
+                });
+                targetPage.classList.remove('hidden');
+                loadPageData(pageId);
+                window.isPageTransitioning = false;
+            }
+        }
+        
+        function loadPageData(pageId) {
+            // Load page-specific data with smooth loading
             if (pageId === 'routes') {
                 loadRoutes();
             } else if (pageId === 'feed') {
                 loadFeed();
             } else if (pageId === 'analytics') {
                 updateAnalytics();
+            } else if (pageId === 'dashboard') {
+                // Refresh dashboard data
+                updateDashboard();
             }
+        }
+        
+        function showXPExplanation() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            modal.innerHTML = `
+                <div class="modal-content" style="
+                    background: linear-gradient(135deg, #1e293b, #334155);
+                    border-radius: 16px;
+                    padding: 2rem;
+                    max-width: 600px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    border: 2px solid rgba(59, 130, 246, 0.3);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+                    animation: slideInUp 0.3s ease;
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="color: #f1f5f9; margin: 0; font-size: 1.5rem;">🎮 XP System Guide</h2>
+                        <button onclick="this.closest('.modal').remove()" style="
+                            background: rgba(239, 68, 68, 0.2);
+                            border: 1px solid rgba(239, 68, 68, 0.3);
+                            border-radius: 50%;
+                            width: 32px;
+                            height: 32px;
+                            color: #ef4444;
+                            cursor: pointer;
+                            font-size: 1.2rem;
+                        ">×</button>
+                    </div>
+                    
+                    <div style="color: #cbd5e1; line-height: 1.6;">
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="color: #3b82f6; margin-bottom: 0.5rem;">🏆 How to Earn XP</h3>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li><strong>Complete Drives:</strong> +50 XP per drive</li>
+                                <li><strong>Distance Bonus:</strong> +1 XP per mile driven</li>
+                                <li><strong>Share Photos:</strong> +25 XP per post</li>
+                                <li><strong>First Drive:</strong> +100 XP bonus</li>
+                                <li><strong>Daily Login:</strong> +10 XP per day</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="color: #10b981; margin-bottom: 0.5rem;">📈 Leveling Up</h3>
+                            <p style="margin: 0 0 0.5rem 0;">Each level requires more XP than the last:</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li><strong>Level 1-5:</strong> 100 XP per level</li>
+                                <li><strong>Level 6-10:</strong> 200 XP per level</li>
+                                <li><strong>Level 11-20:</strong> 300 XP per level</li>
+                                <li><strong>Level 21+:</strong> 500 XP per level</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="color: #f59e0b; margin-bottom: 0.5rem;">🏅 Achievements</h3>
+                            <p style="margin: 0 0 0.5rem 0;">Unlock special achievements for:</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li><strong>Speed Demon:</strong> Drive over 80 mph</li>
+                                <li><strong>Road Warrior:</strong> Complete 100 drives</li>
+                                <li><strong>Social Butterfly:</strong> Share 50 photos</li>
+                                <li><strong>Explorer:</strong> Drive 1000+ miles</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <p style="margin: 0; font-weight: 500; color: #3b82f6;">
+                                💡 <strong>Pro Tip:</strong> The more you drive and share, the faster you'll level up! 
+                                Check your progress in the Analytics page for detailed stats.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Close on background click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
         }
     </script>
 </body>
