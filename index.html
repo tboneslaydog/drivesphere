@@ -1340,6 +1340,49 @@
             margin-top: 1rem;
         }
 
+        /* Sync Modal Styles */
+        .sync-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .sync-modal-content {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(26, 26, 46, 0.9));
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            color: #00bfff;
+        }
+
+        .sync-modal h3 {
+            margin-bottom: 1rem;
+            color: #00bfff;
+        }
+
+        .sync-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .sync-actions .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
         /* Device-specific UI styles */
         .mobile-ui {
             background: 
@@ -4240,6 +4283,7 @@
                             <button class="btn" onclick="clearAllRoutes()">🗑️ Clear All Routes</button>
                             <button class="btn" onclick="clearAllPosts()">🧹 Clear All Posts</button>
                             <button class="btn" onclick="clearAllUsers()">👥 Clear All Users</button>
+                            <button class="btn" onclick="exportDataForSync()">📱 Sync Data</button>
                         </div>
                         <div class="action-group">
                             <h4>Analytics & Reports</h4>
@@ -4428,6 +4472,26 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        
+        // Initialize Firebase
+        const app = initializeApp(window.FIREBASE_CONFIG);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // Make Firebase available globally
+        window.db = db;
+        window.auth = auth;
+        window.firebase = { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+        
+        console.log('🔥 Firebase initialized!');
+    </script>
+    
     <script>
         // Global variables
         let map;
@@ -4994,6 +5058,114 @@
             applyDeviceUI();
         };
 
+        // Data sync functions for sharing between devices
+        function exportDataForSync() {
+            const data = {
+                users: users,
+                posts: JSON.parse(localStorage.getItem('posts') || '[]'),
+                routes: JSON.parse(localStorage.getItem('routes') || '[]'),
+                timestamp: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const dataString = JSON.stringify(data);
+            const encodedData = btoa(dataString);
+            
+            // Create QR code modal
+            const modal = document.createElement('div');
+            modal.className = 'sync-modal';
+            modal.innerHTML = `
+                <div class="sync-modal-content">
+                    <h3>📱 Sync Data Between Devices</h3>
+                    <p>Scan this QR code with another device to sync data:</p>
+                    <div id="qrCode" style="text-align: center; margin: 1rem 0;"></div>
+                    <div class="sync-actions">
+                        <button class="btn" onclick="copySyncData()">📋 Copy Data</button>
+                        <button class="btn" onclick="importSyncData()">📥 Import Data</button>
+                        <button class="btn btn-secondary" onclick="this.closest('.sync-modal').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Generate QR code (simple text-based for now)
+            const qrContainer = document.getElementById('qrCode');
+            qrContainer.innerHTML = `
+                <div style="background: white; padding: 1rem; border-radius: 0.5rem; display: inline-block; font-family: monospace; font-size: 0.6rem; word-break: break-all; max-width: 200px;">
+                    ${encodedData.substring(0, 100)}...
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem;">Data encoded for sync</p>
+            `;
+        }
+
+        function copySyncData() {
+            const data = {
+                users: users,
+                posts: JSON.parse(localStorage.getItem('posts') || '[]'),
+                routes: JSON.parse(localStorage.getItem('routes') || '[]'),
+                timestamp: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const dataString = JSON.stringify(data);
+            navigator.clipboard.writeText(dataString).then(() => {
+                alert('Data copied to clipboard! Paste it on another device to sync.');
+            });
+        }
+
+        function importSyncData() {
+            const dataString = prompt('Paste the sync data here:');
+            if (dataString) {
+                try {
+                    const data = JSON.parse(dataString);
+                    
+                    // Merge users
+                    if (data.users) {
+                        data.users.forEach(newUser => {
+                            if (!users.find(u => u.id === newUser.id)) {
+                                users.push(newUser);
+                            }
+                        });
+                        localStorage.setItem('users', JSON.stringify(users));
+                    }
+                    
+                    // Merge posts
+                    if (data.posts) {
+                        const existingPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+                        data.posts.forEach(newPost => {
+                            if (!existingPosts.find(p => p.id === newPost.id)) {
+                                existingPosts.push(newPost);
+                            }
+                        });
+                        localStorage.setItem('posts', JSON.stringify(existingPosts));
+                    }
+                    
+                    // Merge routes
+                    if (data.routes) {
+                        const existingRoutes = JSON.parse(localStorage.getItem('routes') || '[]');
+                        data.routes.forEach(newRoute => {
+                            if (!existingRoutes.find(r => r.id === newRoute.id)) {
+                                existingRoutes.push(newRoute);
+                            }
+                        });
+                        localStorage.setItem('routes', JSON.stringify(existingRoutes));
+                    }
+                    
+                    alert('Data synced successfully! Refresh the page to see changes.');
+                    
+                    // Refresh the current page
+                    if (currentUser && currentUser.role === 'admin') {
+                        updateAdminPanel();
+                    }
+                    loadFeed();
+                    
+                } catch (error) {
+                    alert('Invalid sync data. Please check the format.');
+                }
+            }
+        }
+
         // Listen for window resize to re-detect device
         window.addEventListener('resize', function() {
             detectDevice();
@@ -5116,7 +5288,7 @@
             updatePhotoPreview();
         }
 
-        function createPost() {
+        async function createPost() {
             const text = document.getElementById('postText').value.trim();
             
             if (!text && selectedPhotos.length === 0) {
@@ -5130,21 +5302,60 @@
             }
 
             const post = {
-                id: Date.now(),
                 userId: currentUser.id,
-                username: currentUser.name,
-                userUsername: currentUser.username,
                 text: text,
-                photos: [...selectedPhotos],
-                timestamp: Date.now(),
-                likes: 0,
-                liked: false
+                photos: [...selectedPhotos]
             };
 
-            // Save to localStorage with data protection
-            const savedPosts = safeGetItem('posts', []);
-            savedPosts.unshift(post);
-            safeSetItem('posts', savedPosts);
+            try {
+                if (window.db && window.firebase) {
+                    // Use Firebase
+                    const newPost = await window.firebase.addDoc(window.firebase.collection(window.db, 'posts'), {
+                        ...post,
+                        username: currentUser.name,
+                        userUsername: currentUser.username,
+                        timestamp: Date.now(),
+                        likes: 0,
+                        liked: false
+                    });
+                    console.log('Post saved to Firebase:', newPost);
+                    
+                    // Award XP for photo sharing if photos were included
+                    if (selectedPhotos.length > 0) {
+                        addXP(XP_CONFIG.PHOTO_SHARE * selectedPhotos.length, `Shared ${selectedPhotos.length} photo${selectedPhotos.length > 1 ? 's' : ''}`);
+                    }
+                    
+                    // Reset form
+                    document.getElementById('postText').value = '';
+                    selectedPhotos = [];
+                    updatePhotoPreview();
+                    
+                    // Reload feed to show new post
+                    loadFeed();
+                    
+                    // Show success message
+                    showNotification('Post created successfully!', 'success');
+                } else {
+                    throw new Error('Firebase not available');
+                }
+            } catch (error) {
+                console.log('Firebase error, saving to localStorage:', error);
+                // Fallback to localStorage
+                const localPost = {
+                    id: Date.now(),
+                    userId: currentUser.id,
+                    username: currentUser.name,
+                    userUsername: currentUser.username,
+                    text: text,
+                    photos: [...selectedPhotos],
+                    timestamp: Date.now(),
+                    likes: 0,
+                    liked: false
+                };
+
+                const savedPosts = safeGetItem('posts', []);
+                savedPosts.unshift(localPost);
+                safeSetItem('posts', savedPosts);
 
             // Award XP for photo sharing if photos were included
             if (selectedPhotos.length > 0) {
@@ -5240,16 +5451,40 @@
             return [...routePosts, ...livePosts];
         }
 
-        function loadFeed() {
+        async function loadFeed() {
             // Ensure users are loaded
-            loadUsersData();
+            await loadUsersData();
             
-            const userPosts = JSON.parse(localStorage.getItem('posts') || '[]');
-            const mockPosts = generateMockPosts();
-            const friendsRoutes = generateFriendsRoutePosts();
-            const allPosts = [...userPosts, ...mockPosts, ...friendsRoutes].sort((a, b) => b.timestamp - a.timestamp);
-            
-            console.log('Loading feed with', userPosts.length, 'user posts and', allPosts.length, 'total posts');
+            try {
+                if (window.db && window.firebase) {
+                    // Use Firebase
+                    const postsQuery = window.firebase.query(window.firebase.collection(window.db, 'posts'), window.firebase.orderBy('timestamp', 'desc'));
+                    const postsSnapshot = await window.firebase.getDocs(postsQuery);
+                    const userPosts = postsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    
+                    const mockPosts = generateMockPosts();
+                    const friendsRoutes = generateFriendsRoutePosts();
+                    const allPosts = [...userPosts, ...mockPosts, ...friendsRoutes].sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    console.log('Loading feed from Firebase with', userPosts.length, 'user posts and', allPosts.length, 'total posts');
+                    displayFeedPosts(allPosts);
+                } else {
+                    throw new Error('Firebase not available');
+                }
+            } catch (error) {
+                console.log('Firebase error, using localStorage fallback:', error);
+                // Fallback to localStorage
+                const userPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+                const mockPosts = generateMockPosts();
+                const friendsRoutes = generateFriendsRoutePosts();
+                const allPosts = [...userPosts, ...mockPosts, ...friendsRoutes].sort((a, b) => b.timestamp - a.timestamp);
+                
+                console.log('Loading feed with', userPosts.length, 'user posts and', allPosts.length, 'total posts');
+                displayFeedPosts(allPosts);
+            }
+        }
+
+        function displayFeedPosts(allPosts) {
 
             const feedContainer = document.getElementById('feedPosts');
             if (!feedContainer) return;
@@ -7180,25 +7415,29 @@
             }, 300); // Simulate checking delay
         }
 
-        function handleLogin() {
+        async function handleLogin() {
             const emailOrUsername = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
             
-            // Check if login is by email or username
-            const user = users.find(u => 
-                (u.email === emailOrUsername || u.username === emailOrUsername) && 
-                u.password === password
-            );
-            
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ emailOrUsername, password })
+                });
                 
-                // Handle Remember Me functionality
-                if (rememberMe) {
-                    // Store login credentials securely (in a real app, you'd encrypt this)
-                    const loginData = {
+                if (response.ok) {
+                    const user = await response.json();
+                    currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                    // Handle Remember Me functionality
+                    if (rememberMe) {
+                        // Store login credentials securely (in a real app, you'd encrypt this)
+                        const loginData = {
                         emailOrUsername: emailOrUsername,
                         rememberMe: true,
                         timestamp: Date.now(),
@@ -7230,8 +7469,53 @@
                     initializeApp();
                     updateUserUI();
                 }, 1500);
-            } else {
-                showAuthError('Invalid email/username or password');
+                } else {
+                    const error = await response.json();
+                    showAuthError(error.error || 'Invalid credentials');
+                }
+            } catch (error) {
+                console.log('Server error, trying localStorage fallback:', error);
+                // Fallback to localStorage
+                const user = users.find(u => 
+                    (u.email === emailOrUsername || u.username === emailOrUsername) && 
+                    u.password === password
+                );
+                
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // Handle Remember Me functionality
+                    if (rememberMe) {
+                        const loginData = {
+                            emailOrUsername: emailOrUsername,
+                            rememberMe: true,
+                            timestamp: Date.now(),
+                            userAgent: navigator.userAgent,
+                            lastIP: 'local'
+                        };
+                        localStorage.setItem('rememberedLogin', JSON.stringify(loginData));
+                    } else {
+                        localStorage.removeItem('rememberedLogin');
+                    }
+                    
+                    // Generate session ID for tracking
+                    const sessionId = generateSessionId();
+                    currentUser.sessionId = sessionId;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // Show success message
+                    showAuthSuccess(`Welcome back, ${currentUser.name}!`);
+                    
+                    // Delay before showing main app for better UX
+                    setTimeout(() => {
+                        showMainApp();
+                        initializeApp();
+                        updateUserUI();
+                    }, 1500);
+                } else {
+                    showAuthError('Invalid email/username or password');
+                }
             }
         }
         
@@ -7666,15 +7950,133 @@
             }, 3000);
         }
 
+        // Firebase Configuration
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyCPtWbwOfCtTKvC_jcwiCEu_bX-d29dblE",
+            authDomain: "drivesphere-app.firebaseapp.com",
+            projectId: "drivesphere-app",
+            storageBucket: "drivesphere-app.firebasestorage.app",
+            messagingSenderId: "999883233294",
+            appId: "1:999883233294:web:0a4b7c5ec466db411ac45f"
+        };
+        
         // Load users data function
-        function loadUsersData() {
-            const savedUsers = localStorage.getItem('users');
-            if (savedUsers) {
-                users = JSON.parse(savedUsers);
-                console.log('Loaded users:', users.length);
-            } else {
-                console.log('No users found in localStorage');
-                users = [];
+        async function loadUsersData() {
+            try {
+                if (window.db && window.firebase) {
+                    // Use Firebase
+                    const usersSnapshot = await window.firebase.getDocs(window.firebase.collection(window.db, 'users'));
+                    users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    console.log('Loaded users from Firebase:', users.length);
+                } else {
+                    throw new Error('Firebase not available');
+                }
+            } catch (error) {
+                console.log('Firebase error, using localStorage fallback:', error);
+                const savedUsers = localStorage.getItem('users');
+                if (savedUsers) {
+                    users = JSON.parse(savedUsers);
+                } else {
+                    users = [];
+                }
+            }
+        }
+
+        // Add demo users that appear on all devices
+        function addDemoUsers() {
+            const demoUsers = [
+                {
+                    id: 'demo-user-1',
+                    name: 'Alex Johnson',
+                    username: 'alex_driver',
+                    email: 'alex@example.com',
+                    password: 'demo123',
+                    role: 'user',
+                    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                    lastActive: new Date().toISOString()
+                },
+                {
+                    id: 'demo-user-2',
+                    name: 'Sarah Chen',
+                    username: 'sarah_speed',
+                    email: 'sarah@example.com',
+                    password: 'demo123',
+                    role: 'user',
+                    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                    lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+                },
+                {
+                    id: 'demo-user-3',
+                    name: 'Mike Rodriguez',
+                    username: 'mike_road',
+                    email: 'mike@example.com',
+                    password: 'demo123',
+                    role: 'user',
+                    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                    lastActive: new Date(Date.now() - 30 * 60 * 1000).toISOString()
+                }
+            ];
+            
+            users = [...users, ...demoUsers];
+            localStorage.setItem('users', JSON.stringify(users));
+            console.log('Added demo users:', demoUsers.length);
+        }
+
+        // Add demo posts that appear on all devices
+        function addDemoPosts() {
+            const savedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+            
+            // Only add demo posts if no posts exist
+            if (savedPosts.length === 0) {
+                const demoPosts = [
+                    {
+                        id: 'demo-post-1',
+                        userId: 'demo-user-1',
+                        username: 'Alex Johnson',
+                        userUsername: 'alex_driver',
+                        text: 'Just completed an amazing road trip through the mountains! The views were incredible and the driving was smooth. Highly recommend this route! 🏔️🚗',
+                        photos: [],
+                        timestamp: Date.now() - 2 * 60 * 60 * 1000, // 2 hours ago
+                        likes: 12,
+                        liked: false
+                    },
+                    {
+                        id: 'demo-post-2',
+                        userId: 'demo-user-2',
+                        username: 'Sarah Chen',
+                        userUsername: 'sarah_speed',
+                        text: 'New personal best on the highway today! Hit 95 mph safely on the open road. The car handled beautifully! 🏎️💨',
+                        photos: [],
+                        timestamp: Date.now() - 4 * 60 * 60 * 1000, // 4 hours ago
+                        likes: 8,
+                        liked: false
+                    },
+                    {
+                        id: 'demo-post-3',
+                        userId: 'demo-user-3',
+                        username: 'Mike Rodriguez',
+                        userUsername: 'mike_road',
+                        text: 'City driving can be challenging but I love the challenge! Found some great shortcuts today that saved me 15 minutes. 🏙️🚦',
+                        photos: [],
+                        timestamp: Date.now() - 6 * 60 * 60 * 1000, // 6 hours ago
+                        likes: 5,
+                        liked: false
+                    },
+                    {
+                        id: 'demo-post-4',
+                        userId: 'demo-user-1',
+                        username: 'Alex Johnson',
+                        userUsername: 'alex_driver',
+                        text: 'Sharing my favorite route for weekend drives. Perfect for a relaxing Sunday morning! 🛣️☀️',
+                        photos: [],
+                        timestamp: Date.now() - 24 * 60 * 60 * 1000, // 1 day ago
+                        likes: 15,
+                        liked: false
+                    }
+                ];
+                
+                localStorage.setItem('posts', JSON.stringify(demoPosts));
+                console.log('Added demo posts:', demoPosts.length);
             }
         }
 
