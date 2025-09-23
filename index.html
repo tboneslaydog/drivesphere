@@ -817,6 +817,50 @@
             justify-content: center;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             padding: 2rem;
+            position: relative;
+        }
+        
+        .close-auth-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #00bfff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .close-auth-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .login-btn {
+            background: linear-gradient(45deg, #00bfff, #0066cc);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .login-btn:hover {
+            background: linear-gradient(45deg, #0066cc, #004499);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 191, 255, 0.3);
         }
 
         .auth-page {
@@ -3639,6 +3683,8 @@
 
     <!-- Authentication Pages -->
     <div id="authContainer" class="auth-container">
+        <button class="close-auth-btn" onclick="closeAuthModal()" title="Continue browsing without login">×</button>
+        
         <!-- Login Page -->
         <div id="loginPage" class="auth-page active">
             <div class="auth-card">
@@ -5297,7 +5343,7 @@
             }
 
             if (!currentUser) {
-                alert('Please log in to create posts');
+                promptLogin('create posts');
                 return;
             }
 
@@ -7225,7 +7271,9 @@
             } else {
                 // Check for Remember Me data
                 checkRememberMeData();
-                showAuthPages();
+                // Show main app in public mode (like Reddit/Instagram)
+                showMainApp();
+                updateUserUI();
             }
         }
         
@@ -7662,8 +7710,11 @@
         }
 
         function updateUserUI() {
+            const userDisplayName = document.getElementById('userDisplayName');
+            
             if (currentUser) {
-                document.getElementById('userDisplayName').textContent = currentUser.username || currentUser.name;
+                // Logged in user
+                userDisplayName.textContent = currentUser.username || currentUser.name;
                 
                 // Update profile page
                 document.getElementById('profileName').textContent = currentUser.name;
@@ -7682,6 +7733,15 @@
                 document.getElementById('profileMiles').innerHTML = `${Math.round(playerData.totalDistance)}<span class="status-unit">mi</span>`;
                 document.getElementById('profileLevel').textContent = playerData.level;
                 document.getElementById('profileXP').innerHTML = `${playerData.xp}<span class="status-unit">XP</span>`;
+                
+                // Show logged-in UI
+                showLoggedInUI();
+            } else {
+                // Public mode (not logged in)
+                userDisplayName.innerHTML = '<button class="login-btn" onclick="showLoginModal()">Login</button>';
+                
+                // Show public UI
+                showPublicUI();
             }
         }
 
@@ -7722,6 +7782,49 @@
         window.switchToLogin = switchToLogin;
         window.switchToRegister = switchToRegister;
         window.adminLogin = adminLogin;
+        
+        function showLoginModal() {
+            console.log('showLoginModal called');
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('loginPage').classList.add('active');
+            document.getElementById('registerPage').classList.remove('active');
+        }
+        
+        function showLoggedInUI() {
+            // Hide any login prompts, show full functionality
+            const postButton = document.querySelector('.create-post-btn');
+            if (postButton) {
+                postButton.style.display = 'block';
+                postButton.onclick = null; // Remove any login prompt
+            }
+        }
+        
+        function showPublicUI() {
+            // Show login prompts for interactive features
+            const postButton = document.querySelector('.create-post-btn');
+            if (postButton) {
+                postButton.style.display = 'block';
+                postButton.onclick = function() {
+                    alert('Please login to create posts!');
+                    showLoginModal();
+                };
+            }
+        }
+        
+        function promptLogin(action) {
+            alert(`Please login to ${action}!`);
+            showLoginModal();
+        }
+        
+        function closeAuthModal() {
+            console.log('closeAuthModal called');
+            document.getElementById('authContainer').style.display = 'none';
+        }
+        
+        // Make new functions globally available
+        window.showLoginModal = showLoginModal;
+        window.promptLogin = promptLogin;
+        window.closeAuthModal = closeAuthModal;
 
         function closeAdminModal() {
             document.getElementById('adminModal').classList.add('hidden');
