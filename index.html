@@ -3742,11 +3742,259 @@
         let users = [];
         const ADMIN_KEY = "driverhub2025"; // Your admin password
         
+        // Data persistence configuration
+        const DATA_CONFIG = {
+            MAX_STORAGE_SIZE: 5 * 1024 * 1024, // 5MB
+            BACKUP_FREQUENCY: 6 * 60 * 60 * 1000, // 6 hours
+            VALIDATION_INTERVAL: 60 * 1000, // 1 minute
+            MAX_RETRIES: 3,
+            RETRY_DELAY: 1000 // 1 second
+        };
+        
         // Session management
         let sessionStart = new Date();
         let socialInterval = null;
         let leaderboardInterval = null;
         let gforceInterval = null;
+        
+        // Data persistence functions
+        function safeSetItem(key, value, retries = DATA_CONFIG.MAX_RETRIES) {
+            try {
+                const serialized = JSON.stringify(value);
+                
+                // Check storage quota
+                if (serialized.length > DATA_CONFIG.MAX_STORAGE_SIZE) {
+                    throw new Error('Data too large for storage');
+                }
+                
+                localStorage.setItem(key, serialized);
+                
+                // Verify the data was saved correctly
+                const retrieved = localStorage.getItem(key);
+                if (!retrieved || retrieved !== serialized) {
+                    throw new Error('Data verification failed');
+                }
+                
+                console.log(`✅ Data saved successfully: ${key}`);
+                return true;
+            } catch (error) {
+                console.error(`❌ Failed to save data: ${key}`, error);
+                
+                if (retries > 0) {
+                    console.log(`🔄 Retrying save for ${key}... (${retries} attempts left)`);
+                    setTimeout(() => {
+                        safeSetItem(key, value, retries - 1);
+                    }, DATA_CONFIG.RETRY_DELAY);
+                } else {
+                    showDataError(`Failed to save ${key}. Data may be lost.`);
+                }
+                return false;
+            }
+        }
+        
+        function safeGetItem(key, defaultValue = null) {
+            try {
+                const item = localStorage.getItem(key);
+                if (item === null) {
+                    return defaultValue;
+                }
+                
+                const parsed = JSON.parse(item);
+                
+                // Validate data integrity
+                if (!validateDataIntegrity(key, parsed)) {
+                    console.warn(`⚠️ Data integrity check failed for ${key}, using backup`);
+                    return getBackupData(key, defaultValue);
+                }
+                
+                return parsed;
+            } catch (error) {
+                console.error(`❌ Failed to load data: ${key}`, error);
+                return getBackupData(key, defaultValue);
+            }
+        }
+        
+        function validateDataIntegrity(key, data) {
+            switch (key) {
+                case 'posts':
+                    return Array.isArray(data) && data.every(post => 
+                        post.id && post.username && post.timestamp
+                    );
+                case 'routes':
+                    return Array.isArray(data) && data.every(route => 
+                        route.id && route.name && route.points
+                    );
+                case 'users':
+                    return Array.isArray(data) && data.every(user => 
+                        user.id && user.username && user.email
+                    );
+                case 'playerData':
+                    return data && typeof data.xp === 'number' && typeof data.level === 'number';
+                default:
+                    return data !== null && data !== undefined;
+            }
+        }
+        
+        function getBackupData(key, defaultValue) {
+            try {
+                const backup = localStorage.getItem('driverhub_backup');
+                if (backup) {
+                    const backupData = JSON.parse(backup);
+                    if (backupData.userData && backupData.userData[key]) {
+                        console.log(`🔄 Restored ${key} from backup`);
+                        return backupData.userData[key];
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to restore from backup:', error);
+            }
+            return defaultValue;
+        }
+        
+        function createDataBackup() {
+            try {
+                const backupData = {
+                    version: "1.0.0",
+                    timestamp: new Date().toISOString(),
+                    userData: {
+                        currentUser: currentUser,
+                        users: users,
+                        playerData: playerData,
+                        routes: safeGetItem('routes', []),
+                        posts: safeGetItem('posts', []),
+                        performanceMetrics: performanceMetrics
+                    },
+                    settings: backupSettings
+                };
+                
+                safeSetItem('driverhub_backup', backupData);
+                backupSettings.lastBackup = new Date().toISOString();
+                safeSetItem('backupSettings', backupSettings);
+                
+                console.log('✅ Data backup created successfully');
+                return true;
+            } catch (error) {
+                console.error('❌ Failed to create backup:', error);
+                return false;
+            }
+        }
+        
+        function startDataValidation() {
+            setInterval(() => {
+                validateAllData();
+            }, DATA_CONFIG.VALIDATION_INTERVAL);
+        }
+        
+        function validateAllData() {
+            const criticalData = ['posts', 'routes', 'users', 'playerData'];
+            let hasErrors = false;
+            
+            criticalData.forEach(key => {
+                const data = safeGetItem(key);
+                if (!validateDataIntegrity(key, data)) {
+                    console.error(`❌ Data validation failed for ${key}`);
+                    hasErrors = true;
+                }
+            });
+            
+            if (hasErrors) {
+                console.log('🔄 Attempting data recovery...');
+                attemptDataRecovery();
+            }
+        }
+        
+        function attemptDataRecovery() {
+            // Try to restore from backup
+            const backup = safeGetItem('driverhub_backup');
+            if (backup && backup.userData) {
+                console.log('🔄 Restoring data from backup...');
+                
+                if (backup.userData.posts) safeSetItem('posts', backup.userData.posts);
+                if (backup.userData.routes) safeSetItem('routes', backup.userData.routes);
+                if (backup.userData.users) safeSetItem('users', backup.userData.users);
+                if (backup.userData.playerData) safeSetItem('playerData', backup.userData.playerData);
+                
+                showDataRecoveryNotification();
+            } else {
+                console.error('❌ No backup available for recovery');
+                showDataLossWarning();
+            }
+        }
+        
+        function showDataError(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            `;
+            notification.innerHTML = `⚠️ ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+        
+        function showDataRecoveryNotification() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            `;
+            notification.innerHTML = '✅ Data recovered from backup successfully';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        function showDataLossWarning() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #f59e0b, #d97706);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            `;
+            notification.innerHTML = '⚠️ Data integrity issues detected. Please refresh the page.';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 8000);
+        }
         
         // Performance monitoring
         let performanceMetrics = {
@@ -3850,6 +4098,9 @@
             
             // Initialize session persistence first
             initializeSessionPersistence();
+            
+            // Initialize data persistence
+            initializeDataPersistence();
             
             // Check authentication first
             checkAuthStatus();
@@ -3994,10 +4245,10 @@
                 liked: false
             };
 
-            // Save to localStorage
-            const savedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+            // Save to localStorage with data protection
+            const savedPosts = safeGetItem('posts', []);
             savedPosts.unshift(post);
-            localStorage.setItem('posts', JSON.stringify(savedPosts));
+            safeSetItem('posts', savedPosts);
 
             // Award XP for photo sharing if photos were included
             if (selectedPhotos.length > 0) {
@@ -5785,6 +6036,42 @@
                     console.error('Error checking session persistence:', error);
                 }
             }
+        }
+        
+        function initializeDataPersistence() {
+            console.log('🔄 Initializing data persistence system...');
+            
+            // Load data using safe methods
+            users = safeGetItem('users', []);
+            playerData = safeGetItem('playerData', {
+                xp: 0,
+                level: 1,
+                totalDistance: 0,
+                totalDrives: 0,
+                achievements: []
+            });
+            
+            // Create initial backup if none exists
+            if (!localStorage.getItem('driverhub_backup')) {
+                console.log('🔄 Creating initial data backup...');
+                createDataBackup();
+            }
+            
+            // Start data validation
+            startDataValidation();
+            
+            // Set up periodic backups
+            setInterval(() => {
+                console.log('🔄 Creating periodic backup...');
+                createDataBackup();
+            }, DATA_CONFIG.BACKUP_FREQUENCY);
+            
+            // Set up beforeunload backup
+            window.addEventListener('beforeunload', () => {
+                createDataBackup();
+            });
+            
+            console.log('✅ Data persistence system initialized');
         }
         
         function checkAuthStatus() {
@@ -7860,9 +8147,9 @@
                 };
                 
                 // Save to localStorage
-                const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+                const routes = safeGetItem('routes', []);
                 routes.unshift(route);
-                localStorage.setItem('routes', JSON.stringify(routes));
+                safeSetItem('routes', routes);
                 
                 console.log('Route saved successfully:', route);
                 
