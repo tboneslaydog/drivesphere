@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveSphere OG Image</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0a0a0a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #00bfff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .background-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 123, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 191, 255, 0.05) 0%, transparent 50%);
+        }
+        
+        .logo {
+            font-size: 120px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+            z-index: 2;
+        }
+        
+        .subtitle {
+            font-size: 36px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            text-align: center;
+            z-index: 2;
+        }
+        
+        .features {
+            display: flex;
+            gap: 40px;
+            z-index: 2;
+        }
+        
+        .feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 24px;
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .domain {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #00bfff;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div>
+    <div class="logo">DriveSphere</div>
+    <div class="subtitle">Social GPS Tracking & Route Sharing</div>
+    <div class="features">
+        <div class="feature">
+            <div class="feature-icon">🗺️</div>
+            <div>GPS Tracking</div>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">👥</div>
+            <div>Social Features</div>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">📊</div>
+            <div>Analytics</div>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🏆</div>
+            <div>XP System</div>
+        </div>
+    </div>
+    <div class="domain">drivesphere.org</div>
+</body>
+</html>

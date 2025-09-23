@@ -3,15 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>DriveSphere - Social GPS Tracking</title>
+    <title>DriveSphere - Social GPS Tracking & Route Sharing</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="DriveSphere - The ultimate social GPS tracking app. Share routes, track drives, earn XP, and connect with friends. Real-time location sharing and advanced analytics.">
+    <meta name="keywords" content="GPS tracking, route sharing, social driving, location sharing, drive analytics, friends, XP system, mobile app">
+    <meta name="author" content="DriveSphere">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://drivesphere.org">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="DriveSphere - Social GPS Tracking & Route Sharing">
+    <meta property="og:description" content="The ultimate social GPS tracking app. Share routes, track drives, earn XP, and connect with friends.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://drivesphere.org">
+    <meta property="og:site_name" content="DriveSphere">
+    <meta property="og:image" content="https://drivesphere.org/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="DriveSphere - Social GPS Tracking App">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="DriveSphere - Social GPS Tracking & Route Sharing">
+    <meta name="twitter:description" content="The ultimate social GPS tracking app. Share routes, track drives, earn XP, and connect with friends.">
+    <meta name="twitter:image" content="https://drivesphere.org/og-image.png">
+    <meta name="twitter:image:alt" content="DriveSphere - Social GPS Tracking App">
     
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#1e293b">
+    <meta name="theme-color" content="#00bfff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="DriveSphere">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="msapplication-TileColor" content="#1e293b">
+    <meta name="msapplication-TileColor" content="#00bfff">
     <meta name="msapplication-tap-highlight" content="no">
     
     <!-- PWA Manifest -->
@@ -21,7 +46,20 @@
     <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWUyOTNiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0OCIgZmlsbD0iIzNiODJmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkQ8L3RleHQ+PC9zdmc+">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFlMjkzYiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMzYjgyZjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5EPC90ZXh0Pjwvc3ZnPg==">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzBhMWIyZiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMwMGJmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5EPC90ZXh0Pjwvc3ZnPg==">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID', {
+            'custom_map': {'custom_parameter_1': 'user_level', 'custom_parameter_2': 'total_distance'},
+            'send_page_view': true
+        });
+    </script>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <style>
