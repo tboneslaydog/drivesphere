@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "drivesphere-app"
-  }
+  },
+  "targets": {
+    "drivesphere-app": {
+      "hosting": {
+        "drivesphere-app": [
+          "drivesphere-app"
+        ],
+        "drivesphere-org": [
+          "drivesphere-org"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

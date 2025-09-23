@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://drivesphere.org/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow admin pages
+Disallow: /admin
+Disallow: /admin/
+
+# Allow all other content
+Allow: /dashboard
+Allow: /routes
+Allow: /feed
+Allow: /analytics
+Allow: /profile
