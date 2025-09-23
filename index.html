@@ -2150,6 +2150,68 @@
             border-radius: 1rem;
             padding: 1.5rem;
             margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .route-post {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(30, 41, 59, 0.8));
+        }
+        
+        .live-post {
+            border-left: 4px solid #ef4444;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(30, 41, 59, 0.8));
+            animation: pulse 2s infinite;
+        }
+        
+        .post-type-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        
+        .route-badge {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .live-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .route-info, .live-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .route-stats, .live-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .route-stat, .live-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #cbd5e1;
+        }
+        
+        .stat-icon {
+            font-size: 1.2rem;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: #f1f5f9;
         }
 
         .post-header {
@@ -3993,11 +4055,49 @@
                 }
             ];
         }
+        
+        function generateFriendsRoutePosts() {
+            const friendsRoutes = JSON.parse(localStorage.getItem('friendsRoutes') || '[]');
+            const liveData = JSON.parse(localStorage.getItem('liveTrackingData') || '{}');
+            
+            // Convert friends routes to post format
+            const routePosts = friendsRoutes.map(route => ({
+                id: `route-${route.id}`,
+                username: route.username || 'Friend',
+                text: `🗺️ Shared a new route: "${route.name}" - ${route.distance.toFixed(1)} miles in ${route.duration} minutes`,
+                photos: route.photos || [],
+                timestamp: route.timestamp || Date.now() - Math.random() * 86400000, // Random time in last 24 hours
+                likes: Math.floor(Math.random() * 20) + 5,
+                liked: false,
+                comments: [],
+                type: 'route',
+                routeData: route
+            }));
+            
+            // Convert live friends to route posts
+            const livePosts = Object.values(liveData)
+                .filter(friend => friend.userId !== currentUser.username && friend.status === 'driving')
+                .map(friend => ({
+                    id: `live-${friend.userId}-${Date.now()}`,
+                    username: friend.userId,
+                    text: `🔴 Currently driving live! ${friend.speed || 0} mph - ${friend.distance || 0} miles traveled`,
+                    photos: [],
+                    timestamp: Date.now() - Math.random() * 3600000, // Random time in last hour
+                    likes: Math.floor(Math.random() * 15) + 3,
+                    liked: false,
+                    comments: [],
+                    type: 'live',
+                    liveData: friend
+                }));
+            
+            return [...routePosts, ...livePosts];
+        }
 
         function loadFeed() {
             const userPosts = JSON.parse(localStorage.getItem('posts') || '[]');
             const mockPosts = generateMockPosts();
-            const allPosts = [...userPosts, ...mockPosts].sort((a, b) => b.timestamp - a.timestamp);
+            const friendsRoutes = generateFriendsRoutePosts();
+            const allPosts = [...userPosts, ...mockPosts, ...friendsRoutes].sort((a, b) => b.timestamp - a.timestamp);
 
             const feedContainer = document.getElementById('feedPosts');
             if (!feedContainer) return;
@@ -4005,15 +4105,22 @@
             feedContainer.innerHTML = allPosts.map(post => {
                 const comments = post.comments || [];
                 const commentCount = comments.length;
+                const isRoutePost = post.type === 'route';
+                const isLivePost = post.type === 'live';
                 
                 return `
-                <div class="feed-post" id="post-${post.id}">
+                <div class="feed-post ${isRoutePost ? 'route-post' : ''} ${isLivePost ? 'live-post' : ''}" id="post-${post.id}">
                     <div class="post-header">
                         <div class="post-avatar">${post.username.charAt(0).toUpperCase()}</div>
                         <div class="post-info">
                             <div class="post-username">${post.username}</div>
                             <div class="post-time">${formatPostTime(post.timestamp)}</div>
                         </div>
+                        ${isRoutePost ? `
+                            <div class="post-type-badge route-badge">🗺️ Route</div>
+                        ` : isLivePost ? `
+                            <div class="post-type-badge live-badge">🔴 Live</div>
+                        ` : ''}
                         ${post.username === 'You' ? `
                             <button class="post-delete-btn" onclick="deletePost('${post.id}')" title="Delete Post">
                                 ×
@@ -4022,6 +4129,50 @@
                     </div>
                     
                     ${post.text ? `<div class="post-content">${post.text}</div>` : ''}
+                    
+                    ${isRoutePost && post.routeData ? `
+                        <div class="route-info">
+                            <div class="route-stats">
+                                <div class="route-stat">
+                                    <span class="stat-icon">📏</span>
+                                    <span class="stat-value">${post.routeData.distance.toFixed(1)} mi</span>
+                                </div>
+                                <div class="route-stat">
+                                    <span class="stat-icon">⏱️</span>
+                                    <span class="stat-value">${post.routeData.duration} min</span>
+                                </div>
+                                <div class="route-stat">
+                                    <span class="stat-icon">🚗</span>
+                                    <span class="stat-value">${post.routeData.avgSpeed || 0} mph</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="viewRoute('${post.routeData.id}')" style="margin-top: 0.5rem;">
+                                View Route Details
+                            </button>
+                        </div>
+                    ` : ''}
+                    
+                    ${isLivePost && post.liveData ? `
+                        <div class="live-info">
+                            <div class="live-stats">
+                                <div class="live-stat">
+                                    <span class="stat-icon">🚗</span>
+                                    <span class="stat-value">${post.liveData.speed || 0} mph</span>
+                                </div>
+                                <div class="live-stat">
+                                    <span class="stat-icon">📍</span>
+                                    <span class="stat-value">${post.liveData.distance || 0} mi</span>
+                                </div>
+                                <div class="live-stat">
+                                    <span class="stat-icon">🕐</span>
+                                    <span class="stat-value">${post.liveData.duration || '0:00'}</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary" onclick="followFriend('${post.liveData.userId}')" style="margin-top: 0.5rem;">
+                                Follow Live
+                            </button>
+                        </div>
+                    ` : ''}
                     
                     ${post.photos && post.photos.length > 0 ? `
                         <div class="post-photos">
@@ -8217,6 +8368,51 @@
                 // Refresh dashboard data
                 updateDashboard();
             }
+        }
+        
+        function viewRoute(routeId) {
+            // Switch to routes page and show the specific route
+            showPage('routes');
+            showRouteTab('friends-routes');
+            
+            // Highlight the specific route
+            setTimeout(() => {
+                const routeElement = document.querySelector(`[data-route-id="${routeId}"]`);
+                if (routeElement) {
+                    routeElement.scrollIntoView({ behavior: 'smooth' });
+                    routeElement.style.animation = 'pulse 1s ease-in-out';
+                }
+            }, 500);
+        }
+        
+        function followFriend(userId) {
+            // Switch to live friends tab
+            showPage('routes');
+            showRouteTab('live-friends');
+            
+            // Show notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            `;
+            notification.innerHTML = `🔴 Now following ${userId}'s live drive`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
         
         function showXPExplanation() {
