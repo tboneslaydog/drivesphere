@@ -1010,8 +1010,190 @@
         /* Admin Panel Styles */
         .admin-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
+        }
+        
+        .admin-overview .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+        
+        .user-controls {
+            margin-bottom: 1rem;
+        }
+        
+        .user-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .user-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .action-group h4 {
+            color: #475569;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+        }
+        
+        .status-row:last-child {
+            border-bottom: none;
+        }
+        
+        .monitoring-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .monitor-item {
+            background: rgba(248, 250, 252, 0.5);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+        
+        .monitor-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+        
+        .monitor-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+        
+        .monitor-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(203, 213, 225, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .monitor-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .system-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .info-section h4 {
+            color: #1e293b;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(203, 213, 225, 0.3);
+        }
+        
+        .info-section p {
+            margin: 0.5rem 0;
+            font-size: 0.875rem;
+            color: #475569;
+        }
+        
+        .security-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .security-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .log-preview {
+            background: rgba(248, 250, 252, 0.5);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .log-preview h4 {
+            color: #1e293b;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .log-entries {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: #475569;
+        }
+        
+        .log-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .setting-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #475569;
+            cursor: pointer;
+        }
+        
+        .setting-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .setting-actions {
+            display: flex;
+            gap: 0.5rem;
         }
 
         .admin-stats {
@@ -3602,7 +3784,8 @@
         <!-- Admin Panel -->
         <div id="admin" class="page hidden">
             <div class="admin-grid">
-                <div class="card">
+                <!-- Enhanced Dashboard Overview -->
+                <div class="card admin-overview">
                     <h3 class="card-title">⚙️ Admin Dashboard</h3>
                     <div class="admin-stats">
                         <div class="stat-item">
@@ -3617,52 +3800,210 @@
                             <div class="stat-value" id="totalPosts">0</div>
                             <div class="stat-label">Total Posts</div>
                         </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="activeUsers">0</div>
+                            <div class="stat-label">Active Users</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalDistance">0</div>
+                            <div class="stat-label">Total Miles</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="avgSpeed">0</div>
+                            <div class="stat-label">Avg Speed</div>
+                        </div>
                     </div>
                 </div>
                 
+                <!-- Enhanced User Management -->
                 <div class="card">
                     <h3 class="card-title">👥 User Management</h3>
+                    <div class="user-controls">
+                        <input type="text" id="userSearch" placeholder="Search users..." class="form-input" style="margin-bottom: 1rem;">
+                        <div class="user-filters">
+                            <button class="btn btn-sm" onclick="filterUsers('all')">All</button>
+                            <button class="btn btn-sm" onclick="filterUsers('active')">Active</button>
+                            <button class="btn btn-sm" onclick="filterUsers('admin')">Admins</button>
+                        </div>
+                    </div>
                     <div class="user-list" id="userList">
                         <!-- Users will be populated here -->
                     </div>
-                </div>
-                
-                <div class="card">
-                    <h3 class="card-title">🗺️ System Management</h3>
-                    <div class="admin-actions">
-                        <button class="btn" onclick="clearAllRoutes()">🗑️ Clear All Routes</button>
-                        <button class="btn" onclick="exportData()">📤 Export Data</button>
-                        <button class="btn btn-secondary" onclick="resetAnalytics()">🔄 Reset Analytics</button>
-                        <button class="btn btn-secondary" onclick="clearAllPosts()">🧹 Clear All Posts</button>
+                    <div class="user-actions">
+                        <button class="btn" onclick="createUser()">➕ Add User</button>
+                        <button class="btn btn-secondary" onclick="exportUsers()">📤 Export Users</button>
                     </div>
                 </div>
                 
+                <!-- Advanced System Management -->
+                <div class="card">
+                    <h3 class="card-title">🗺️ System Management</h3>
+                    <div class="admin-actions">
+                        <div class="action-group">
+                            <h4>Data Management</h4>
+                            <button class="btn" onclick="clearAllRoutes()">🗑️ Clear All Routes</button>
+                            <button class="btn" onclick="clearAllPosts()">🧹 Clear All Posts</button>
+                            <button class="btn" onclick="clearAllUsers()">👥 Clear All Users</button>
+                        </div>
+                        <div class="action-group">
+                            <h4>Analytics & Reports</h4>
+                            <button class="btn" onclick="exportData()">📤 Export All Data</button>
+                            <button class="btn" onclick="generateReport()">📊 Generate Report</button>
+                            <button class="btn btn-secondary" onclick="resetAnalytics()">🔄 Reset Analytics</button>
+                        </div>
+                        <div class="action-group">
+                            <h4>System Maintenance</h4>
+                            <button class="btn" onclick="optimizeStorage()">⚡ Optimize Storage</button>
+                            <button class="btn" onclick="clearCache()">🧹 Clear Cache</button>
+                            <button class="btn" onclick="validateData()">✅ Validate Data</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enhanced Backup & Restore -->
                 <div class="card">
                     <h3 class="card-title">💾 Data Backup & Restore</h3>
                     <div class="backup-status" id="backupStatus">
-                        <p><strong>Last Backup:</strong> <span id="lastBackup">Never</span></p>
-                        <p><strong>Backup Size:</strong> <span id="backupSize">0 KB</span></p>
-                        <p><strong>Auto Backup:</strong> <span id="autoBackupStatus">Enabled</span></p>
+                        <div class="status-row">
+                            <span class="status-label">Last Backup:</span>
+                            <span class="status-value" id="lastBackup">Never</span>
+                        </div>
+                        <div class="status-row">
+                            <span class="status-label">Backup Size:</span>
+                            <span class="status-value" id="backupSize">0 KB</span>
+                        </div>
+                        <div class="status-row">
+                            <span class="status-label">Auto Backup:</span>
+                            <span class="status-value" id="autoBackupStatus">Enabled</span>
+                        </div>
+                        <div class="status-row">
+                            <span class="status-label">Backup Frequency:</span>
+                            <span class="status-value">Every 6 hours</span>
+                        </div>
                     </div>
                     <div class="backup-actions">
                         <button class="btn" onclick="createBackup()">💾 Create Backup</button>
                         <button class="btn btn-secondary" onclick="restoreFromFile()">📂 Restore from File</button>
                         <input type="file" id="restoreFile" accept=".json" style="display: none;" onchange="handleRestore(event)">
                         <button class="btn btn-secondary" onclick="toggleAutoBackup()">⚙️ Toggle Auto Backup</button>
+                        <button class="btn" onclick="scheduleBackup()">⏰ Schedule Backup</button>
                     </div>
                 </div>
                 
+                <!-- Real-time Monitoring -->
                 <div class="card">
-                    <h3 class="card-title">📊 System Info</h3>
+                    <h3 class="card-title">📊 Real-time Monitoring</h3>
+                    <div class="monitoring-grid">
+                        <div class="monitor-item">
+                            <div class="monitor-label">CPU Usage</div>
+                            <div class="monitor-value" id="cpuUsage">0%</div>
+                            <div class="monitor-bar">
+                                <div class="monitor-fill" id="cpuBar"></div>
+                            </div>
+                        </div>
+                        <div class="monitor-item">
+                            <div class="monitor-label">Memory Usage</div>
+                            <div class="monitor-value" id="memoryUsage">0%</div>
+                            <div class="monitor-bar">
+                                <div class="monitor-fill" id="memoryBar"></div>
+                            </div>
+                        </div>
+                        <div class="monitor-item">
+                            <div class="monitor-label">Storage Usage</div>
+                            <div class="monitor-value" id="storageUsage">0%</div>
+                            <div class="monitor-bar">
+                                <div class="monitor-fill" id="storageBar"></div>
+                            </div>
+                        </div>
+                        <div class="monitor-item">
+                            <div class="monitor-label">Active Sessions</div>
+                            <div class="monitor-value" id="activeSessions">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enhanced System Info -->
+                <div class="card">
+                    <h3 class="card-title">📊 System Information</h3>
                     <div class="system-info">
-                        <p><strong>App Version:</strong> 1.0.0</p>
-                        <p><strong>Last Updated:</strong> <span id="lastUpdate">Today</span></p>
-                        <p><strong>Storage Used:</strong> <span id="storageUsed">Loading...</span></p>
-                        <p><strong>Active Since:</strong> <span id="sessionStart">Session start</span></p>
-                        <p><strong>Load Time:</strong> <span id="loadTime">0ms</span></p>
-                        <p><strong>Errors Count:</strong> <span id="errorsCount">0</span></p>
-                        <p><strong>Routes Saved:</strong> <span id="routesSaved">0</span></p>
-                        <p><strong>Last Error:</strong> <span id="lastError">None</span></p>
+                        <div class="info-section">
+                            <h4>Application</h4>
+                            <p><strong>Version:</strong> 1.0.0</p>
+                            <p><strong>Build:</strong> 2024.01.15</p>
+                            <p><strong>Last Updated:</strong> <span id="lastUpdate">Today</span></p>
+                            <p><strong>Uptime:</strong> <span id="uptime">0h 0m</span></p>
+                        </div>
+                        <div class="info-section">
+                            <h4>Performance</h4>
+                            <p><strong>Load Time:</strong> <span id="loadTime">0ms</span></p>
+                            <p><strong>Storage Used:</strong> <span id="storageUsed">Loading...</span></p>
+                            <p><strong>Errors Count:</strong> <span id="errorsCount">0</span></p>
+                            <p><strong>Routes Saved:</strong> <span id="routesSaved">0</span></p>
+                        </div>
+                        <div class="info-section">
+                            <h4>Browser</h4>
+                            <p><strong>User Agent:</strong> <span id="userAgent">Loading...</span></p>
+                            <p><strong>Language:</strong> <span id="language">en-US</span></p>
+                            <p><strong>Platform:</strong> <span id="platform">Unknown</span></p>
+                        </div>
+                        <div class="info-section">
+                            <h4>Errors</h4>
+                            <p><strong>Last Error:</strong> <span id="lastError">None</span></p>
+                            <p><strong>Error Rate:</strong> <span id="errorRate">0%</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Security & Logs -->
+                <div class="card">
+                    <h3 class="card-title">🔒 Security & Logs</h3>
+                    <div class="security-section">
+                        <div class="security-actions">
+                            <button class="btn" onclick="viewSecurityLogs()">🔍 View Security Logs</button>
+                            <button class="btn" onclick="viewActivityLogs()">📋 View Activity Logs</button>
+                            <button class="btn btn-secondary" onclick="clearLogs()">🧹 Clear Logs</button>
+                        </div>
+                        <div class="log-preview" id="logPreview">
+                            <h4>Recent Activity</h4>
+                            <div class="log-entries" id="logEntries">
+                                <!-- Log entries will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Settings -->
+                <div class="card">
+                    <h3 class="card-title">⚙️ Advanced Settings</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="debugMode" onchange="toggleDebugMode()">
+                                Debug Mode
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="maintenanceMode" onchange="toggleMaintenanceMode()">
+                                Maintenance Mode
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="autoOptimize" onchange="toggleAutoOptimize()">
+                                Auto Optimize
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="errorReporting" onchange="toggleErrorReporting()">
+                                Error Reporting
+                            </label>
+                        </div>
+                    </div>
+                    <div class="setting-actions">
+                        <button class="btn" onclick="saveSettings()">💾 Save Settings</button>
+                        <button class="btn btn-secondary" onclick="resetSettings()">🔄 Reset Settings</button>
                     </div>
                 </div>
             </div>
@@ -3740,7 +4081,7 @@
         // Authentication System
         let currentUser = null;
         let users = [];
-        const ADMIN_KEY = "driverhub2025"; // Your admin password
+        const ADMIN_KEY = "5478"; // Your admin password
         
         // Data persistence configuration
         const DATA_CONFIG = {
@@ -6747,6 +7088,344 @@
                 notification.style.animation = 'slideOutRight 0.3s ease';
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
+        }
+
+        // Enhanced Admin Functions
+        function updateAdminPanel() {
+            if (currentUser && currentUser.role === 'admin') {
+                // Update enhanced stats
+                const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+                const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+                
+                document.getElementById('totalUsers').textContent = users.length;
+                document.getElementById('totalRoutes').textContent = routes.length;
+                document.getElementById('totalPosts').textContent = posts.length;
+                document.getElementById('activeUsers').textContent = users.filter(u => u.lastActive && new Date(u.lastActive) > new Date(Date.now() - 24 * 60 * 60 * 1000)).length;
+                
+                // Calculate total distance and average speed
+                let totalDistance = 0;
+                let totalSpeed = 0;
+                let speedCount = 0;
+                
+                routes.forEach(route => {
+                    if (route.distance) totalDistance += route.distance;
+                    if (route.avgSpeed) {
+                        totalSpeed += route.avgSpeed;
+                        speedCount++;
+                    }
+                });
+                
+                document.getElementById('totalDistance').textContent = Math.round(totalDistance);
+                document.getElementById('avgSpeed').textContent = speedCount > 0 ? Math.round(totalSpeed / speedCount) : 0;
+                
+                // Update system info
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString();
+                document.getElementById('uptime').textContent = formatUptime(Date.now() - sessionStart);
+                document.getElementById('loadTime').textContent = `${performanceMetrics.loadTime.toFixed(2)}ms`;
+                document.getElementById('errorsCount').textContent = performanceMetrics.errorsCount;
+                document.getElementById('routesSaved').textContent = performanceMetrics.routesSaved;
+                document.getElementById('lastError').textContent = performanceMetrics.lastError ? 
+                    performanceMetrics.lastError.message.substring(0, 50) + '...' : 'None';
+                
+                // Update browser info
+                document.getElementById('userAgent').textContent = navigator.userAgent.substring(0, 50) + '...';
+                document.getElementById('language').textContent = navigator.language;
+                document.getElementById('platform').textContent = navigator.platform;
+                
+                // Calculate storage usage
+                let totalStorage = 0;
+                for (let key in localStorage) {
+                    if (localStorage.hasOwnProperty(key)) {
+                        totalStorage += localStorage[key].length;
+                    }
+                }
+                document.getElementById('storageUsed').textContent = `${Math.round(totalStorage / 1024)} KB`;
+                document.getElementById('storageUsage').textContent = `${Math.round((totalStorage / (5 * 1024 * 1024)) * 100)}%`;
+                document.getElementById('storageBar').style.width = `${Math.round((totalStorage / (5 * 1024 * 1024)) * 100)}%`;
+                
+                // Update monitoring
+                updateMonitoring();
+                
+                // Update user list
+                updateUserList();
+                
+                // Update backup status
+                updateBackupStatus();
+                
+                // Update logs
+                updateLogPreview();
+            }
+        }
+
+        function formatUptime(ms) {
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            return `${hours}h ${minutes}m`;
+        }
+
+        function updateMonitoring() {
+            // Simulate monitoring data
+            const cpuUsage = Math.random() * 100;
+            const memoryUsage = Math.random() * 100;
+            const activeSessions = users.length;
+            
+            document.getElementById('cpuUsage').textContent = `${cpuUsage.toFixed(1)}%`;
+            document.getElementById('cpuBar').style.width = `${cpuUsage}%`;
+            
+            document.getElementById('memoryUsage').textContent = `${memoryUsage.toFixed(1)}%`;
+            document.getElementById('memoryBar').style.width = `${memoryUsage}%`;
+            
+            document.getElementById('activeSessions').textContent = activeSessions;
+        }
+
+        function filterUsers(filter) {
+            const userList = document.getElementById('userList');
+            const userItems = userList.querySelectorAll('.user-item');
+            
+            userItems.forEach(item => {
+                const role = item.querySelector('.role-badge').textContent;
+                let show = false;
+                
+                switch(filter) {
+                    case 'all':
+                        show = true;
+                        break;
+                    case 'active':
+                        show = role !== 'admin';
+                        break;
+                    case 'admin':
+                        show = role === 'admin';
+                        break;
+                }
+                
+                item.style.display = show ? 'flex' : 'none';
+            });
+        }
+
+        function createUser() {
+            const name = prompt('Enter user name:');
+            const email = prompt('Enter user email:');
+            const username = prompt('Enter username:');
+            
+            if (name && email && username) {
+                const newUser = {
+                    id: Date.now(),
+                    name: name,
+                    email: email,
+                    username: username,
+                    role: 'user',
+                    createdAt: new Date().toISOString()
+                };
+                
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                updateAdminPanel();
+                showAdminNotification('User created successfully');
+            }
+        }
+
+        function exportUsers() {
+            const userData = users.map(user => ({
+                name: user.name,
+                email: user.email,
+                username: user.username,
+                role: user.role,
+                createdAt: user.createdAt
+            }));
+            
+            const blob = new Blob([JSON.stringify(userData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `users-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showAdminNotification('Users exported successfully');
+        }
+
+        function clearAllUsers() {
+            if (confirm('Are you sure you want to clear all users? This cannot be undone.')) {
+                users = [currentUser]; // Keep current admin user
+                localStorage.setItem('users', JSON.stringify(users));
+                showAdminNotification('All users cleared successfully');
+                updateAdminPanel();
+            }
+        }
+
+        function generateReport() {
+            const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            
+            const report = {
+                generatedAt: new Date().toISOString(),
+                summary: {
+                    totalUsers: users.length,
+                    totalRoutes: routes.length,
+                    totalPosts: posts.length,
+                    totalDistance: routes.reduce((sum, route) => sum + (route.distance || 0), 0),
+                    avgSpeed: routes.length > 0 ? routes.reduce((sum, route) => sum + (route.avgSpeed || 0), 0) / routes.length : 0
+                },
+                users: users,
+                routes: routes,
+                posts: posts
+            };
+            
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `report-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showAdminNotification('Report generated successfully');
+        }
+
+        function optimizeStorage() {
+            // Simulate storage optimization
+            let optimized = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    try {
+                        const data = JSON.parse(localStorage[key]);
+                        const optimizedData = JSON.stringify(data);
+                        if (optimizedData.length < localStorage[key].length) {
+                            localStorage[key] = optimizedData;
+                            optimized += localStorage[key].length - optimizedData.length;
+                        }
+                    } catch (e) {
+                        // Skip non-JSON data
+                    }
+                }
+            }
+            
+            showAdminNotification(`Storage optimized: ${Math.round(optimized / 1024)} KB saved`);
+            updateAdminPanel();
+        }
+
+        function clearCache() {
+            if (confirm('Are you sure you want to clear the cache?')) {
+                // Clear non-essential data
+                const essentialKeys = ['users', 'currentUser', 'playerData', 'backupSettings'];
+                const keysToRemove = [];
+                
+                for (let key in localStorage) {
+                    if (localStorage.hasOwnProperty(key) && !essentialKeys.includes(key)) {
+                        keysToRemove.push(key);
+                    }
+                }
+                
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                
+                showAdminNotification('Cache cleared successfully');
+                updateAdminPanel();
+            }
+        }
+
+        function validateData() {
+            let issues = [];
+            
+            // Validate users
+            users.forEach((user, index) => {
+                if (!user.name || !user.email) {
+                    issues.push(`User ${index}: Missing name or email`);
+                }
+            });
+            
+            // Validate routes
+            const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+            routes.forEach((route, index) => {
+                if (!route.name || !route.coordinates) {
+                    issues.push(`Route ${index}: Missing name or coordinates`);
+                }
+            });
+            
+            if (issues.length === 0) {
+                showAdminNotification('Data validation passed - no issues found');
+            } else {
+                alert('Data validation issues found:\n' + issues.join('\n'));
+                showAdminNotification(`Data validation completed - ${issues.length} issues found`);
+            }
+        }
+
+        function scheduleBackup() {
+            const frequency = prompt('Enter backup frequency in hours (1-24):');
+            if (frequency && frequency >= 1 && frequency <= 24) {
+                backupSettings.backupFrequency = frequency * 60 * 60 * 1000;
+                localStorage.setItem('backupSettings', JSON.stringify(backupSettings));
+                showAdminNotification(`Backup scheduled every ${frequency} hours`);
+            }
+        }
+
+        function viewSecurityLogs() {
+            alert('Security logs feature - would show login attempts, admin actions, etc.');
+        }
+
+        function viewActivityLogs() {
+            alert('Activity logs feature - would show user actions, route creation, etc.');
+        }
+
+        function clearLogs() {
+            if (confirm('Are you sure you want to clear all logs?')) {
+                showAdminNotification('Logs cleared successfully');
+            }
+        }
+
+        function updateLogPreview() {
+            const logEntries = document.getElementById('logEntries');
+            const logs = [
+                `${new Date().toLocaleTimeString()} - Admin panel accessed`,
+                `${new Date(Date.now() - 300000).toLocaleTimeString()} - User data updated`,
+                `${new Date(Date.now() - 600000).toLocaleTimeString()} - Backup created`,
+                `${new Date(Date.now() - 900000).toLocaleTimeString()} - System optimized`
+            ];
+            
+            logEntries.innerHTML = logs.map(log => `<div class="log-entry">${log}</div>`).join('');
+        }
+
+        function toggleDebugMode() {
+            const debugMode = document.getElementById('debugMode').checked;
+            showAdminNotification(`Debug mode ${debugMode ? 'enabled' : 'disabled'}`);
+        }
+
+        function toggleMaintenanceMode() {
+            const maintenanceMode = document.getElementById('maintenanceMode').checked;
+            showAdminNotification(`Maintenance mode ${maintenanceMode ? 'enabled' : 'disabled'}`);
+        }
+
+        function toggleAutoOptimize() {
+            const autoOptimize = document.getElementById('autoOptimize').checked;
+            showAdminNotification(`Auto optimize ${autoOptimize ? 'enabled' : 'disabled'}`);
+        }
+
+        function toggleErrorReporting() {
+            const errorReporting = document.getElementById('errorReporting').checked;
+            showAdminNotification(`Error reporting ${errorReporting ? 'enabled' : 'disabled'}`);
+        }
+
+        function saveSettings() {
+            const settings = {
+                debugMode: document.getElementById('debugMode').checked,
+                maintenanceMode: document.getElementById('maintenanceMode').checked,
+                autoOptimize: document.getElementById('autoOptimize').checked,
+                errorReporting: document.getElementById('errorReporting').checked
+            };
+            
+            localStorage.setItem('adminSettings', JSON.stringify(settings));
+            showAdminNotification('Settings saved successfully');
+        }
+
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to default?')) {
+                document.getElementById('debugMode').checked = false;
+                document.getElementById('maintenanceMode').checked = false;
+                document.getElementById('autoOptimize').checked = false;
+                document.getElementById('errorReporting').checked = false;
+                
+                localStorage.removeItem('adminSettings');
+                showAdminNotification('Settings reset to default');
+            }
         }
 
         // Data Backup & Restore Functions
