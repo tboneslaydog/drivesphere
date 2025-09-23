@@ -1340,6 +1340,164 @@
             margin-top: 1rem;
         }
 
+        /* Device-specific UI styles */
+        .mobile-ui {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 123, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 191, 255, 0.05) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0a0a0a 100%) !important;
+            color: #00bfff !important;
+        }
+
+        .mobile-ui .card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(26, 26, 46, 0.8) 50%, rgba(22, 33, 62, 0.8) 100%) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 2px solid rgba(0, 191, 255, 0.3) !important;
+            box-shadow: 
+                0 8px 32px rgba(0, 191, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .mobile-ui .status-item {
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 2px solid rgba(0, 191, 255, 0.3) !important;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.15) !important;
+        }
+
+        .mobile-ui .status-label {
+            color: #00bfff !important;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.4) !important;
+        }
+
+        .mobile-ui .status-value {
+            color: #ffffff !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .mobile-ui .btn {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(0, 123, 255, 0.15)) !important;
+            border: 2px solid rgba(0, 191, 255, 0.4) !important;
+            color: #00bfff !important;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.2) !important;
+        }
+
+        .mobile-ui .btn:hover {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.3), rgba(0, 123, 255, 0.3)) !important;
+            box-shadow: 0 6px 20px rgba(0, 191, 255, 0.4) !important;
+        }
+
+        .mobile-ui .navbar {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(26, 26, 46, 0.9)) !important;
+            backdrop-filter: blur(20px) !important;
+            border-bottom: 2px solid #00bfff !important;
+            box-shadow: 0 4px 20px rgba(0, 191, 255, 0.2) !important;
+        }
+
+        .mobile-ui .logo {
+            color: #00bfff !important;
+            text-shadow: 0 0 20px rgba(0, 191, 255, 0.4) !important;
+        }
+
+        .mobile-ui .nav-link {
+            color: #00bfff !important;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(0, 123, 255, 0.1)) !important;
+            border: 1px solid rgba(0, 191, 255, 0.3) !important;
+            box-shadow: 0 2px 10px rgba(0, 191, 255, 0.15) !important;
+        }
+
+        .mobile-ui .nav-link:hover {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.25), rgba(0, 123, 255, 0.25)) !important;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3) !important;
+        }
+
+        .mobile-ui .nav-link.active {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.3), rgba(0, 123, 255, 0.3)) !important;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4) !important;
+            border-color: #00bfff !important;
+        }
+
+        .tablet-ui {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 123, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 191, 255, 0.05) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0a0a0a 100%) !important;
+            color: #00bfff !important;
+        }
+
+        .desktop-ui {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 123, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 191, 255, 0.05) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0a0a0a 100%) !important;
+            color: #00bfff !important;
+        }
+
+        /* Mobile-specific improvements */
+        .mobile-ui .dashboard-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+        }
+
+        .mobile-ui .status-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.75rem !important;
+        }
+
+        .mobile-ui .card-title {
+            color: #00bfff !important;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.4) !important;
+        }
+
+        .mobile-ui .feed-post {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(26, 26, 46, 0.8)) !important;
+            border: 2px solid rgba(0, 191, 255, 0.3) !important;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.15) !important;
+        }
+
+        .mobile-ui .post-username {
+            color: #00bfff !important;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.4) !important;
+        }
+
+        .mobile-ui .post-time {
+            color: #00bfff !important;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.3) !important;
+        }
+
+        .mobile-ui .route-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(26, 26, 46, 0.8)) !important;
+            border: 2px solid rgba(0, 191, 255, 0.3) !important;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.15) !important;
+        }
+
+        .mobile-ui .route-post {
+            border-left: 4px solid #00bfff !important;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(0, 0, 0, 0.8)) !important;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.2) !important;
+        }
+
+        .mobile-ui .live-post {
+            border-left: 4px solid #007bff !important;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.15), rgba(0, 0, 0, 0.8)) !important;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2) !important;
+        }
+
+        /* Ensure all text is visible on mobile */
+        .mobile-ui * {
+            color: inherit !important;
+        }
+
+        .mobile-ui .status-unit {
+            color: #64748b !important;
+        }
+
+        .mobile-ui .post-content {
+            color: #e2e8f0 !important;
+        }
+
         .admin-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -4637,6 +4795,48 @@
             console.log(`DriveSphere loaded in ${performanceMetrics.loadTime.toFixed(2)}ms`);
         });
         
+        // Device detection and UI management
+        let isMobile = false;
+        let isTablet = false;
+        let isDesktop = false;
+
+        function detectDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const screenWidth = window.innerWidth;
+            
+            // Check for mobile devices
+            isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent) || screenWidth <= 768;
+            
+            // Check for tablets
+            isTablet = /ipad|android(?!.*mobile)/i.test(userAgent) || (screenWidth > 768 && screenWidth <= 1024);
+            
+            // Check for desktop
+            isDesktop = !isMobile && !isTablet && screenWidth > 1024;
+            
+            console.log('Device detected:', { isMobile, isTablet, isDesktop, screenWidth });
+            
+            // Apply appropriate UI
+            applyDeviceUI();
+        }
+
+        function applyDeviceUI() {
+            const body = document.body;
+            
+            if (isMobile) {
+                body.classList.add('mobile-ui');
+                body.classList.remove('tablet-ui', 'desktop-ui');
+                console.log('Applied mobile UI');
+            } else if (isTablet) {
+                body.classList.add('tablet-ui');
+                body.classList.remove('mobile-ui', 'desktop-ui');
+                console.log('Applied tablet UI');
+            } else {
+                body.classList.add('desktop-ui');
+                body.classList.remove('mobile-ui', 'tablet-ui');
+                console.log('Applied desktop UI');
+            }
+        }
+
         // Global error handler
         window.addEventListener('error', function(event) {
             console.error('Global error caught:', event.error);
@@ -4679,8 +4879,21 @@
         // Add reset function to window for debugging
         window.resetNavigation = resetNavigation;
 
+        // Listen for window resize to re-detect device
+        window.addEventListener('resize', function() {
+            detectDevice();
+        });
+
+        // Listen for orientation change on mobile
+        window.addEventListener('orientationchange', function() {
+            setTimeout(detectDevice, 100);
+        });
+
         function initializeApp() {
             try {
+                // Detect device and apply appropriate UI
+                detectDevice();
+                
                 // Make sure save modal is hidden on startup
                 const saveModal = document.getElementById('saveModal');
                 if (saveModal) {
