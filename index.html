@@ -7708,13 +7708,20 @@
         }
 
         function switchToRegister() {
+            console.log('switchToRegister called');
             document.getElementById('registerPage').classList.add('active');
             document.getElementById('loginPage').classList.remove('active');
         }
 
         function adminLogin() {
+            console.log('adminLogin called');
             document.getElementById('adminModal').classList.remove('hidden');
         }
+
+        // Make functions globally available
+        window.switchToLogin = switchToLogin;
+        window.switchToRegister = switchToRegister;
+        window.adminLogin = adminLogin;
 
         function closeAdminModal() {
             document.getElementById('adminModal').classList.add('hidden');
