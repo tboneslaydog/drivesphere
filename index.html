@@ -1,0 +1,4741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DriverHub - Social GPS Tracking</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1e293b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DriverHub">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#1e293b">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWUyOTNiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0OCIgZmlsbD0iIzNiODJmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkQ8L3RleHQ+PC9zdmc+">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFlMjkzYiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiMzYjgyZjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5EPC90ZXh0Pjwvc3ZnPg==">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            line-height: 1.5;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.1), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.05), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.1), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.05), transparent),
+                radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.1), transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: sparkle 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes sparkle {
+            0% { transform: translateY(0px) translateX(0px); }
+            100% { transform: translateY(-200px) translateX(-200px); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 0.75rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.025em;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .nav-link:hover {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-link.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .page {
+            margin-top: 1rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Pulse animation for active elements */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Floating elements */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Scroll reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glow effects */
+        .glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .glow-green {
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+        }
+
+        .glow-red {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+        }
+
+        /* G-Force Display Styles */
+        .gforce-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .gforce-main {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 1rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .gforce-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+        }
+
+        .gforce-label {
+            font-size: 1rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .gforce-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .gforce-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .gforce-stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 0.25rem;
+        }
+
+        .gforce-stat-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .gforce-chart {
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .gforce-chart canvas {
+            width: 100%;
+            height: 100px;
+            border-radius: 0.5rem;
+        }
+
+        .gforce-axes {
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.2);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .gforce-axis span {
+            display: block;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .gforce-axis span:first-child {
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Event Notifications */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile G-Force Styles */
+        @media (max-width: 480px) {
+            .gforce-value {
+                font-size: 2.5rem;
+            }
+            
+            .gforce-stats {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .gforce-stat {
+                padding: 0.75rem;
+            }
+            
+            .gforce-axes {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .gforce-axis {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Status Display */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .status-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .status-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .status-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .status-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .status-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .status-unit {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-left: 0.25rem;
+        }
+
+        /* Tracking Controls */
+        .tracking-controls {
+            text-align: center;
+        }
+
+        .track-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border: none;
+            border-radius: 1.25rem;
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 700;
+            padding: 1.25rem 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.4);
+            min-width: 180px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .track-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .track-button:hover::before {
+            left: 100%;
+        }
+
+        .track-button:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 30px 0 rgba(59, 130, 246, 0.6);
+        }
+
+        .track-button.recording {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 6px 20px 0 rgba(239, 68, 68, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .tracking-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 0.75rem;
+            color: #22c55e;
+            font-weight: 500;
+        }
+
+        /* Map */
+        .map-container {
+            height: 300px;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .map-controls .btn {
+            font-size: 0.8rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .map-controls .btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .map-controls .btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .route-overlay {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .route-overlay .btn {
+            font-size: 0.8rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .route-overlay .btn:hover {
+            background: rgba(34, 197, 94, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Route Comparison Modal */
+        .route-comparison-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            padding: 2rem;
+        }
+
+        .route-comparison-content {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 800px;
+        }
+
+        .route-comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .route-comparison-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+
+        .route-stats-comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-comparison {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 0.5rem;
+        }
+
+        .stat-comparison.better {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .stat-comparison.worse {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* QR Code Modal */
+        .qr-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            padding: 2rem;
+        }
+
+        .qr-content {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            display: inline-block;
+        }
+
+        /* POI Markers */
+        .poi-marker {
+            background: #ef4444;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .poi-popup {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            color: #f1f5f9;
+        }
+
+        /* Routes */
+        .routes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .route-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .route-card:hover {
+            background: rgba(30, 41, 59, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .route-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .route-name {
+            font-weight: 600;
+            color: #f1f5f9;
+            font-size: 1.125rem;
+        }
+
+        .route-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .route-badge {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .route-badge.private {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        .route-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .route-stat {
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 0.5rem;
+        }
+
+        .route-stat-value {
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .route-stat-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+
+        .route-timestamp {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        /* Buttons */
+        .btn {
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 0.875rem 1.75rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(148, 163, 184, 0.3);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            padding: 0.375rem;
+            border-radius: 0.375rem;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #f1f5f9;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #e2e8f0;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 0.5rem;
+            color: #f1f5f9;
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .search-bar {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Route Tabs */
+        .route-tab {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .route-tab:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .route-tab.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .route-tab-content {
+            margin-top: 1rem;
+        }
+
+        /* Feed Styles */
+        .create-post {
+            margin-bottom: 1rem;
+        }
+
+        .upload-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .photo-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .photo-preview {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background: rgba(148, 163, 184, 0.1);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-remove {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feed-post {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .post-delete-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .post-delete-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 0.75rem;
+        }
+
+        .post-info {
+            flex-grow: 1;
+        }
+
+        .post-username {
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .post-time {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .post-content {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+
+        .post-photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .post-photo {
+            aspect-ratio: 1;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .post-photo:hover {
+            transform: scale(1.02);
+        }
+
+        .post-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .post-action {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .post-action:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .post-action.liked {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .post-action.liked:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #dc2626;
+        }
+
+        .like-animation {
+            animation: heartBeat 0.6s ease-in-out;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.2); }
+            70% { transform: scale(1); }
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 1rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            padding-top: 1rem;
+        }
+
+        .comment-input-section {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .comment-input-wrapper {
+            flex-grow: 1;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .comment-input {
+            flex-grow: 1;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            color: #f1f5f9;
+            font-size: 0.875rem;
+            resize: none;
+            min-height: 20px;
+            max-height: 100px;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .comment-submit {
+            background: #3b82f6;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .comment-submit:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        .comment-submit:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .comment {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .comment-content {
+            flex-grow: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .comment-username {
+            font-weight: 600;
+            color: #f1f5f9;
+            font-size: 0.875rem;
+        }
+
+        .comment-time {
+            color: #94a3b8;
+            font-size: 0.75rem;
+        }
+
+        .comment-text {
+            color: #e2e8f0;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .comments-toggle {
+            color: #3b82f6;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .comments-toggle:hover {
+            text-decoration: underline;
+        }
+
+        /* Photo Modal */
+        .photo-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            padding: 2rem;
+        }
+
+        .photo-modal img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 1rem;
+        }
+
+        .photo-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.75rem;
+            }
+
+            .navbar {
+                padding: 0.5rem 0.75rem;
+            }
+
+            .nav-links {
+                gap: 0.25rem;
+            }
+
+            .nav-link {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .route-stats {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 0.5rem;
+            }
+
+            .routes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 1rem;
+                border-radius: 0.75rem;
+            }
+
+            .map-container {
+                height: 250px;
+            }
+
+            .track-button {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Enhanced Mobile Features */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .card {
+                padding: 1rem;
+                margin-bottom: 1rem;
+                border-radius: 1rem;
+            }
+            
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            
+            .map-controls {
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .map-controls .btn {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.75rem;
+                min-height: 44px;
+            }
+            
+            .route-overlay {
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+            
+            .route-overlay .btn {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.75rem;
+                min-height: 44px;
+            }
+
+            .track-button {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+                border-radius: 1rem;
+                min-width: 160px;
+            }
+
+            .nav-link {
+                padding: 0.75rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .logo {
+                font-size: 1.125rem;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .btn, .nav-link, .post-action {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .btn-sm {
+                min-height: 36px;
+                min-width: 36px;
+            }
+            
+            .map-controls .btn,
+            .route-overlay .btn {
+                min-height: 40px;
+                min-width: 40px;
+            }
+        }
+
+        /* Swipe gestures support */
+        .swipe-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .swipe-content {
+            transition: transform 0.3s ease;
+        }
+
+        .swipe-indicator {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .swipe-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(148, 163, 184, 0.5);
+            transition: background 0.3s ease;
+        }
+
+        .swipe-dot.active {
+            background: #3b82f6;
+        }
+
+        /* Pull-to-refresh */
+        .pull-to-refresh {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pull-indicator {
+            position: absolute;
+            top: -60px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            font-size: 0.875rem;
+            transition: top 0.3s ease;
+        }
+
+        .pull-indicator.show {
+            top: 0;
+        }
+
+        /* Haptic feedback simulation */
+        .haptic-light {
+            animation: hapticLight 0.1s ease;
+        }
+
+        .haptic-medium {
+            animation: hapticMedium 0.15s ease;
+        }
+
+        .haptic-heavy {
+            animation: hapticHeavy 0.2s ease;
+        }
+
+        @keyframes hapticLight {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.98); }
+        }
+
+        @keyframes hapticMedium {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(0.96); }
+            75% { transform: scale(1.02); }
+        }
+
+        @keyframes hapticHeavy {
+            0%, 100% { transform: scale(1); }
+            20% { transform: scale(0.94); }
+            40% { transform: scale(1.04); }
+            60% { transform: scale(0.96); }
+            80% { transform: scale(1.02); }
+        }
+
+        /* Analytics Styles */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .analytics-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .analytics-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+
+        .analytics-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .analytics-change {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .analytics-change.positive {
+            color: #22c55e;
+        }
+
+        .analytics-change.negative {
+            color: #ef4444;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .insight-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .insight-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .insight-content h4 {
+            color: #f1f5f9;
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .insight-content p {
+            color: #e2e8f0;
+            margin-bottom: 0.75rem;
+        }
+
+        .insight-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .insight-stats .stat {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+        }
+
+        .speed-chart-container {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .speed-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .speed-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 0.5rem;
+        }
+
+        .speed-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.25rem;
+        }
+
+        .speed-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .achievement {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .achievement.earned {
+            border-color: rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .achievement.locked {
+            opacity: 0.6;
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .achievement-content h4 {
+            color: #f1f5f9;
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .achievement-content p {
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-date {
+            font-size: 0.75rem;
+            color: #22c55e;
+        }
+
+        .achievement-progress {
+            font-size: 0.75rem;
+            color: #f59e0b;
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .leaderboard-tab {
+            padding: 0.5rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.5rem;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-tab.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item.current-user {
+            border-color: rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            min-width: 2rem;
+            text-align: center;
+        }
+
+        .player-info {
+            flex-grow: 1;
+        }
+
+        .player-name {
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 0.25rem;
+        }
+
+        .player-stats {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .player-score {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .status-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .route-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-link {
+                padding: 0.375rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">DriverHub</div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" onclick="showPage('dashboard')">Dashboard</a>
+                <a href="#" class="nav-link" onclick="showPage('routes')">Routes</a>
+                <a href="#" class="nav-link" onclick="showPage('analytics')">Analytics</a>
+                <a href="#" class="nav-link" onclick="showPage('feed')">Feed</a>
+                <a href="#" class="nav-link" onclick="showPage('profile')">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page">
+            <div class="dashboard-grid">
+                <!-- Current Status -->
+                <div class="card">
+                    <h3 class="card-title">Current Status</h3>
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <div class="status-label">Speed</div>
+                            <div class="status-value" id="currentSpeed">0<span class="status-unit">mph</span></div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Distance</div>
+                            <div class="status-value" id="totalDistance">0.0<span class="status-unit">mi</span></div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Location Quality</div>
+                            <div class="status-value" style="font-size: 0.875rem;" id="locationStatus">Getting location...</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Status</div>
+                            <div class="status-value" style="font-size: 0.875rem;" id="trackingStatus">Ready</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tracking Controls -->
+                <div class="card">
+                    <h3 class="card-title">Route Tracking</h3>
+                    <div class="tracking-controls">
+                        <button id="trackBtn" class="track-button" onclick="toggleTracking()">
+                            Start Recording
+                        </button>
+                        <div id="trackingInfo" class="tracking-info hidden">
+                            <div>Recording route...</div>
+                            <div id="routePoints">0 points</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="card">
+                <h3 class="card-title">Live Map</h3>
+                <div class="map-controls">
+                    <button class="btn btn-sm" onclick="toggleMapLayer('traffic')" id="trafficBtn">
+                        🚦 Traffic
+                    </button>
+                    <button class="btn btn-sm" onclick="toggleMapLayer('satellite')" id="satelliteBtn">
+                        🛰️ Satellite
+                    </button>
+                    <button class="btn btn-sm" onclick="toggleMapLayer('terrain')" id="terrainBtn">
+                        🏔️ Terrain
+                    </button>
+                    <button class="btn btn-sm" onclick="showNearbyPOI()" id="poiBtn">
+                        📍 POI
+                    </button>
+                </div>
+                <div id="map" class="map-container"></div>
+                <div class="route-overlay" id="routeOverlay">
+                    <button class="btn btn-sm" onclick="toggleRouteComparison()" id="compareBtn">
+                        📊 Compare Routes
+                    </button>
+                    <button class="btn btn-sm" onclick="shareCurrentRoute()" id="shareBtn">
+                        📤 Share Route
+                    </button>
+                    <button class="btn btn-sm" onclick="suggestAlternativeRoute()" id="suggestBtn">
+                        🔄 Find Alternative
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Routes -->
+            <div class="card">
+                <h3 class="card-title">Recent Routes</h3>
+                <div class="routes-grid" id="recentRoutes">
+                    <!-- Routes will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Routes Page -->
+        <div id="routes" class="page hidden">
+            <!-- Route Tabs -->
+            <div class="card">
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 1rem;">
+                    <button class="route-tab active" onclick="showRouteTab('my-routes')">My Routes</button>
+                    <button class="route-tab" onclick="showRouteTab('friends-routes')">Friends' Routes</button>
+                    <button class="route-tab" onclick="showRouteTab('public-routes')">Public Routes</button>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <input type="text" class="form-input" placeholder="Search routes..." style="max-width: 300px;" id="routeSearchInput" onkeyup="filterRoutes()">
+                </div>
+            </div>
+
+            <!-- My Routes Tab -->
+            <div id="my-routes" class="route-tab-content">
+                <div class="card">
+                    <h3 class="card-title">My Routes</h3>
+                    <div class="routes-grid" id="allRoutes">
+                        <!-- My routes will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friends Routes Tab -->
+            <div id="friends-routes" class="route-tab-content hidden">
+                <div class="card">
+                    <h3 class="card-title">Friends' Routes</h3>
+                    <div class="routes-grid" id="friendsRoutes">
+                        <!-- Friends routes will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Public Routes Tab -->
+            <div id="public-routes" class="route-tab-content hidden">
+                <div class="card">
+                    <h3 class="card-title">Discover Public Routes</h3>
+                    <div class="routes-grid" id="publicRoutes">
+                        <!-- Public routes will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Page -->
+        <div id="analytics" class="page hidden">
+            <!-- Weekly Summary -->
+            <div class="card">
+                <h3 class="card-title">📊 Weekly Summary</h3>
+                <div class="analytics-grid">
+                    <div class="analytics-item">
+                        <div class="analytics-value" id="weeklyDistance">0</div>
+                        <div class="analytics-label">Miles Driven</div>
+                        <div class="analytics-change positive">+12% vs last week</div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-value" id="weeklyTime">0</div>
+                        <div class="analytics-label">Hours Driving</div>
+                        <div class="analytics-change positive">+8% vs last week</div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-value" id="weeklySpeed">0</div>
+                        <div class="analytics-label">Avg Speed (mph)</div>
+                        <div class="analytics-change negative">-3% vs last week</div>
+                    </div>
+                    <div class="analytics-item">
+                        <div class="analytics-value" id="weeklyEfficiency">0</div>
+                        <div class="analytics-label">Efficiency Score</div>
+                        <div class="analytics-change positive">+5% vs last week</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Driving Insights -->
+            <div class="card">
+                <h3 class="card-title">🎯 Driving Insights</h3>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-icon">🏆</div>
+                        <div class="insight-content">
+                            <h4>Best Route This Week</h4>
+                            <p id="bestRoute">Highway 101 - 45.2 mi in 38 min</p>
+                            <div class="insight-stats">
+                                <span class="stat">87 mph max</span>
+                                <span class="stat">71 mph avg</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">⏰</div>
+                        <div class="insight-content">
+                            <h4>Peak Driving Time</h4>
+                            <p id="peakTime">7:30 AM - 9:00 AM</p>
+                            <div class="insight-stats">
+                                <span class="stat">Most active</span>
+                                <span class="stat">5 days this week</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🌱</div>
+                        <div class="insight-content">
+                            <h4>Eco Score</h4>
+                            <p id="ecoscore">85/100</p>
+                            <div class="insight-stats">
+                                <span class="stat">Smooth acceleration</span>
+                                <span class="stat">Efficient routes</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🚗</div>
+                        <div class="insight-content">
+                            <h4>Route Variety</h4>
+                            <p id="routeVariety">12 unique routes</p>
+                            <div class="insight-stats">
+                                <span class="stat">3 new this week</span>
+                                <span class="stat">Explorer badge</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Speed Analysis -->
+            <div class="card">
+                <h3 class="card-title">⚡ Speed Analysis</h3>
+                <div class="speed-chart-container">
+                    <canvas id="speedChart" width="400" height="200"></canvas>
+                </div>
+                <div class="speed-stats">
+                    <div class="speed-stat">
+                        <div class="speed-value" id="topSpeed">0</div>
+                        <div class="speed-label">Top Speed (mph)</div>
+                    </div>
+                    <div class="speed-stat">
+                        <div class="speed-value" id="avgSpeed">0</div>
+                        <div class="speed-label">Average Speed (mph)</div>
+                    </div>
+                    <div class="speed-stat">
+                        <div class="speed-value" id="speedConsistency">0</div>
+                        <div class="speed-label">Consistency Score</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="card">
+                <h3 class="card-title">🏅 Achievements</h3>
+                <div class="achievements-grid">
+                    <div class="achievement earned">
+                        <div class="achievement-icon">🚀</div>
+                        <div class="achievement-content">
+                            <h4>Speed Demon</h4>
+                            <p>Reached 100+ mph</p>
+                            <div class="achievement-date">Earned 2 days ago</div>
+                        </div>
+                    </div>
+                    <div class="achievement earned">
+                        <div class="achievement-icon">🛣️</div>
+                        <div class="achievement-content">
+                            <h4>Road Warrior</h4>
+                            <p>500+ miles driven</p>
+                            <div class="achievement-date">Earned 1 week ago</div>
+                        </div>
+                    </div>
+                    <div class="achievement earned">
+                        <div class="achievement-icon">🌍</div>
+                        <div class="achievement-content">
+                            <h4>Explorer</h4>
+                            <p>10+ unique routes</p>
+                            <div class="achievement-date">Earned 3 days ago</div>
+                        </div>
+                    </div>
+                    <div class="achievement locked">
+                        <div class="achievement-icon">⏱️</div>
+                        <div class="achievement-content">
+                            <h4>Early Bird</h4>
+                            <p>Drive before 6 AM (5/10)</p>
+                            <div class="achievement-progress">50%</div>
+                        </div>
+                    </div>
+                    <div class="achievement locked">
+                        <div class="achievement-icon">🌱</div>
+                        <div class="achievement-content">
+                            <h4>Eco Driver</h4>
+                            <p>90+ efficiency score (85/90)</p>
+                            <div class="achievement-progress">94%</div>
+                        </div>
+                    </div>
+                    <div class="achievement locked">
+                        <div class="achievement-icon">🏁</div>
+                        <div class="achievement-content">
+                            <h4>Marathon Driver</h4>
+                            <p>1000+ miles in a month</p>
+                            <div class="achievement-progress">23%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="card">
+                <h3 class="card-title">🏆 Leaderboard</h3>
+                <div class="leaderboard-tabs">
+                    <button class="leaderboard-tab active" onclick="showLeaderboard('distance')">Distance</button>
+                    <button class="leaderboard-tab" onclick="showLeaderboard('speed')">Speed</button>
+                    <button class="leaderboard-tab" onclick="showLeaderboard('efficiency')">Efficiency</button>
+                </div>
+                <div class="leaderboard-content">
+                    <div class="leaderboard-list" id="distanceLeaderboard">
+                        <div class="leaderboard-item">
+                            <div class="rank">1</div>
+                            <div class="player-info">
+                                <div class="player-name">SpeedRacer</div>
+                                <div class="player-stats">2,847 mi</div>
+                            </div>
+                            <div class="player-score">2,847</div>
+                        </div>
+                        <div class="leaderboard-item">
+                            <div class="rank">2</div>
+                            <div class="player-info">
+                                <div class="player-name">RoadWarrior</div>
+                                <div class="player-stats">2,156 mi</div>
+                            </div>
+                            <div class="player-score">2,156</div>
+                        </div>
+                        <div class="leaderboard-item current-user">
+                            <div class="rank">3</div>
+                            <div class="player-info">
+                                <div class="player-name">You</div>
+                                <div class="player-stats">1,892 mi</div>
+                            </div>
+                            <div class="player-score">1,892</div>
+                        </div>
+                        <div class="leaderboard-item">
+                            <div class="rank">4</div>
+                            <div class="player-info">
+                                <div class="player-name">UrbanDriver</div>
+                                <div class="player-stats">1,234 mi</div>
+                            </div>
+                            <div class="player-score">1,234</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feed Page -->
+        <div id="feed" class="page hidden">
+            <!-- Create Post Section -->
+            <div class="card">
+                <h3 class="card-title">Share Your Drive</h3>
+                <div class="create-post">
+                    <textarea id="postText" class="form-input" rows="3" placeholder="Share something about your drive..." style="margin-bottom: 1rem; resize: vertical;"></textarea>
+                    
+                    <!-- Photo Upload Section -->
+                    <div class="photo-upload-section">
+                        <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)">
+                        <div class="upload-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('photoUpload').click()">
+                                📷 Add Photos
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="createPost()" style="margin-left: auto;">
+                                Post
+                            </button>
+                        </div>
+                        <div id="photoPreview" class="photo-preview-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feed Posts -->
+            <div id="feedPosts">
+                <!-- Posts will be populated here -->
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile" class="page hidden">
+            <div class="card">
+                <h3 class="card-title">Driver Profile</h3>
+                <div class="status-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 1rem;">
+                    <div class="status-item">
+                        <div class="status-label">Total Distance</div>
+                        <div class="status-value">1,250<span class="status-unit">mi</span></div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Total Time</div>
+                        <div class="status-value">72<span class="status-unit">hrs</span></div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Avg Speed</div>
+                        <div class="status-value">40<span class="status-unit">mph</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Route Modal -->
+    <div id="saveModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 class="modal-title">Save Route</h3>
+            <div class="form-group">
+                <label class="form-label">Route Name</label>
+                <input type="text" id="routeName" class="form-input" placeholder="Enter route name">
+            </div>
+            <div class="form-group">
+                <label class="form-label">
+                    <input type="checkbox" id="isPublic" style="margin-right: 0.5rem;">
+                    Make route public
+                </label>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-secondary btn-sm" onclick="closeSaveModal()">Cancel</button>
+                <button class="btn btn-primary btn-sm" onclick="saveRoute()">Save Route</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Global variables
+        let map;
+        let currentRoute = [];
+        let isTracking = false;
+        let watchId = null;
+        let speedData = [];
+        let locationPermissionGranted = false;
+        let currentPosition = null;
+        let selectedPhotos = [];
+        let posts = [];
+        let mapLayers = {
+            traffic: null,
+            satellite: null,
+            terrain: null,
+            currentLayer: 'standard'
+        };
+        let routeComparison = {
+            active: false,
+            routes: [],
+            selectedRoutes: []
+        };
+        let poiMarkers = [];
+        let alternativeRoutes = [];
+        let accelerometerData = {
+            x: 0,
+            y: 0,
+            z: 0,
+            totalG: 0,
+            isSupported: false
+        };
+        let gForceHistory = [];
+        let maxGForce = 0;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DriverHub initializing...');
+            
+            try {
+                // Make sure save modal is hidden on startup
+                const saveModal = document.getElementById('saveModal');
+                if (saveModal) {
+                    saveModal.classList.add('hidden');
+                    console.log('Save modal hidden on startup');
+                }
+                
+                // Initialize route tracking variables
+                currentRoute = [];
+                speedData = [];
+                isTracking = false;
+                watchId = null;
+                
+                // Initialize components
+                initializeMap();
+                loadSampleRoutes();
+                loadFeed();
+                
+                // Initialize mobile features
+                initializeSwipeGestures();
+                initializePullToRefresh();
+                initializeAccelerometer();
+                
+                // Initialize social simulation
+                simulateSocialUpdates();
+                
+                // Initialize scroll animations
+                initializeScrollAnimations();
+                
+                // Add floating and glow effects
+                addFloatingEffects();
+                addGlowEffects();
+                
+                // Add haptic feedback to buttons
+                document.querySelectorAll('.btn, .nav-link, .post-action').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        addHapticFeedback(btn, 'light');
+                    });
+                });
+                
+                // Get location after other components are loaded
+                setTimeout(() => {
+                    getCurrentLocationForMap();
+                    updateAnalytics();
+                }, 1000);
+                
+                // Register service worker for PWA
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('./sw.js')
+                        .then((registration) => {
+                            console.log('Service Worker registered successfully:', registration);
+                        })
+                        .catch((error) => {
+                            console.log('Service Worker registration failed:', error);
+                        });
+                }
+                
+                console.log('DriverHub initialized successfully');
+            } catch (error) {
+                console.error('Error during app initialization:', error);
+            }
+        });
+
+        // Photo upload handling
+        function handlePhotoUpload(event) {
+            const files = Array.from(event.target.files);
+            
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        selectedPhotos.push({
+                            id: Date.now() + Math.random(),
+                            data: e.target.result,
+                            file: file
+                        });
+                        updatePhotoPreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function updatePhotoPreview() {
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = selectedPhotos.map(photo => `
+                <div class="photo-preview">
+                    <img src="${photo.data}" alt="Preview">
+                    <button class="photo-remove" onclick="removePhoto('${photo.id}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        function removePhoto(photoId) {
+            selectedPhotos = selectedPhotos.filter(photo => photo.id !== photoId);
+            updatePhotoPreview();
+        }
+
+        function createPost() {
+            const text = document.getElementById('postText').value.trim();
+            
+            if (!text && selectedPhotos.length === 0) {
+                alert('Please add some content or photos to your post');
+                return;
+            }
+
+            const post = {
+                id: Date.now(),
+                username: 'You',
+                text: text,
+                photos: [...selectedPhotos],
+                timestamp: Date.now(),
+                likes: 0,
+                liked: false
+            };
+
+            // Save to localStorage
+            const savedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+            savedPosts.unshift(post);
+            localStorage.setItem('posts', JSON.stringify(savedPosts));
+
+            // Reset form
+            document.getElementById('postText').value = '';
+            selectedPhotos = [];
+            updatePhotoPreview();
+            document.getElementById('photoUpload').value = '';
+
+            // Reload feed
+            loadFeed();
+        }
+
+        function generateMockPosts() {
+            return [
+                {
+                    id: 'mock-1',
+                    username: 'SpeedRacer',
+                    text: 'Epic highway run today! Hit a new top speed of 87 mph on the freeway 🏎️',
+                    photos: [],
+                    timestamp: Date.now() - 3600000,
+                    likes: 8,
+                    liked: false,
+                    comments: [
+                        { id: 'c1', username: 'RoadWarrior', text: 'Wow! That\'s impressive! Stay safe out there 🚗', timestamp: Date.now() - 3000000 },
+                        { id: 'c2', username: 'UrbanDriver', text: 'Nice speed! What car were you driving?', timestamp: Date.now() - 2700000 }
+                    ]
+                },
+                {
+                    id: 'mock-2',
+                    username: 'RoadWarrior',
+                    text: 'Beautiful mountain drive this morning. The views were incredible!',
+                    photos: [
+                        { id: 'mock-photo-1', data: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNGY0NjY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk1vdW50YWluIFZpZXc8L3RleHQ+PC9zdmc+' }
+                    ],
+                    timestamp: Date.now() - 7200000,
+                    likes: 12,
+                    liked: false,
+                    comments: [
+                        { id: 'c3', username: 'SpeedRacer', text: 'Absolutely stunning! Where is this?', timestamp: Date.now() - 6900000 }
+                    ]
+                },
+                {
+                    id: 'mock-3',
+                    username: 'UrbanDriver',
+                    text: 'City traffic was crazy today but found a great new route through downtown! Saved 15 minutes on my commute.',
+                    photos: [],
+                    timestamp: Date.now() - 14400000,
+                    likes: 5,
+                    liked: true,
+                    comments: []
+                }
+            ];
+        }
+
+        function loadFeed() {
+            const userPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+            const mockPosts = generateMockPosts();
+            const allPosts = [...userPosts, ...mockPosts].sort((a, b) => b.timestamp - a.timestamp);
+
+            const feedContainer = document.getElementById('feedPosts');
+            if (!feedContainer) return;
+
+            feedContainer.innerHTML = allPosts.map(post => {
+                const comments = post.comments || [];
+                const commentCount = comments.length;
+                
+                return `
+                <div class="feed-post" id="post-${post.id}">
+                    <div class="post-header">
+                        <div class="post-avatar">${post.username.charAt(0).toUpperCase()}</div>
+                        <div class="post-info">
+                            <div class="post-username">${post.username}</div>
+                            <div class="post-time">${formatPostTime(post.timestamp)}</div>
+                        </div>
+                        ${post.username === 'You' ? `
+                            <button class="post-delete-btn" onclick="deletePost('${post.id}')" title="Delete Post">
+                                ×
+                            </button>
+                        ` : ''}
+                    </div>
+                    
+                    ${post.text ? `<div class="post-content">${post.text}</div>` : ''}
+                    
+                    ${post.photos && post.photos.length > 0 ? `
+                        <div class="post-photos">
+                            ${post.photos.map(photo => `
+                                <div class="post-photo" onclick="openPhotoModal('${photo.data}')">
+                                    <img src="${photo.data}" alt="Post photo">
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="post-actions">
+                        <button class="post-action ${post.liked ? 'liked' : ''}" onclick="toggleLike('${post.id}')" id="like-btn-${post.id}">
+                            <span>${post.liked ? '❤️' : '🤍'}</span>
+                            <span>${post.likes} ${post.likes === 1 ? 'like' : 'likes'}</span>
+                        </button>
+                        <button class="post-action" onclick="toggleComments('${post.id}')">
+                            <span>💬</span>
+                            <span>${commentCount} ${commentCount === 1 ? 'comment' : 'comments'}</span>
+                        </button>
+                        <button class="post-action" onclick="sharePost('${post.id}')">
+                            <span>📤</span>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                    
+                    <div class="comments-section hidden" id="comments-${post.id}">
+                        ${commentCount > 0 ? `
+                            <div class="comments-list">
+                                ${comments.map(comment => `
+                                    <div class="comment">
+                                        <div class="comment-avatar">${comment.username.charAt(0).toUpperCase()}</div>
+                                        <div class="comment-content">
+                                            <div class="comment-header">
+                                                <span class="comment-username">${comment.username}</span>
+                                                <span class="comment-time">${formatPostTime(comment.timestamp)}</span>
+                                            </div>
+                                            <div class="comment-text">${comment.text}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="comment-input-section">
+                            <div class="comment-avatar">Y</div>
+                            <div class="comment-input-wrapper">
+                                <textarea 
+                                    class="comment-input" 
+                                    placeholder="Write a comment..." 
+                                    id="comment-input-${post.id}"
+                                    rows="1"
+                                    onkeydown="handleCommentKeydown(event, '${post.id}')"
+                                    oninput="autoResizeTextarea(this)"
+                                ></textarea>
+                                <button 
+                                    class="comment-submit" 
+                                    onclick="submitComment('${post.id}')"
+                                    id="comment-submit-${post.id}"
+                                    disabled
+                                >
+                                    ➤
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+
+            // Add event listeners for comment inputs
+            allPosts.forEach(post => {
+                const input = document.getElementById(`comment-input-${post.id}`);
+                if (input) {
+                    input.addEventListener('input', () => {
+                        const submitBtn = document.getElementById(`comment-submit-${post.id}`);
+                        submitBtn.disabled = !input.value.trim();
+                    });
+                }
+            });
+        }
+
+        function formatPostTime(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            return `${days}d ago`;
+        }
+
+        function toggleLike(postId) {
+            const likeBtn = document.getElementById(`like-btn-${postId}`);
+            if (!likeBtn) return;
+
+            // Add animation
+            likeBtn.classList.add('like-animation');
+            setTimeout(() => likeBtn.classList.remove('like-animation'), 600);
+
+            // Update like state in localStorage for user posts
+            const userPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+            const userPost = userPosts.find(post => post.id == postId);
+            
+            if (userPost) {
+                userPost.liked = !userPost.liked;
+                userPost.likes += userPost.liked ? 1 : -1;
+                localStorage.setItem('posts', JSON.stringify(userPosts));
+            } else {
+                // For mock posts, just update the UI temporarily
+                const isLiked = likeBtn.classList.contains('liked');
+                const heartSpan = likeBtn.querySelector('span:first-child');
+                const countSpan = likeBtn.querySelector('span:last-child');
+                
+                if (isLiked) {
+                    likeBtn.classList.remove('liked');
+                    heartSpan.textContent = '🤍';
+                    const currentCount = parseInt(countSpan.textContent);
+                    const newCount = currentCount - 1;
+                    countSpan.textContent = `${newCount} ${newCount === 1 ? 'like' : 'likes'}`;
+                } else {
+                    likeBtn.classList.add('liked');
+                    heartSpan.textContent = '❤️';
+                    const currentCount = parseInt(countSpan.textContent);
+                    const newCount = currentCount + 1;
+                    countSpan.textContent = `${newCount} ${newCount === 1 ? 'like' : 'likes'}`;
+                }
+            }
+        }
+
+        function toggleComments(postId) {
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            if (!commentsSection) return;
+
+            commentsSection.classList.toggle('hidden');
+            
+            // Focus on comment input when opened
+            if (!commentsSection.classList.contains('hidden')) {
+                const commentInput = document.getElementById(`comment-input-${postId}`);
+                if (commentInput) {
+                    setTimeout(() => commentInput.focus(), 100);
+                }
+            }
+        }
+
+        function submitComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const submitBtn = document.getElementById(`comment-submit-${postId}`);
+            
+            if (!input || !submitBtn) return;
+            
+            const commentText = input.value.trim();
+            if (!commentText) return;
+
+            const newComment = {
+                id: Date.now() + Math.random(),
+                username: 'You',
+                text: commentText,
+                timestamp: Date.now()
+            };
+
+            // Update user posts in localStorage
+            const userPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+            const userPost = userPosts.find(post => post.id == postId);
+            
+            if (userPost) {
+                if (!userPost.comments) userPost.comments = [];
+                userPost.comments.push(newComment);
+                localStorage.setItem('posts', JSON.stringify(userPosts));
+                loadFeed(); // Reload to show new comment
+            } else {
+                // For mock posts, add comment dynamically
+                const commentsSection = document.getElementById(`comments-${postId}`);
+                const commentsList = commentsSection.querySelector('.comments-list');
+                
+                const commentHTML = `
+                    <div class="comment">
+                        <div class="comment-avatar">Y</div>
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <span class="comment-username">You</span>
+                                <span class="comment-time">Just now</span>
+                            </div>
+                            <div class="comment-text">${commentText}</div>
+                        </div>
+                    </div>
+                `;
+                
+                if (commentsList) {
+                    commentsList.insertAdjacentHTML('beforeend', commentHTML);
+                } else {
+                    const newCommentsList = document.createElement('div');
+                    newCommentsList.className = 'comments-list';
+                    newCommentsList.innerHTML = commentHTML;
+                    commentsSection.insertBefore(newCommentsList, commentsSection.querySelector('.comment-input-section'));
+                }
+
+                // Update comment count
+                const commentBtn = document.querySelector(`#post-${postId} .post-action:nth-child(2) span:last-child`);
+                if (commentBtn) {
+                    const currentCount = parseInt(commentBtn.textContent);
+                    const newCount = currentCount + 1;
+                    commentBtn.textContent = `${newCount} ${newCount === 1 ? 'comment' : 'comments'}`;
+                }
+            }
+
+            // Reset input
+            input.value = '';
+            submitBtn.disabled = true;
+            autoResizeTextarea(input);
+        }
+
+        function handleCommentKeydown(event, postId) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                submitComment(postId);
+            }
+        }
+
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
+        }
+
+        function sharePost(postId) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out this drive!',
+                    text: 'Awesome driving post from DriverHub',
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                // Fallback - copy to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch(() => {
+                    alert('Sharing not supported on this device');
+                });
+            }
+        }
+
+        function deletePost(postId) {
+            if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+                return;
+            }
+
+            // Get user posts from localStorage
+            let userPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+            
+            // Find and remove the post
+            const postIndex = userPosts.findIndex(post => post.id == postId);
+            if (postIndex === -1) {
+                alert('Post not found or you don\'t have permission to delete it.');
+                return;
+            }
+
+            // Remove post with animation
+            const postElement = document.getElementById(`post-${postId}`);
+            if (postElement) {
+                postElement.style.transition = 'all 0.3s ease';
+                postElement.style.transform = 'translateX(-100%)';
+                postElement.style.opacity = '0';
+                
+                setTimeout(() => {
+                    // Remove from localStorage
+                    userPosts.splice(postIndex, 1);
+                    localStorage.setItem('posts', JSON.stringify(userPosts));
+                    
+                    // Reload feed to reflect changes
+                    loadFeed();
+                }, 300);
+            } else {
+                // Direct removal if element not found
+                userPosts.splice(postIndex, 1);
+                localStorage.setItem('posts', JSON.stringify(userPosts));
+                loadFeed();
+            }
+        }
+
+        function openPhotoModal(photoData) {
+            const modal = document.createElement('div');
+            modal.className = 'photo-modal';
+            modal.innerHTML = `
+                <img src="${photoData}" alt="Full size photo">
+                <button class="photo-modal-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Advanced GPS and Mapping Features
+        function toggleMapLayer(layerType) {
+            const btn = document.getElementById(layerType + 'Btn');
+            
+            // Remove all active layers first
+            document.querySelectorAll('.map-controls .btn').forEach(b => b.classList.remove('active'));
+            
+            if (mapLayers.currentLayer === layerType) {
+                // Toggle off
+                if (mapLayers[layerType]) {
+                    map.removeLayer(mapLayers[layerType]);
+                }
+                mapLayers.currentLayer = 'standard';
+            } else {
+                // Remove current layer
+                if (mapLayers[mapLayers.currentLayer]) {
+                    map.removeLayer(mapLayers[mapLayers.currentLayer]);
+                }
+                
+                // Add new layer
+                if (layerType === 'traffic') {
+                    // Simulate traffic layer (in real app, use Google Maps Traffic API or similar)
+                    mapLayers.traffic = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap contributors (Traffic simulation)'
+                    });
+                    map.addLayer(mapLayers.traffic);
+                    showTrafficSimulation();
+                } else if (layerType === 'satellite') {
+                    mapLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                        attribution: '© Esri'
+                    });
+                    map.addLayer(mapLayers.satellite);
+                } else if (layerType === 'terrain') {
+                    mapLayers.terrain = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenTopoMap'
+                    });
+                    map.addLayer(mapLayers.terrain);
+                }
+                
+                mapLayers.currentLayer = layerType;
+                btn.classList.add('active');
+            }
+        }
+
+        function showTrafficSimulation() {
+            // Simulate traffic data with colored route overlays
+            if (currentPosition) {
+                const lat = currentPosition.coords.latitude;
+                const lng = currentPosition.coords.longitude;
+                
+                // Add some simulated traffic routes
+                const trafficRoutes = [
+                    {
+                        coords: [[lat + 0.01, lng], [lat + 0.01, lng + 0.01], [lat, lng + 0.01]],
+                        color: '#22c55e', // Green - light traffic
+                        weight: 8
+                    },
+                    {
+                        coords: [[lat - 0.005, lng], [lat - 0.005, lng - 0.01], [lat, lng - 0.01]],
+                        color: '#f59e0b', // Yellow - moderate traffic  
+                        weight: 8
+                    },
+                    {
+                        coords: [[lat + 0.005, lng - 0.005], [lat + 0.015, lng - 0.005]],
+                        color: '#ef4444', // Red - heavy traffic
+                        weight: 8
+                    }
+                ];
+                
+                trafficRoutes.forEach(route => {
+                    L.polyline(route.coords, {
+                        color: route.color,
+                        weight: route.weight,
+                        opacity: 0.7
+                    }).addTo(map);
+                });
+            }
+        }
+
+        function showNearbyPOI() {
+            if (!currentPosition) return;
+            
+            const btn = document.getElementById('poiBtn');
+            if (btn.classList.contains('active')) {
+                // Remove POI markers
+                poiMarkers.forEach(marker => map.removeLayer(marker));
+                poiMarkers = [];
+                btn.classList.remove('active');
+                return;
+            }
+            
+            const lat = currentPosition.coords.latitude;
+            const lng = currentPosition.coords.longitude;
+            
+            // Simulate nearby POIs
+            const pois = [
+                { lat: lat + 0.003, lng: lng + 0.002, name: 'Gas Station', type: '⛽', distance: '0.2 mi' },
+                { lat: lat - 0.004, lng: lng + 0.003, name: 'Restaurant', type: '🍔', distance: '0.3 mi' },
+                { lat: lat + 0.006, lng: lng - 0.002, name: 'Hospital', type: '🏥', distance: '0.4 mi' },
+                { lat: lat - 0.002, lng: lng - 0.004, name: 'Parking', type: '🅿️', distance: '0.1 mi' },
+                { lat: lat + 0.008, lng: lng + 0.005, name: 'Hotel', type: '🏨', distance: '0.6 mi' }
+            ];
+            
+            pois.forEach(poi => {
+                const marker = L.marker([poi.lat, poi.lng], {
+                    icon: L.divIcon({
+                        className: 'poi-marker',
+                        html: poi.type,
+                        iconSize: [30, 30]
+                    })
+                }).addTo(map);
+                
+                marker.bindPopup(`
+                    <div class="poi-popup">
+                        <strong>${poi.name}</strong><br>
+                        Distance: ${poi.distance}
+                    </div>
+                `);
+                
+                poiMarkers.push(marker);
+            });
+            
+            btn.classList.add('active');
+        }
+
+        function toggleRouteComparison() {
+            if (routeComparison.active) {
+                closeRouteComparison();
+                return;
+            }
+            
+            const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+            if (routes.length < 2) {
+                alert('You need at least 2 saved routes to compare!');
+                return;
+            }
+            
+            showRouteComparisonModal(routes);
+        }
+
+        function showRouteComparisonModal(routes) {
+            const modal = document.createElement('div');
+            modal.className = 'route-comparison-modal';
+            modal.innerHTML = `
+                <div class="route-comparison-content">
+                    <h3 style="color: #f1f5f9; margin-bottom: 1rem;">Compare Routes</h3>
+                    <p style="color: #94a3b8; margin-bottom: 2rem;">Select two routes to compare their statistics</p>
+                    
+                    <div class="route-comparison-grid">
+                        <div class="route-comparison-item">
+                            <h4 style="color: #3b82f6; margin-bottom: 1rem;">Route 1</h4>
+                            <select id="route1Select" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(148, 163, 184, 0.3); color: #f1f5f9;">
+                                <option value="">Select a route...</option>
+                                ${routes.map(route => `<option value="${route.id}">${route.name} (${route.distance} mi)</option>`).join('')}
+                            </select>
+                            <div id="route1Stats" class="route-stats-comparison"></div>
+                        </div>
+                        
+                        <div class="route-comparison-item">
+                            <h4 style="color: #22c55e; margin-bottom: 1rem;">Route 2</h4>
+                            <select id="route2Select" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(148, 163, 184, 0.3); color: #f1f5f9;">
+                                <option value="">Select a route...</option>
+                                ${routes.map(route => `<option value="${route.id}">${route.name} (${route.distance} mi)</option>`).join('')}
+                            </select>
+                            <div id="route2Stats" class="route-stats-comparison"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end;">
+                        <button class="btn" onclick="closeRouteComparison()" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">Close</button>
+                        <button class="btn" onclick="performRouteComparison()" style="background: #3b82f6; color: white; border: 1px solid #3b82f6;">Compare</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            routeComparison.active = true;
+            
+            // Add event listeners
+            document.getElementById('route1Select').addEventListener('change', updateRoutePreview);
+            document.getElementById('route2Select').addEventListener('change', updateRoutePreview);
+        }
+
+        function updateRoutePreview() {
+            const route1Id = document.getElementById('route1Select').value;
+            const route2Id = document.getElementById('route2Select').value;
+            const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+            
+            const route1 = routes.find(r => r.id == route1Id);
+            const route2 = routes.find(r => r.id == route2Id);
+            
+            if (route1) {
+                document.getElementById('route1Stats').innerHTML = createRouteStatsDisplay(route1);
+            }
+            
+            if (route2) {
+                document.getElementById('route2Stats').innerHTML = createRouteStatsDisplay(route2);
+            }
+        }
+
+        function createRouteStatsDisplay(route) {
+            return `
+                <div class="stat-comparison">
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #3b82f6;">${route.distance}</div>
+                    <div style="font-size: 0.875rem; color: #94a3b8;">Distance (mi)</div>
+                </div>
+                <div class="stat-comparison">
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #3b82f6;">${route.duration}</div>
+                    <div style="font-size: 0.875rem; color: #94a3b8;">Duration (min)</div>
+                </div>
+                <div class="stat-comparison">
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #3b82f6;">${route.topSpeed ? Math.round(route.topSpeed * 0.621371) : 'N/A'}</div>
+                    <div style="font-size: 0.875rem; color: #94a3b8;">Top Speed (mph)</div>
+                </div>
+            `;
+        }
+
+        function performRouteComparison() {
+            const route1Id = document.getElementById('route1Select').value;
+            const route2Id = document.getElementById('route2Select').value;
+            
+            if (!route1Id || !route2Id) {
+                alert('Please select both routes to compare!');
+                return;
+            }
+            
+            if (route1Id === route2Id) {
+                alert('Please select two different routes!');
+                return;
+            }
+            
+            const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+            const route1 = routes.find(r => r.id == route1Id);
+            const route2 = routes.find(r => r.id == route2Id);
+            
+            // Update comparison with winner highlighting
+            const stats1 = document.getElementById('route1Stats');
+            const stats2 = document.getElementById('route2Stats');
+            
+            stats1.innerHTML = createComparisonStats(route1, route2, 1);
+            stats2.innerHTML = createComparisonStats(route2, route1, 2);
+        }
+
+        function createComparisonStats(route, compareRoute, routeNum) {
+            const distance1 = parseFloat(route.distance);
+            const distance2 = parseFloat(compareRoute.distance);
+            const duration1 = parseInt(route.duration);
+            const duration2 = parseInt(compareRoute.duration);
+            const speed1 = route.topSpeed ? Math.round(route.topSpeed * 0.621371) : 0;
+            const speed2 = compareRoute.topSpeed ? Math.round(compareRoute.topSpeed * 0.621371) : 0;
+            
+            return `
+                <div class="stat-comparison ${distance1 < distance2 ? 'better' : distance1 > distance2 ? 'worse' : ''}">
+                    <div style="font-size: 1.5rem; font-weight: bold;">${route.distance}</div>
+                    <div style="font-size: 0.875rem;">Distance (mi)</div>
+                    ${distance1 < distance2 ? '<div style="font-size: 0.75rem; color: #22c55e;">Shorter! ✓</div>' : 
+                      distance1 > distance2 ? '<div style="font-size: 0.75rem; color: #ef4444;">Longer</div>' : ''}
+                </div>
+                <div class="stat-comparison ${duration1 < duration2 ? 'better' : duration1 > duration2 ? 'worse' : ''}">
+                    <div style="font-size: 1.5rem; font-weight: bold;">${route.duration}</div>
+                    <div style="font-size: 0.875rem;">Duration (min)</div>
+                    ${duration1 < duration2 ? '<div style="font-size: 0.75rem; color: #22c55e;">Faster! ✓</div>' : 
+                      duration1 > duration2 ? '<div style="font-size: 0.75rem; color: #ef4444;">Slower</div>' : ''}
+                </div>
+                <div class="stat-comparison ${speed1 > speed2 ? 'better' : speed1 < speed2 ? 'worse' : ''}">
+                    <div style="font-size: 1.5rem; font-weight: bold;">${speed1 || 'N/A'}</div>
+                    <div style="font-size: 0.875rem;">Top Speed (mph)</div>
+                    ${speed1 > speed2 ? '<div style="font-size: 0.75rem; color: #22c55e;">Faster! ✓</div>' : 
+                      speed1 < speed2 ? '<div style="font-size: 0.75rem; color: #ef4444;">Slower</div>' : ''}
+                </div>
+            `;
+        }
+
+        function closeRouteComparison() {
+            const modal = document.querySelector('.route-comparison-modal');
+            if (modal) {
+                modal.remove();
+            }
+            routeComparison.active = false;
+        }
+
+        function shareCurrentRoute() {
+            if (!currentRoute || currentRoute.length === 0) {
+                alert('No active route to share! Start tracking first.');
+                return;
+            }
+            
+            const routeData = {
+                points: currentRoute.length,
+                distance: calculateTotalDistance(currentRoute).toFixed(1),
+                duration: currentRoute.length > 0 ? 
+                    ((currentRoute[currentRoute.length - 1].timestamp - currentRoute[0].timestamp) / 60000).toFixed(0) : 0,
+                timestamp: new Date().toLocaleString()
+            };
+            
+            const shareUrl = window.location.href + `?route=${encodeURIComponent(JSON.stringify(routeData))}`;
+            
+            showQRModal(shareUrl, routeData);
+        }
+
+        function showQRModal(url, routeData) {
+            const modal = document.createElement('div');
+            modal.className = 'qr-modal';
+            modal.innerHTML = `
+                <div class="qr-content">
+                    <h3 style="color: #f1f5f9; margin-bottom: 1rem;">Share Your Route</h3>
+                    <div class="qr-code">
+                        <div style="width: 150px; height: 150px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #333; font-size: 0.875rem; text-align: center;">
+                            QR Code<br>${routeData.distance} mi<br>${routeData.points} points
+                        </div>
+                    </div>
+                    <p style="color: #94a3b8; margin: 1rem 0;">Scan to view route details</p>
+                    <div style="background: rgba(15, 23, 42, 0.6); padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; word-break: break-all; font-family: monospace; font-size: 0.75rem;">
+                        ${url}
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button class="btn" onclick="copyToClipboard('${url}')" style="background: #3b82f6; color: white;">Copy Link</button>
+                        <button class="btn" onclick="this.closest('.qr-modal').remove()" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy link');
+            });
+        }
+
+        function suggestAlternativeRoute() {
+            if (!currentPosition) {
+                alert('Location not available for route suggestions');
+                return;
+            }
+            
+            // Simulate alternative route suggestions
+            const alternatives = [
+                { name: 'Scenic Route', distance: '12.3 mi', duration: '18 min', traffic: 'Light', type: 'scenic' },
+                { name: 'Fastest Route', distance: '10.8 mi', duration: '15 min', traffic: 'Moderate', type: 'fast' },
+                { name: 'Fuel Efficient', distance: '11.5 mi', duration: '20 min', traffic: 'Light', type: 'eco' }
+            ];
+            
+            const modal = document.createElement('div');
+            modal.className = 'route-comparison-modal';
+            modal.innerHTML = `
+                <div class="route-comparison-content">
+                    <h3 style="color: #f1f5f9; margin-bottom: 1rem;">🔄 Alternative Routes</h3>
+                    <p style="color: #94a3b8; margin-bottom: 2rem;">Based on current traffic and conditions</p>
+                    
+                    <div class="route-comparison-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                        ${alternatives.map(route => `
+                            <div class="route-comparison-item">
+                                <h4 style="color: ${route.type === 'fast' ? '#22c55e' : route.type === 'scenic' ? '#3b82f6' : '#f59e0b'}; margin-bottom: 1rem;">
+                                    ${route.type === 'fast' ? '⚡' : route.type === 'scenic' ? '🌲' : '🍃'} ${route.name}
+                                </h4>
+                                <div class="route-stats-comparison">
+                                    <div class="stat-comparison">
+                                        <div style="font-size: 1.2rem; font-weight: bold;">${route.distance}</div>
+                                        <div style="font-size: 0.8rem;">Distance</div>
+                                    </div>
+                                    <div class="stat-comparison">
+                                        <div style="font-size: 1.2rem; font-weight: bold;">${route.duration}</div>
+                                        <div style="font-size: 0.8rem;">Duration</div>
+                                    </div>
+                                    <div class="stat-comparison">
+                                        <div style="font-size: 1rem; font-weight: bold;">${route.traffic}</div>
+                                        <div style="font-size: 0.8rem;">Traffic</div>
+                                    </div>
+                                </div>
+                                <button class="btn" onclick="selectAlternativeRoute('${route.name}')" style="width: 100%; margin-top: 1rem; background: #3b82f6; color: white;">Select Route</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; margin-top: 2rem;">
+                        <button class="btn" onclick="this.closest('.route-comparison-modal').remove()" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">Cancel</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function selectAlternativeRoute(routeName) {
+            alert(`Selected: ${routeName}\nRoute guidance would start here in a full app!`);
+            document.querySelector('.route-comparison-modal').remove();
+        }
+
+        // Mobile App Enhancements
+        function addHapticFeedback(element, intensity = 'light') {
+            element.classList.add(`haptic-${intensity}`);
+            setTimeout(() => {
+                element.classList.remove(`haptic-${intensity}`);
+            }, 200);
+        }
+
+        function initializeSwipeGestures() {
+            let startX = 0;
+            let startY = 0;
+            let currentX = 0;
+            let currentY = 0;
+            let isSwipe = false;
+
+            document.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                isSwipe = false;
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isSwipe) {
+                    currentX = e.touches[0].clientX;
+                    currentY = e.touches[0].clientY;
+                    
+                    const diffX = Math.abs(currentX - startX);
+                    const diffY = Math.abs(currentY - startY);
+                    
+                    if (diffX > diffY && diffX > 50) {
+                        isSwipe = true;
+                        if (currentX > startX) {
+                            // Swipe right - go to previous page
+                            handleSwipeRight();
+                        } else {
+                            // Swipe left - go to next page
+                            handleSwipeLeft();
+                        }
+                    }
+                }
+            });
+        }
+
+        function handleSwipeRight() {
+            const pages = ['dashboard', 'routes', 'analytics', 'feed', 'profile'];
+            const currentPage = document.querySelector('.page:not(.hidden)').id;
+            const currentIndex = pages.indexOf(currentPage);
+            
+            if (currentIndex > 0) {
+                showPage(pages[currentIndex - 1]);
+                addHapticFeedback(document.body, 'light');
+            }
+        }
+
+        function handleSwipeLeft() {
+            const pages = ['dashboard', 'routes', 'analytics', 'feed', 'profile'];
+            const currentPage = document.querySelector('.page:not(.hidden)').id;
+            const currentIndex = pages.indexOf(currentPage);
+            
+            if (currentIndex < pages.length - 1) {
+                showPage(pages[currentIndex + 1]);
+                addHapticFeedback(document.body, 'light');
+            }
+        }
+
+        function initializePullToRefresh() {
+            let startY = 0;
+            let currentY = 0;
+            let isPulling = false;
+            const pullIndicator = document.createElement('div');
+            pullIndicator.className = 'pull-indicator';
+            pullIndicator.textContent = 'Pull to refresh';
+            document.body.appendChild(pullIndicator);
+
+            document.addEventListener('touchstart', (e) => {
+                if (window.scrollY === 0) {
+                    startY = e.touches[0].clientY;
+                    isPulling = true;
+                }
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (isPulling && window.scrollY === 0) {
+                    currentY = e.touches[0].clientY;
+                    const pullDistance = currentY - startY;
+                    
+                    if (pullDistance > 0) {
+                        pullIndicator.style.top = `${Math.min(pullDistance - 60, 0)}px`;
+                        
+                        if (pullDistance > 100) {
+                            pullIndicator.textContent = 'Release to refresh';
+                            pullIndicator.classList.add('show');
+                        } else {
+                            pullIndicator.textContent = 'Pull to refresh';
+                            pullIndicator.classList.remove('show');
+                        }
+                    }
+                }
+            });
+
+            document.addEventListener('touchend', () => {
+                if (isPulling) {
+                    const pullDistance = currentY - startY;
+                    
+                    if (pullDistance > 100) {
+                        refreshData();
+                        addHapticFeedback(document.body, 'medium');
+                    }
+                    
+                    pullIndicator.style.top = '-60px';
+                    pullIndicator.classList.remove('show');
+                    isPulling = false;
+                }
+            });
+        }
+
+        function refreshData() {
+            // Simulate data refresh
+            loadRoutes();
+            loadFeed();
+            updateAnalytics();
+            
+            // Show refresh animation
+            const refreshToast = document.createElement('div');
+            refreshToast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(34, 197, 94, 0.9);
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.5rem;
+                z-index: 1000;
+                font-size: 0.875rem;
+            `;
+            refreshToast.textContent = 'Data refreshed!';
+            document.body.appendChild(refreshToast);
+            
+            setTimeout(() => {
+                refreshToast.remove();
+            }, 2000);
+        }
+
+        // Analytics Functions
+        function updateAnalytics() {
+            const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+            
+            // Calculate weekly stats
+            const now = new Date();
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            
+            const weeklyRoutes = routes.filter(route => {
+                const routeDate = new Date(route.timestamp);
+                return routeDate >= weekAgo;
+            });
+            
+            const weeklyDistance = weeklyRoutes.reduce((sum, route) => sum + parseFloat(route.distance), 0);
+            const weeklyTime = weeklyRoutes.reduce((sum, route) => sum + parseInt(route.duration), 0);
+            const weeklySpeed = weeklyRoutes.length > 0 ? 
+                weeklyRoutes.reduce((sum, route) => sum + (route.avgSpeed || 0), 0) / weeklyRoutes.length : 0;
+            
+            // Update UI
+            document.getElementById('weeklyDistance').textContent = weeklyDistance.toFixed(1);
+            document.getElementById('weeklyTime').textContent = (weeklyTime / 60).toFixed(1);
+            document.getElementById('weeklySpeed').textContent = Math.round(weeklySpeed * 0.621371);
+            document.getElementById('weeklyEfficiency').textContent = calculateEfficiencyScore(weeklyRoutes);
+            
+            // Update speed stats
+            const allSpeeds = routes.flatMap(route => route.speedData || []);
+            const topSpeed = allSpeeds.length > 0 ? Math.max(...allSpeeds) * 0.621371 : 0;
+            const avgSpeed = allSpeeds.length > 0 ? 
+                allSpeeds.reduce((sum, speed) => sum + speed, 0) / allSpeeds.length * 0.621371 : 0;
+            
+            document.getElementById('topSpeed').textContent = Math.round(topSpeed);
+            document.getElementById('avgSpeed').textContent = Math.round(avgSpeed);
+            document.getElementById('speedConsistency').textContent = calculateSpeedConsistency(allSpeeds);
+            
+            // Update insights
+            updateDrivingInsights(routes);
+            drawSpeedChart(allSpeeds);
+        }
+
+        function calculateEfficiencyScore(routes) {
+            if (routes.length === 0) return 0;
+            
+            let score = 0;
+            routes.forEach(route => {
+                const distance = parseFloat(route.distance);
+                const duration = parseInt(route.duration);
+                const avgSpeed = route.avgSpeed || 0;
+                
+                // Base score from average speed efficiency
+                score += Math.min(avgSpeed * 0.621371 / 60, 1) * 40;
+                
+                // Bonus for longer routes
+                score += Math.min(distance / 50, 1) * 30;
+                
+                // Bonus for consistent speed
+                const speedConsistency = calculateSpeedConsistency(route.speedData || []);
+                score += speedConsistency * 30;
+            });
+            
+            return Math.round(score / routes.length);
+        }
+
+        function calculateSpeedConsistency(speeds) {
+            if (speeds.length < 2) return 0;
+            
+            const avg = speeds.reduce((sum, speed) => sum + speed, 0) / speeds.length;
+            const variance = speeds.reduce((sum, speed) => sum + Math.pow(speed - avg, 2), 0) / speeds.length;
+            const stdDev = Math.sqrt(variance);
+            
+            // Return consistency as percentage (lower std dev = higher consistency)
+            return Math.max(0, 100 - (stdDev / avg) * 100);
+        }
+
+        function updateDrivingInsights(routes) {
+            if (routes.length === 0) return;
+            
+            // Find best route
+            const bestRoute = routes.reduce((best, route) => {
+                const efficiency = calculateEfficiencyScore([route]);
+                const bestEfficiency = calculateEfficiencyScore([best]);
+                return efficiency > bestEfficiency ? route : best;
+            });
+            
+            document.getElementById('bestRoute').textContent = 
+                `${bestRoute.name} - ${bestRoute.distance} mi in ${bestRoute.duration} min`;
+            
+            // Calculate peak driving time
+            const hourCounts = {};
+            routes.forEach(route => {
+                const hour = new Date(route.timestamp).getHours();
+                hourCounts[hour] = (hourCounts[hour] || 0) + 1;
+            });
+            
+            const peakHour = Object.keys(hourCounts).reduce((a, b) => 
+                hourCounts[a] > hourCounts[b] ? a : b
+            );
+            
+            document.getElementById('peakTime').textContent = 
+                `${peakHour}:00 - ${parseInt(peakHour) + 1}:00`;
+            
+            // Update eco score
+            const ecoScore = calculateEfficiencyScore(routes);
+            document.getElementById('ecoscore').textContent = `${ecoScore}/100`;
+            
+            // Update route variety
+            const uniqueRoutes = new Set(routes.map(route => route.name)).size;
+            document.getElementById('routeVariety').textContent = `${uniqueRoutes} unique routes`;
+        }
+
+        function drawSpeedChart(speeds) {
+            const canvas = document.getElementById('speedChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            if (speeds.length === 0) {
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '14px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('No speed data available', width / 2, height / 2);
+                return;
+            }
+            
+            // Sample data for visualization
+            const sampleSize = Math.min(speeds.length, 50);
+            const step = Math.floor(speeds.length / sampleSize);
+            const sampledSpeeds = speeds.filter((_, index) => index % step === 0).slice(0, sampleSize);
+            
+            const maxSpeed = Math.max(...sampledSpeeds) * 0.621371;
+            const minSpeed = Math.min(...sampledSpeeds) * 0.621371;
+            const range = maxSpeed - minSpeed || 1;
+            
+            // Draw chart
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            sampledSpeeds.forEach((speed, index) => {
+                const x = (index / (sampledSpeeds.length - 1)) * width;
+                const y = height - ((speed * 0.621371 - minSpeed) / range) * height;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Draw grid lines
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = (i / 4) * height;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+        }
+
+        function showLeaderboard(type) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.leaderboard-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Update leaderboard content based on type
+            const leaderboard = document.getElementById('distanceLeaderboard');
+            
+            if (type === 'speed') {
+                leaderboard.innerHTML = `
+                    <div class="leaderboard-item">
+                        <div class="rank">1</div>
+                        <div class="player-info">
+                            <div class="player-name">SpeedDemon</div>
+                            <div class="player-stats">127 mph</div>
+                        </div>
+                        <div class="player-score">127</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank">2</div>
+                        <div class="player-info">
+                            <div class="player-name">FastLane</div>
+                            <div class="player-stats">115 mph</div>
+                        </div>
+                        <div class="player-score">115</div>
+                    </div>
+                    <div class="leaderboard-item current-user">
+                        <div class="rank">3</div>
+                        <div class="player-info">
+                            <div class="player-name">You</div>
+                            <div class="player-stats">98 mph</div>
+                        </div>
+                        <div class="player-score">98</div>
+                    </div>
+                `;
+            } else if (type === 'efficiency') {
+                leaderboard.innerHTML = `
+                    <div class="leaderboard-item">
+                        <div class="rank">1</div>
+                        <div class="player-info">
+                            <div class="player-name">EcoDriver</div>
+                            <div class="player-stats">95/100</div>
+                        </div>
+                        <div class="player-score">95</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank">2</div>
+                        <div class="player-info">
+                            <div class="player-name">GreenMachine</div>
+                            <div class="player-stats">92/100</div>
+                        </div>
+                        <div class="player-score">92</div>
+                    </div>
+                    <div class="leaderboard-item current-user">
+                        <div class="rank">3</div>
+                        <div class="player-info">
+                            <div class="player-name">You</div>
+                            <div class="player-stats">85/100</div>
+                        </div>
+                        <div class="player-score">85</div>
+                    </div>
+                `;
+            } else {
+                // Distance leaderboard (default)
+                leaderboard.innerHTML = `
+                    <div class="leaderboard-item">
+                        <div class="rank">1</div>
+                        <div class="player-info">
+                            <div class="player-name">SpeedRacer</div>
+                            <div class="player-stats">2,847 mi</div>
+                        </div>
+                        <div class="player-score">2,847</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank">2</div>
+                        <div class="player-info">
+                            <div class="player-name">RoadWarrior</div>
+                            <div class="player-stats">2,156 mi</div>
+                        </div>
+                        <div class="player-score">2,156</div>
+                    </div>
+                    <div class="leaderboard-item current-user">
+                        <div class="rank">3</div>
+                        <div class="player-info">
+                            <div class="player-name">You</div>
+                            <div class="player-stats">1,892 mi</div>
+                        </div>
+                        <div class="player-score">1,892</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Social Simulation Features
+        function simulateSocialUpdates() {
+            // Simulate new posts from friends
+            setInterval(() => {
+                if (Math.random() < 0.3) { // 30% chance every 30 seconds
+                    addMockPost();
+                }
+            }, 30000);
+
+            // Simulate live leaderboard updates
+            setInterval(() => {
+                updateLiveLeaderboard();
+            }, 15000);
+        }
+
+        function addMockPost() {
+            const mockPost = {
+                id: 'mock-' + Date.now(),
+                username: getRandomFriendName(),
+                text: getRandomPostText(),
+                timestamp: new Date().toLocaleString(),
+                photos: Math.random() > 0.7 ? [getRandomPhoto()] : [],
+                likes: Math.floor(Math.random() * 20),
+                comments: [],
+                liked: false,
+                isOwn: false
+            };
+
+            // Add to feed
+            const feedContainer = document.getElementById('feedPosts');
+            if (feedContainer) {
+                const postElement = document.createElement('div');
+                postElement.className = 'feed-post';
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-avatar">${mockPost.username.charAt(0).toUpperCase()}</div>
+                        <div class="post-info">
+                            <div class="post-username">${mockPost.username}</div>
+                            <div class="post-time">${mockPost.timestamp}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${mockPost.text}</div>
+                    ${mockPost.photos.length > 0 ? `
+                        <div class="post-photos">
+                            ${mockPost.photos.map(photo => `
+                                <img src="${photo}" alt="Post photo" class="post-photo" onclick="openPhotoModal('${photo}')">
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="post-actions">
+                        <button class="post-action" onclick="toggleLike('${mockPost.id}')">
+                            ❤️ ${mockPost.likes}
+                        </button>
+                        <button class="post-action" onclick="toggleComments('${mockPost.id}')">
+                            💬 ${mockPost.comments.length}
+                        </button>
+                        <button class="post-action" onclick="sharePost('${mockPost.id}')">
+                            📤 Share
+                        </button>
+                    </div>
+                    <div class="comments-section" id="comments-${mockPost.id}" style="display: none;">
+                        <div class="comments-list"></div>
+                        <div class="comment-input">
+                            <textarea placeholder="Add a comment..." onkeydown="handleCommentKeydown(event, '${mockPost.id}')"></textarea>
+                            <button onclick="submitComment('${mockPost.id}')">Post</button>
+                        </div>
+                    </div>
+                `;
+                feedContainer.insertBefore(postElement, feedContainer.firstChild);
+            }
+        }
+
+        function getRandomFriendName() {
+            const names = ['SpeedRacer', 'RoadWarrior', 'UrbanDriver', 'HighwayHero', 'CityCruiser', 'FastLane', 'EcoDriver'];
+            return names[Math.floor(Math.random() * names.length)];
+        }
+
+        function getRandomPostText() {
+            const texts = [
+                "Just completed an amazing 45-mile drive through the mountains! 🏔️",
+                "New personal best: 127 mph on the highway! 🚀",
+                "Found this beautiful scenic route today - perfect for a Sunday drive 🌅",
+                "Eco-driving mode activated! 95% efficiency score today 🌱",
+                "Traffic was terrible but made it through with some great music 🎵",
+                "Early morning drive before sunrise - so peaceful 🌅",
+                "Just hit 1000 miles this month! Road warrior status unlocked 🏆",
+                "Beautiful sunset drive along the coast 🌊",
+                "New route discovered - 12 miles in 15 minutes! ⚡",
+                "Driving in the rain today - extra careful and safe ☔"
+            ];
+            return texts[Math.floor(Math.random() * texts.length)];
+        }
+
+        function getRandomPhoto() {
+            // Return a placeholder image
+            return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkRyaXZpbmcgUGhvdG88L3RleHQ+PC9zdmc+';
+        }
+
+        function updateLiveLeaderboard() {
+            // Simulate live leaderboard updates
+            const leaderboardItems = document.querySelectorAll('.leaderboard-item');
+            leaderboardItems.forEach(item => {
+                const scoreElement = item.querySelector('.player-score');
+                if (scoreElement && !item.classList.contains('current-user')) {
+                    const currentScore = parseInt(scoreElement.textContent.replace(/,/g, ''));
+                    const change = Math.floor(Math.random() * 20) - 10; // -10 to +10
+                    const newScore = Math.max(0, currentScore + change);
+                    scoreElement.textContent = newScore.toLocaleString();
+                }
+            });
+        }
+
+        // Scroll animations
+        function initializeScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            // Add reveal class to cards and observe them
+            document.querySelectorAll('.card, .status-item, .route-card').forEach(el => {
+                el.classList.add('reveal');
+                observer.observe(el);
+            });
+        }
+
+        // Add floating animation to random elements
+        function addFloatingEffects() {
+            const elements = document.querySelectorAll('.card, .status-item');
+            elements.forEach((el, index) => {
+                if (Math.random() < 0.3) { // 30% chance
+                    el.classList.add('floating');
+                    el.style.animationDelay = `${index * 0.5}s`;
+                }
+            });
+        }
+
+        // Add glow effects on hover
+        function addGlowEffects() {
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    btn.classList.add('glow');
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.classList.remove('glow');
+                });
+            });
+
+            document.querySelectorAll('.status-item').forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    item.classList.add('glow');
+                });
+                item.addEventListener('mouseleave', () => {
+                    item.classList.remove('glow');
+                });
+            });
+        }
+
+        // Accelerometer Functions
+        function initializeAccelerometer() {
+            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                // iOS 13+ requires permission
+                DeviceMotionEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            startAccelerometer();
+                        } else {
+                            console.log('Accelerometer permission denied');
+                            showAccelerometerFallback();
+                        }
+                    })
+                    .catch(console.error);
+            } else if (typeof DeviceMotionEvent !== 'undefined') {
+                // Android and older iOS
+                startAccelerometer();
+            } else {
+                console.log('Accelerometer not supported');
+                showAccelerometerFallback();
+            }
+        }
+
+        function startAccelerometer() {
+            accelerometerData.isSupported = true;
+            
+            window.addEventListener('devicemotion', handleMotionEvent);
+            
+            // Add G-force display to dashboard
+            addGForceDisplay();
+            
+            console.log('Accelerometer started successfully');
+        }
+
+        function handleMotionEvent(event) {
+            const acceleration = event.accelerationIncludingGravity;
+            
+            if (acceleration) {
+                accelerometerData.x = acceleration.x || 0;
+                accelerometerData.y = acceleration.y || 0;
+                accelerometerData.z = acceleration.z || 0;
+                
+                // Calculate total G-force (excluding gravity)
+                const totalG = Math.sqrt(
+                    Math.pow(acceleration.x, 2) + 
+                    Math.pow(acceleration.y, 2) + 
+                    Math.pow(acceleration.z - 9.81, 2)
+                ) / 9.81;
+                
+                accelerometerData.totalG = totalG;
+                
+                // Update max G-force
+                if (totalG > maxGForce) {
+                    maxGForce = totalG;
+                }
+                
+                // Store in history
+                gForceHistory.push({
+                    timestamp: Date.now(),
+                    gForce: totalG,
+                    x: acceleration.x,
+                    y: acceleration.y,
+                    z: acceleration.z
+                });
+                
+                // Keep only last 100 readings
+                if (gForceHistory.length > 100) {
+                    gForceHistory.shift();
+                }
+                
+                // Update UI
+                updateGForceDisplay();
+                updateGForceChart();
+                
+                // Detect driving events
+                detectDrivingEvents(totalG);
+            }
+        }
+
+        function addGForceDisplay() {
+            const dashboard = document.querySelector('#dashboard');
+            if (dashboard) {
+                const gForceCard = document.createElement('div');
+                gForceCard.className = 'card';
+                gForceCard.innerHTML = `
+                    <h3 class="card-title">🚀 G-Force Monitor</h3>
+                    <div class="gforce-container">
+                        <div class="gforce-main">
+                            <div class="gforce-value" id="currentGForce">0.00</div>
+                            <div class="gforce-label">Current G-Force</div>
+                        </div>
+                        <div class="gforce-stats">
+                            <div class="gforce-stat">
+                                <div class="gforce-stat-value" id="maxGForce">0.00</div>
+                                <div class="gforce-stat-label">Max G-Force</div>
+                            </div>
+                            <div class="gforce-stat">
+                                <div class="gforce-stat-value" id="avgGForce">0.00</div>
+                                <div class="gforce-stat-label">Average G-Force</div>
+                            </div>
+                        </div>
+                        <div class="gforce-chart">
+                            <canvas id="gForceChart" width="300" height="100"></canvas>
+                        </div>
+                        <div class="gforce-axes">
+                            <div class="gforce-axis">
+                                <span>X: <span id="gForceX">0.00</span></span>
+                                <span>Y: <span id="gForceY">0.00</span></span>
+                                <span>Z: <span id="gForceZ">0.00</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Insert after the first card
+                const firstCard = dashboard.querySelector('.card');
+                if (firstCard) {
+                    firstCard.insertAdjacentElement('afterend', gForceCard);
+                }
+            }
+        }
+
+        function updateGForceDisplay() {
+            const currentGElement = document.getElementById('currentGForce');
+            const maxGElement = document.getElementById('maxGForce');
+            const avgGElement = document.getElementById('avgGForce');
+            const xElement = document.getElementById('gForceX');
+            const yElement = document.getElementById('gForceY');
+            const zElement = document.getElementById('gForceZ');
+            
+            if (currentGElement) {
+                currentGElement.textContent = accelerometerData.totalG.toFixed(2);
+                
+                // Color code based on G-force level
+                const gForce = accelerometerData.totalG;
+                if (gForce > 2.0) {
+                    currentGElement.style.color = '#ef4444'; // Red - High G
+                } else if (gForce > 1.5) {
+                    currentGElement.style.color = '#f59e0b'; // Orange - Medium G
+                } else if (gForce > 1.2) {
+                    currentGElement.style.color = '#eab308'; // Yellow - Low G
+                } else {
+                    currentGElement.style.color = '#22c55e'; // Green - Normal
+                }
+            }
+            
+            if (maxGElement) {
+                maxGElement.textContent = maxGForce.toFixed(2);
+            }
+            
+            if (avgGElement && gForceHistory.length > 0) {
+                const avgG = gForceHistory.reduce((sum, reading) => sum + reading.gForce, 0) / gForceHistory.length;
+                avgGElement.textContent = avgG.toFixed(2);
+            }
+            
+            if (xElement) {
+                xElement.textContent = accelerometerData.x.toFixed(2);
+            }
+            if (yElement) {
+                yElement.textContent = accelerometerData.y.toFixed(2);
+            }
+            if (zElement) {
+                zElement.textContent = accelerometerData.z.toFixed(2);
+            }
+        }
+
+        function updateGForceChart() {
+            const canvas = document.getElementById('gForceChart');
+            if (!canvas || gForceHistory.length < 2) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Get recent data (last 50 points)
+            const recentData = gForceHistory.slice(-50);
+            const maxG = Math.max(...recentData.map(d => d.gForce));
+            const minG = Math.min(...recentData.map(d => d.gForce));
+            const range = maxG - minG || 1;
+            
+            // Draw chart
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            recentData.forEach((point, index) => {
+                const x = (index / (recentData.length - 1)) * width;
+                const y = height - ((point.gForce - minG) / range) * height;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Draw G-force zones
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)';
+            ctx.lineWidth = 1;
+            const highGLine = height - ((2.0 - minG) / range) * height;
+            ctx.beginPath();
+            ctx.moveTo(0, highGLine);
+            ctx.lineTo(width, highGLine);
+            ctx.stroke();
+            
+            ctx.strokeStyle = 'rgba(34, 197, 94, 0.3)';
+            const normalGLine = height - ((1.0 - minG) / range) * height;
+            ctx.beginPath();
+            ctx.moveTo(0, normalGLine);
+            ctx.lineTo(width, normalGLine);
+            ctx.stroke();
+        }
+
+        function detectDrivingEvents(gForce) {
+            // Detect hard braking (negative Y acceleration)
+            if (accelerometerData.y < -1.5) {
+                showDrivingEvent('Hard Braking', '⚠️', '#ef4444');
+            }
+            
+            // Detect hard acceleration (positive Y acceleration)
+            if (accelerometerData.y > 1.5) {
+                showDrivingEvent('Hard Acceleration', '🚀', '#f59e0b');
+            }
+            
+            // Detect sharp turns (high X acceleration)
+            if (Math.abs(accelerometerData.x) > 1.5) {
+                showDrivingEvent('Sharp Turn', '🔄', '#8b5cf6');
+            }
+            
+            // Detect high G-force events
+            if (gForce > 2.0) {
+                showDrivingEvent('High G-Force', '⚡', '#ef4444');
+            }
+        }
+
+        function showDrivingEvent(type, icon, color) {
+            // Create event notification
+            const eventToast = document.createElement('div');
+            eventToast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${color};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            `;
+            eventToast.textContent = `${icon} ${type}`;
+            document.body.appendChild(eventToast);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                eventToast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => eventToast.remove(), 300);
+            }, 3000);
+        }
+
+        function showAccelerometerFallback() {
+            console.log('Accelerometer not available - using simulated data');
+            // Simulate G-force data for testing
+            setInterval(() => {
+                accelerometerData.x = (Math.random() - 0.5) * 2;
+                accelerometerData.y = (Math.random() - 0.5) * 2;
+                accelerometerData.z = 9.81 + (Math.random() - 0.5) * 2;
+                accelerometerData.totalG = Math.sqrt(
+                    Math.pow(accelerometerData.x, 2) + 
+                    Math.pow(accelerometerData.y, 2) + 
+                    Math.pow(accelerometerData.z - 9.81, 2)
+                ) / 9.81;
+                
+                updateGForceDisplay();
+                updateGForceChart();
+            }, 100);
+        }
+
+        // Initialize map
+        function initializeMap() {
+            map = L.map('map').setView([40.7128, -74.0060], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        // Request location permission once and cache the result
+        async function requestLocationPermission() {
+            if (locationPermissionGranted) {
+                return true;
+            }
+
+            if (!navigator.geolocation) {
+                document.getElementById('locationStatus').textContent = 'Not supported';
+                return false;
+            }
+
+            // Check if we already have permission using the Permissions API
+            if ('permissions' in navigator) {
+                try {
+                    const permission = await navigator.permissions.query({ name: 'geolocation' });
+                    if (permission.state === 'granted') {
+                        locationPermissionGranted = true;
+                        return true;
+                    } else if (permission.state === 'denied') {
+                        document.getElementById('locationStatus').textContent = 'Permission denied';
+                        return false;
+                    }
+                } catch (error) {
+                    console.log('Permissions API not available, using fallback');
+                }
+            }
+
+            // Request permission through getCurrentPosition (only once)
+            return new Promise((resolve) => {
+                document.getElementById('locationStatus').textContent = 'Requesting location access...';
+                
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        locationPermissionGranted = true;
+                        currentPosition = position;
+                        console.log('Location permission granted');
+                        resolve(true);
+                    },
+                    function(error) {
+                        console.log('Location permission denied:', error);
+                        let errorMsg = 'Location unavailable';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMsg = 'Location access denied. Please enable in browser settings.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMsg = 'Position unavailable';
+                                break;
+                            case error.TIMEOUT:
+                                errorMsg = 'Location request timeout';
+                                break;
+                        }
+                        document.getElementById('locationStatus').textContent = errorMsg;
+                        resolve(false);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 15000,
+                        maximumAge: 60000 // Cache for 1 minute to avoid repeated requests
+                    }
+                );
+            });
+        }
+
+        // Get current location for map centering (uses cached permission)
+        async function getCurrentLocationForMap() {
+            const hasPermission = await requestLocationPermission();
+            
+            if (!hasPermission) {
+                return;
+            }
+
+            document.getElementById('locationStatus').textContent = 'Getting precise location...';
+            
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+                            const speed = position.coords.speed ? Math.round(position.coords.speed * 3.6) : 0;
+                            const accuracy = position.coords.accuracy;
+                            const altitude = position.coords.altitude;
+                            const altitudeAccuracy = position.coords.altitudeAccuracy;
+                            
+                            currentPosition = position;
+                            console.log('Location Details:', {
+                                lat: lat,
+                                lng: lng,
+                                accuracy: accuracy,
+                                altitude: altitude,
+                                altitudeAccuracy: altitudeAccuracy,
+                                timestamp: new Date(position.timestamp).toLocaleTimeString()
+                            });
+                            
+                            // Determine location source based on accuracy
+                            let locationSource = 'GPS';
+                            let statusColor = '#22c55e'; // Green for good GPS
+                            
+                            if (accuracy > 100) {
+                                locationSource = 'Cell Tower (~' + Math.round(accuracy) + 'm)';
+                                statusColor = '#ef4444'; // Red for poor accuracy
+                            } else if (accuracy > 50) {
+                                locationSource = 'WiFi (~' + Math.round(accuracy) + 'm)';
+                                statusColor = '#f59e0b'; // Orange for medium accuracy
+                            } else if (accuracy > 20) {
+                                locationSource = 'GPS (~' + Math.round(accuracy) + 'm)';
+                                statusColor = '#3b82f6'; // Blue for decent GPS
+                            } else {
+                                locationSource = 'GPS (~' + Math.round(accuracy) + 'm)';
+                                statusColor = '#22c55e'; // Green for good GPS
+                            }
+                            
+                            // Update display with source info
+                            document.getElementById('currentSpeed').innerHTML = `${speed}<span class="status-unit">km/h</span>`;
+                            const locationStatusEl = document.getElementById('locationStatus');
+                            locationStatusEl.innerHTML = `${locationSource}`;
+                            locationStatusEl.style.color = statusColor;
+                            
+                            // Warn if accuracy is poor
+                            if (accuracy > 100) {
+                                console.warn('⚠️ POOR ACCURACY: Location may be inaccurate. Try going outside or near a window for better GPS signal.');
+                                locationStatusEl.innerHTML += '<br><small style="color: #ef4444;">Poor signal - go outside</small>';
+                            }
+                            
+                            // Center map on current location
+                            map.setView([lat, lng], 16);
+                            
+                            // Add accuracy circle with color coding
+                            const accuracyCircle = L.circle([lat, lng], {
+                                radius: accuracy,
+                                color: statusColor,
+                                fillColor: statusColor,
+                                fillOpacity: 0.1,
+                                weight: 2
+                            }).addTo(map);
+                            
+                            // Add marker with detailed popup
+                            const popupContent = `
+                                <strong>Your Location</strong><br>
+                                Accuracy: ±${Math.round(accuracy)}m<br>
+                                Source: ${locationSource}<br>
+                                ${accuracy > 50 ? '<span style="color: #ef4444;">⚠️ Go outside for better accuracy</span>' : '<span style="color: #22c55e;">✓ Good accuracy</span>'}
+                            `;
+                            L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
+                        },
+                function(error) {
+                    console.log('Location error:', error);
+                    document.getElementById('locationStatus').textContent = 'Location error';
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 30000 // Use cached position for 30 seconds
+                }
+            );
+        }
+
+        // Toggle tracking
+        function toggleTracking() {
+            if (!isTracking) {
+                startTracking();
+            } else {
+                stopTracking();
+            }
+        }
+
+        // Start tracking
+        async function startTracking() {
+            console.log('Starting tracking...');
+            
+            // Check permission first
+            const hasPermission = await requestLocationPermission();
+            if (!hasPermission) {
+                alert('Location permission is required to track routes. Please enable location access in your browser settings.');
+                return;
+            }
+            
+            isTracking = true;
+            currentRoute = [];
+            speedData = [];
+            
+            document.getElementById('trackBtn').textContent = 'Stop Recording';
+            document.getElementById('trackBtn').classList.add('recording');
+            document.getElementById('trackingInfo').classList.remove('hidden');
+            document.getElementById('trackingStatus').textContent = 'Recording';
+            
+            if (navigator.geolocation) {
+                // Get initial high-accuracy position
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        const speed = position.coords.speed ? Math.round(position.coords.speed * 3.6) : 0;
+                        const accuracy = position.coords.accuracy;
+                        
+                        console.log(`Initial tracking accuracy: ${accuracy} meters`);
+                        
+                        // Update location display
+                        document.getElementById('locationStatus').textContent = `±${Math.round(accuracy)}m accuracy`;
+                        document.getElementById('currentSpeed').innerHTML = `${speed}<span class="status-unit">km/h</span>`;
+                        
+                        // Center map and add first point
+                        map.setView([lat, lng], 16);
+                        L.marker([lat, lng]).addTo(map);
+                        currentRoute.push({ lat, lng, speed, timestamp: Date.now(), accuracy });
+                        document.getElementById('routePoints').textContent = `${currentRoute.length} points`;
+                        
+                        // Start continuous high-accuracy tracking
+                        watchId = navigator.geolocation.watchPosition(
+                            function(position) {
+                                const lat = position.coords.latitude;
+                                const lng = position.coords.longitude;
+                                const speed = position.coords.speed ? Math.round(position.coords.speed * 3.6) : 0;
+                                const accuracy = position.coords.accuracy;
+                                const timestamp = Date.now();
+                                
+                                console.log(`Tracking accuracy: ${accuracy}m, Speed: ${speed}km/h`);
+                                
+                                // Log all readings for debugging
+                                console.log(`Tracking reading: ${accuracy}m accuracy, ${speed}km/h, ${locationSource}`);
+                                
+                                // Only add point if accuracy is reasonable (less than 100m for tracking, 30m for precise tracking)
+                                const accuracyThreshold = isTracking ? 100 : 30; // More lenient during tracking
+                                if (accuracy <= accuracyThreshold) {
+                                    // Update current speed and location
+                                    document.getElementById('currentSpeed').innerHTML = `${Math.round(speed * 0.621371)}<span class="status-unit">mph</span>`;
+                                    document.getElementById('locationStatus').textContent = `±${Math.round(accuracy)}m accuracy`;
+                                    
+                                    // Filter out points that are too close (less than 5m apart) to reduce noise
+                                    const lastPoint = currentRoute[currentRoute.length - 1];
+                                    const distance = lastPoint ? getDistanceFromLatLonInMiles(lastPoint.lat, lastPoint.lng, lat, lng) * 5280 : 328; // Convert to feet
+                                    
+                                    if (distance > 5 || currentRoute.length === 0) {
+                                        // Add to route
+                                        currentRoute.push({ lat, lng, speed, timestamp, accuracy });
+                                        document.getElementById('routePoints').textContent = `${currentRoute.length} points`;
+                                        
+                                        // Update map with smoothed route
+                                        if (currentRoute.length > 1) {
+                                            // Clear previous route line
+                                            map.eachLayer(layer => {
+                                                if (layer instanceof L.Polyline) {
+                                                    map.removeLayer(layer);
+                                                }
+                                            });
+                                            
+                                            // Add new route line
+                                            L.polyline(currentRoute.map(p => [p.lat, p.lng]), {
+                                                color: '#3b82f6',
+                                                weight: 4,
+                                                opacity: 0.8,
+                                                smoothFactor: 2.0  // Smooth the line
+                                            }).addTo(map);
+                                            
+                                            // Keep map centered on current position
+                                            map.setView([lat, lng], map.getZoom());
+                                        }
+                                        
+                                        // Update total distance
+                                        const totalDistance = calculateTotalDistance(currentRoute);
+                                        document.getElementById('totalDistance').innerHTML = `${totalDistance.toFixed(1)}<span class="status-unit">mi</span>`;
+                                    }
+                                } else {
+                                    console.warn(`Low accuracy reading skipped: ${accuracy}m`);
+                                }
+                            },
+                            function(error) {
+                                console.error('Error tracking location:', error);
+                                document.getElementById('locationStatus').textContent = 'Tracking error';
+                            },
+                            {
+                                enableHighAccuracy: true,
+                                timeout: 8000,         // Shorter timeout for continuous updates
+                                maximumAge: 0          // Always fresh readings
+                            }
+                        );
+                    },
+                    function(error) {
+                        console.error('Error getting initial position:', error);
+                        document.getElementById('locationStatus').textContent = 'Cannot start tracking';
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 15000,
+                        maximumAge: 0
+                    }
+                );
+            }
+        }
+
+        // Stop tracking
+        function stopTracking() {
+            console.log('Stopping tracking...');
+            
+            try {
+                isTracking = false;
+                
+                if (watchId) {
+                    navigator.geolocation.clearWatch(watchId);
+                    watchId = null;
+                }
+                
+                document.getElementById('trackBtn').textContent = 'Start Recording';
+                document.getElementById('trackBtn').classList.remove('recording');
+                document.getElementById('trackingInfo').classList.add('hidden');
+                document.getElementById('trackingStatus').textContent = 'Ready';
+                
+                // Only show save modal if we have route data
+                if (currentRoute && currentRoute.length > 0) {
+                    document.getElementById('saveModal').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error in stopTracking:', error);
+            }
+        }
+
+        // Calculate total distance
+        function calculateTotalDistance(route) {
+            let total = 0;
+            for (let i = 1; i < route.length; i++) {
+                const prev = route[i - 1];
+                const curr = route[i];
+                const distance = getDistanceFromLatLonInMiles(prev.lat, prev.lng, curr.lat, curr.lng);
+                total += distance;
+            }
+            return total;
+        }
+
+        function getDistanceFromLatLonInMiles(lat1, lon1, lat2, lon2) {
+            const R = 3959; // Earth's radius in miles
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI/180);
+        }
+
+        // Save route
+        function saveRoute() {
+            try {
+                const nameInput = document.getElementById('routeName');
+                const isPublicInput = document.getElementById('isPublic');
+                
+                const name = nameInput.value.trim();
+                const isPublic = isPublicInput ? isPublicInput.checked : false;
+                
+                if (!name) {
+                    alert('Please enter a route name');
+                    return;
+                }
+                
+                if (!currentRoute || currentRoute.length === 0) {
+                    alert('No route data to save');
+                    return;
+                }
+                
+                // Calculate route statistics
+                    const topSpeed = currentRoute.length > 0 ? Math.max(...currentRoute.map(p => (p.speed || 0) * 0.621371)) : 0;
+                    const avgSpeed = currentRoute.length > 0 ?
+                        currentRoute.reduce((sum, p) => sum + ((p.speed || 0) * 0.621371), 0) / currentRoute.length : 0;
+                
+                const route = {
+                    id: Date.now(),
+                    name: name,
+                    points: currentRoute.length,
+                    distance: calculateTotalDistance(currentRoute).toFixed(1),
+                    duration: currentRoute.length > 0 ? 
+                        ((currentRoute[currentRoute.length - 1].timestamp - currentRoute[0].timestamp) / 60000).toFixed(0) : 0,
+                    topSpeed: Math.round(topSpeed),
+                    avgSpeed: Math.round(avgSpeed),
+                    isPublic: isPublic,
+                    timestamp: new Date().toLocaleString(),
+                    username: 'You', // Current user
+                    userId: 'current-user'
+                };
+                
+                // Save to localStorage
+                const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+                routes.unshift(route);
+                localStorage.setItem('routes', JSON.stringify(routes));
+                
+                console.log('Route saved successfully:', route);
+                
+                closeSaveModal();
+                loadSampleRoutes();
+                
+                // Reset tracking
+                currentRoute = [];
+                speedData = [];
+                
+                // Clear route lines from map
+                if (map) {
+                    map.eachLayer(layer => {
+                        if (layer instanceof L.Polyline) {
+                            map.removeLayer(layer);
+                        }
+                    });
+                }
+                
+                // Reset distance display
+                document.getElementById('totalDistance').innerHTML = '0.0<span class="status-unit">mi</span>';
+                
+            } catch (error) {
+                console.error('Error saving route:', error);
+                alert('Error saving route. Please try again.');
+            }
+        }
+
+        // Close save modal
+        function closeSaveModal() {
+            document.getElementById('saveModal').classList.add('hidden');
+            document.getElementById('routeName').value = '';
+            document.getElementById('isPublic').checked = false;
+        }
+
+        // Generate mock friends data
+        function generateFriendsRoutes() {
+            const friendsRoutes = [
+                {
+                    id: 'friend-1-route-1',
+                    name: 'Morning Commute',
+                    username: 'SpeedRacer',
+                    userId: 'friend-1',
+                    distance: '25.3',
+                    duration: '32',
+                    topSpeed: 95,
+                    avgSpeed: 47,
+                    points: 287,
+                    isPublic: true,
+                    timestamp: 'Yesterday, 8:15 AM'
+                },
+                {
+                    id: 'friend-2-route-1',
+                    name: 'Highway Run',
+                    username: 'RoadWarrior',
+                    userId: 'friend-2',
+                    distance: '85.2',
+                    duration: '78',
+                    topSpeed: 128,
+                    avgSpeed: 65,
+                    points: 456,
+                    isPublic: true,
+                    timestamp: '2 days ago'
+                },
+                {
+                    id: 'friend-3-route-1',
+                    name: 'City Loop',
+                    username: 'UrbanDriver',
+                    userId: 'friend-3',
+                    distance: '12.7',
+                    duration: '28',
+                    topSpeed: 62,
+                    avgSpeed: 27,
+                    points: 198,
+                    isPublic: true,
+                    timestamp: '3 days ago'
+                }
+            ];
+            return friendsRoutes;
+        }
+
+        // Create route card HTML
+        function createRouteCard(route, showActions = false) {
+            const isOwnRoute = route.userId === 'current-user' || route.username === 'You';
+            
+            return `
+                <div class="route-card" id="route-${route.id}">
+                    <div class="route-header">
+                        <div>
+                            <div class="route-name">${route.name}</div>
+                            ${!isOwnRoute ? `<div style="font-size: 0.875rem; color: #94a3b8; margin-top: 0.25rem;">by ${route.username}</div>` : ''}
+                        </div>
+                        <div class="route-actions">
+                            <div class="route-badge ${route.isPublic ? '' : 'private'}">${route.isPublic ? 'Public' : 'Private'}</div>
+                            ${showActions && isOwnRoute ? `<button class="btn-danger" onclick="deleteRoute(${route.id})" title="Delete Route">×</button>` : ''}
+                        </div>
+                    </div>
+                    <div class="route-stats">
+                            <div class="route-stat">
+                                <div class="route-stat-value">${route.distance}</div>
+                                <div class="route-stat-label">mi</div>
+                            </div>
+                        <div class="route-stat">
+                            <div class="route-stat-value">${route.duration}</div>
+                            <div class="route-stat-label">min</div>
+                        </div>
+                        <div class="route-stat">
+                            <div class="route-stat-value">${route.topSpeed ? Math.round(route.topSpeed * 0.621371) : route.points}</div>
+                            <div class="route-stat-label">${route.topSpeed ? 'mph max' : 'points'}</div>
+                        </div>
+                        ${route.avgSpeed ? `
+                        <div class="route-stat">
+                            <div class="route-stat-value">${Math.round(route.avgSpeed * 0.621371)}</div>
+                            <div class="route-stat-label">mph avg</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="route-timestamp">${route.timestamp}</div>
+                </div>
+            `;
+        }
+
+        // Load routes
+        function loadSampleRoutes() {
+            const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+            const friendsRoutes = generateFriendsRoutes();
+            const publicRoutes = [...routes.filter(r => r.isPublic), ...friendsRoutes];
+            
+            const recentRoutes = document.getElementById('recentRoutes');
+            const allRoutes = document.getElementById('allRoutes');
+            const friendsRoutesEl = document.getElementById('friendsRoutes');
+            const publicRoutesEl = document.getElementById('publicRoutes');
+            
+            // Recent routes (dashboard) - limit to 3
+            const recentRoutesHTML = routes.slice(0, 3).map(route => createRouteCard(route, false)).join('');
+            
+            // My routes (routes page) - with delete buttons
+            const allRoutesHTML = routes.map(route => createRouteCard(route, true)).join('');
+            
+            // Friends routes
+            const friendsRoutesHTML = friendsRoutes.map(route => createRouteCard(route, false)).join('');
+            
+            // Public routes (mix of user's public routes and friends' routes)
+            const publicRoutesHTML = publicRoutes.map(route => createRouteCard(route, false)).join('');
+            
+            // Update DOM
+            recentRoutes.innerHTML = recentRoutesHTML || '<div class="text-center" style="color: #64748b; padding: 2rem;">No routes yet. Start tracking to create your first route.</div>';
+            allRoutes.innerHTML = allRoutesHTML || '<div class="text-center" style="color: #64748b; padding: 2rem;">No routes yet. Start tracking to create your first route.</div>';
+            
+            if (friendsRoutesEl) {
+                friendsRoutesEl.innerHTML = friendsRoutesHTML || '<div class="text-center" style="color: #64748b; padding: 2rem;">Add friends to see their routes here.</div>';
+            }
+            
+            if (publicRoutesEl) {
+                publicRoutesEl.innerHTML = publicRoutesHTML || '<div class="text-center" style="color: #64748b; padding: 2rem;">No public routes available.</div>';
+            }
+        }
+
+        // Delete route
+        function deleteRoute(routeId) {
+            try {
+                if (!routeId) return;
+                
+                if (confirm('Delete this route permanently?')) {
+                    let routes = JSON.parse(localStorage.getItem('routes') || '[]');
+                    routes = routes.filter(route => route.id != routeId);
+                    localStorage.setItem('routes', JSON.stringify(routes));
+                    
+                    const routeCard = document.getElementById(`route-${routeId}`);
+                    if (routeCard) {
+                        routeCard.style.transition = 'all 0.3s ease';
+                        routeCard.style.opacity = '0';
+                        routeCard.style.transform = 'scale(0.95)';
+                        
+                        setTimeout(() => {
+                            loadSampleRoutes();
+                        }, 300);
+                    } else {
+                        loadSampleRoutes();
+                    }
+                }
+            } catch (error) {
+                console.error('Error deleting route:', error);
+            }
+        }
+
+        // Show route tab
+        function showRouteTab(tabId) {
+            // Update tab buttons
+            document.querySelectorAll('.route-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Hide all tab contents
+            document.querySelectorAll('.route-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.remove('hidden');
+        }
+
+        // Filter routes based on search
+        function filterRoutes() {
+            const searchTerm = document.getElementById('routeSearchInput').value.toLowerCase();
+            const activeTab = document.querySelector('.route-tab.active').textContent.toLowerCase();
+            
+            let routeCards = [];
+            if (activeTab.includes('my routes')) {
+                routeCards = document.querySelectorAll('#allRoutes .route-card');
+            } else if (activeTab.includes('friends')) {
+                routeCards = document.querySelectorAll('#friendsRoutes .route-card');
+            } else if (activeTab.includes('public')) {
+                routeCards = document.querySelectorAll('#publicRoutes .route-card');
+            }
+            
+            routeCards.forEach(card => {
+                const routeName = card.querySelector('.route-name').textContent.toLowerCase();
+                const username = card.querySelector('.route-name + div')?.textContent.toLowerCase() || '';
+                
+                if (routeName.includes(searchTerm) || username.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Show page
+        function showPage(pageId) {
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.remove('hidden');
+            
+            // Load page-specific data
+            if (pageId === 'routes') {
+                loadRoutes();
+            } else if (pageId === 'feed') {
+                loadFeed();
+            } else if (pageId === 'analytics') {
+                updateAnalytics();
+            }
+        }
+    </script>
+</body>
+</html>
