@@ -4599,6 +4599,48 @@
             console.log(`DriveSphere loaded in ${performanceMetrics.loadTime.toFixed(2)}ms`);
         });
         
+        // Global error handler
+        window.addEventListener('error', function(event) {
+            console.error('Global error caught:', event.error);
+            // Reset page transition lock on any error
+            window.isPageTransitioning = false;
+        });
+
+        // Manual reset function for stuck navigation
+        function resetNavigation() {
+            console.log('Resetting navigation...');
+            window.isPageTransitioning = false;
+            
+            // Reset all page styles
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.opacity = '1';
+                page.style.transition = '';
+            });
+            
+            // Show dashboard as fallback
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            const dashboard = document.getElementById('dashboard');
+            if (dashboard) {
+                dashboard.classList.remove('hidden');
+            }
+            
+            // Reset nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            const dashboardLink = document.querySelector('[onclick="showPage(\'dashboard\')"]');
+            if (dashboardLink) {
+                dashboardLink.classList.add('active');
+            }
+            
+            console.log('Navigation reset complete');
+        }
+
+        // Add reset function to window for debugging
+        window.resetNavigation = resetNavigation;
+
         function initializeApp() {
             try {
                 // Make sure save modal is hidden on startup
@@ -9408,64 +9450,105 @@
         // Show page
         function showPage(pageId) {
             // Prevent multiple rapid clicks
-            if (window.isPageTransitioning) return;
-            window.isPageTransitioning = true;
-            
-            // Update nav links with smooth transition
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                link.style.transition = 'all 0.3s ease';
-            });
-            
-            // Find the clicked nav link and make it active
-            const clickedLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
-            if (clickedLink) {
-                clickedLink.classList.add('active');
+            if (window.isPageTransitioning) {
+                console.log('Page transition in progress, ignoring click');
+                return;
             }
             
-            // Get current and target pages
-            const currentPage = document.querySelector('.page:not(.hidden)');
-            const targetPage = document.getElementById(pageId);
-            
-            if (currentPage && targetPage && currentPage !== targetPage) {
-                // Add fade out effect to current page
-                currentPage.style.transition = 'opacity 0.2s ease-out';
-                currentPage.style.opacity = '0';
-                
-                // After fade out, switch pages
-                setTimeout(() => {
-                    // Hide all pages
-                    document.querySelectorAll('.page').forEach(page => {
-                        page.classList.add('hidden');
-                        page.style.opacity = '1'; // Reset opacity
-                    });
-                    
-                    // Show target page with fade in
-                    targetPage.classList.remove('hidden');
-                    targetPage.style.transition = 'opacity 0.3s ease-in';
-                    targetPage.style.opacity = '0';
-                    
-                    // Trigger fade in
-                    setTimeout(() => {
-                        targetPage.style.opacity = '1';
-                    }, 10);
-                    
-                    // Load page-specific data
-                    loadPageData(pageId);
-                    
-                    // Reset transition lock
-                    setTimeout(() => {
-                        window.isPageTransitioning = false;
-                    }, 300);
-                }, 200);
-            } else {
-                // Direct switch if no current page or same page
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.add('hidden');
-                });
-                targetPage.classList.remove('hidden');
-                loadPageData(pageId);
+            // Safety fallback - reset transition lock after 2 seconds
+            const fallbackTimeout = setTimeout(() => {
+                console.log('Page transition fallback triggered');
                 window.isPageTransitioning = false;
+            }, 2000);
+            
+            window.isPageTransitioning = true;
+            
+            try {
+                // Update nav links with smooth transition
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    link.style.transition = 'all 0.3s ease';
+                });
+                
+                // Find the clicked nav link and make it active
+                const clickedLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+                if (clickedLink) {
+                    clickedLink.classList.add('active');
+                }
+                
+                // Get current and target pages
+                const currentPage = document.querySelector('.page:not(.hidden)');
+                const targetPage = document.getElementById(pageId);
+                
+                if (!targetPage) {
+                    console.error('Target page not found:', pageId);
+                    window.isPageTransitioning = false;
+                    clearTimeout(fallbackTimeout);
+                    return;
+                }
+                
+                if (currentPage && targetPage && currentPage !== targetPage) {
+                    // Add fade out effect to current page
+                    currentPage.style.transition = 'opacity 0.2s ease-out';
+                    currentPage.style.opacity = '0';
+                    
+                    // After fade out, switch pages
+                    setTimeout(() => {
+                        try {
+                            // Hide all pages
+                            document.querySelectorAll('.page').forEach(page => {
+                                page.classList.add('hidden');
+                                page.style.opacity = '1'; // Reset opacity
+                            });
+                            
+                            // Show target page with fade in
+                            targetPage.classList.remove('hidden');
+                            targetPage.style.transition = 'opacity 0.3s ease-in';
+                            targetPage.style.opacity = '0';
+                            
+                            // Trigger fade in
+                            setTimeout(() => {
+                                targetPage.style.opacity = '1';
+                            }, 10);
+                            
+                            // Load page-specific data with error handling
+                            try {
+                                loadPageData(pageId);
+                            } catch (error) {
+                                console.error('Error loading page data:', error);
+                            }
+                            
+                            // Reset transition lock
+                            setTimeout(() => {
+                                window.isPageTransitioning = false;
+                                clearTimeout(fallbackTimeout);
+                            }, 300);
+                        } catch (error) {
+                            console.error('Error in page transition:', error);
+                            window.isPageTransitioning = false;
+                            clearTimeout(fallbackTimeout);
+                        }
+                    }, 200);
+                } else {
+                    // Direct switch if no current page or same page
+                    try {
+                        document.querySelectorAll('.page').forEach(page => {
+                            page.classList.add('hidden');
+                        });
+                        targetPage.classList.remove('hidden');
+                        loadPageData(pageId);
+                        window.isPageTransitioning = false;
+                        clearTimeout(fallbackTimeout);
+                    } catch (error) {
+                        console.error('Error in direct page switch:', error);
+                        window.isPageTransitioning = false;
+                        clearTimeout(fallbackTimeout);
+                    }
+                }
+            } catch (error) {
+                console.error('Error in showPage function:', error);
+                window.isPageTransitioning = false;
+                clearTimeout(fallbackTimeout);
             }
         }
         
