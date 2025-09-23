@@ -9079,7 +9079,12 @@
             document.querySelectorAll('.route-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            event.target.classList.add('active');
+            
+            // Find and activate the clicked tab
+            const clickedTab = document.querySelector(`[onclick="showRouteTab('${tabId}')"]`);
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            }
             
             // Hide all tab contents
             document.querySelectorAll('.route-tab-content').forEach(content => {
@@ -9377,6 +9382,75 @@
                 // Refresh dashboard data
                 updateDashboard();
             }
+        }
+
+        function loadRoutes() {
+            // Load and display routes
+            const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+            const allRoutesContainer = document.getElementById('allRoutes');
+            
+            if (allRoutesContainer) {
+                if (routes.length === 0) {
+                    allRoutesContainer.innerHTML = '<p style="text-align: center; color: #64748b; padding: 2rem;">No routes saved yet. Start tracking to create your first route!</p>';
+                } else {
+                    allRoutesContainer.innerHTML = routes.map(route => `
+                        <div class="route-card" data-route-id="${route.id}">
+                            <div class="route-header">
+                                <h4>${route.name}</h4>
+                                <div class="route-actions">
+                                    <button class="btn btn-sm" onclick="viewRouteOnMap('${route.id}')">View</button>
+                                    <button class="btn btn-sm btn-secondary" onclick="deleteRoute('${route.id}')">Delete</button>
+                                </div>
+                            </div>
+                            <div class="route-stats">
+                                <div class="route-stat">
+                                    <span class="stat-icon">📏</span>
+                                    <span class="stat-value">${route.distance ? route.distance.toFixed(1) : '0'} miles</span>
+                                </div>
+                                <div class="route-stat">
+                                    <span class="stat-icon">⏱️</span>
+                                    <span class="stat-value">${route.duration || '0'} min</span>
+                                </div>
+                                <div class="route-stat">
+                                    <span class="stat-icon">🚗</span>
+                                    <span class="stat-value">${route.avgSpeed ? route.avgSpeed.toFixed(0) : '0'} mph</span>
+                                </div>
+                            </div>
+                            <div class="route-date">
+                                <small>Created: ${new Date(route.timestamp).toLocaleDateString()}</small>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function viewRouteOnMap(routeId) {
+            // Switch to dashboard to view route on map
+            showPage('dashboard');
+            
+            // Show notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #00bfff, #007bff);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(0, 191, 255, 0.3);
+            `;
+            notification.textContent = `🗺️ Route loaded on map`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
         
         function viewRoute(routeId) {
