@@ -1224,6 +1224,84 @@
             gap: 0.5rem;
         }
 
+        /* Friends System Styles */
+        .friends-section {
+            margin-top: 1rem;
+        }
+
+        .search-friends {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .friend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .friend-item:hover {
+            background: rgba(0, 191, 255, 0.1);
+            border-color: rgba(0, 191, 255, 0.4);
+        }
+
+        .friend-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00bfff, #007bff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+
+        .friend-details h4 {
+            margin: 0;
+            color: #00bfff;
+            font-size: 1rem;
+        }
+
+        .friend-details p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(0, 191, 255, 0.2);
+            color: #00bfff;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+
+        .my-posts {
+            margin-top: 1rem;
+        }
+
         .admin-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -3241,7 +3319,7 @@
 <body>
     <nav class="navbar" id="mainNavbar" style="display: none;">
         <div class="nav-container">
-            <div class="logo">DriveSphere</div>
+            <div class="logo" onclick="showPage('dashboard')" style="cursor: pointer;">DriveSphere</div>
             <div class="nav-links">
                 <a href="#" class="nav-link active" onclick="showPage('dashboard')">Dashboard</a>
                 <a href="#" class="nav-link" onclick="showPage('routes')">Routes</a>
@@ -3445,9 +3523,6 @@
                     </button>
                     <button class="btn btn-sm" onclick="toggleMapLayer('terrain')" id="terrainBtn">
                         🏔️ Terrain
-                    </button>
-                    <button class="btn btn-sm" onclick="showNearbyPOI()" id="poiBtn">
-                        📍 POI
                     </button>
                 </div>
                 <div id="map" class="map-container"></div>
@@ -3820,6 +3895,28 @@
                         <div class="status-label">Total XP</div>
                         <div class="status-value" id="profileXP">0<span class="status-unit">XP</span></div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Friends Section -->
+            <div class="card">
+                <h3 class="card-title">👥 Friends</h3>
+                <div class="friends-section">
+                    <div class="search-friends">
+                        <input type="text" id="friendSearch" placeholder="Search for friends..." class="form-input" style="margin-bottom: 1rem;">
+                        <button class="btn" onclick="searchFriends()">🔍 Search</button>
+                    </div>
+                    <div class="friends-list" id="friendsList">
+                        <!-- Friends will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Posts Section -->
+            <div class="card">
+                <h3 class="card-title">📝 My Posts</h3>
+                <div class="my-posts" id="myPosts">
+                    <!-- User's posts will be populated here -->
                 </div>
             </div>
         </div>
@@ -4443,7 +4540,7 @@
                 'drives_10': { name: 'Regular Driver', description: 'Complete 10 drives', xp: 200, icon: '🔄' },
                 'drives_50': { name: 'Veteran Driver', description: 'Complete 50 drives', xp: 750, icon: '🎖️' },
                 'safe_driver': { name: 'Safety First', description: 'Complete 10 drives without hard events', xp: 400, icon: '🛡️' },
-                'speed_demon': { name: 'Speed Demon', description: 'Reach 80+ mph', xp: 250, icon: '⚡' },
+                'speed_demon': { name: 'Speed Demon', description: 'Reach 100+ mph', xp: 500, icon: '⚡' },
                 'photographer': { name: 'Photographer', description: 'Share 10 photos', xp: 300, icon: '📸' },
                 'social_butterfly': { name: 'Social Butterfly', description: 'Get 50 likes total', xp: 350, icon: '🦋' },
                 'streak_7': { name: 'Weekly Warrior', description: 'Drive 7 days in a row', xp: 600, icon: '🔥' },
@@ -8380,6 +8477,8 @@
                     return playerData.level >= 10;
                 case 'level_25':
                     return playerData.level >= 25;
+                case 'speed_demon':
+                    return speedData.some(speed => speed > 100);
                 default:
                     return false;
             }
@@ -9381,6 +9480,10 @@
             } else if (pageId === 'dashboard') {
                 // Refresh dashboard data
                 updateDashboard();
+            } else if (pageId === 'profile') {
+                // Load profile data
+                loadFriends();
+                loadMyPosts();
             }
         }
 
@@ -9451,6 +9554,173 @@
                 notification.style.animation = 'slideOutRight 0.3s ease';
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
+        }
+
+        // Friends System
+        let friends = JSON.parse(localStorage.getItem('friends') || '[]');
+        let friendRequests = JSON.parse(localStorage.getItem('friendRequests') || '[]');
+
+        function searchFriends() {
+            const searchTerm = document.getElementById('friendSearch').value.toLowerCase();
+            if (!searchTerm) {
+                loadFriends();
+                return;
+            }
+
+            const friendsList = document.getElementById('friendsList');
+            const allUsers = users.filter(user => user.id !== currentUser.id);
+            const filteredUsers = allUsers.filter(user => 
+                user.name.toLowerCase().includes(searchTerm) || 
+                user.username.toLowerCase().includes(searchTerm) ||
+                user.email.toLowerCase().includes(searchTerm)
+            );
+
+            friendsList.innerHTML = '';
+            
+            if (filteredUsers.length === 0) {
+                friendsList.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No users found</p>';
+                return;
+            }
+
+            filteredUsers.forEach(user => {
+                const isFriend = friends.some(f => f.id === user.id);
+                const hasRequest = friendRequests.some(r => r.fromId === user.id || r.toId === user.id);
+                
+                const friendItem = document.createElement('div');
+                friendItem.className = 'friend-item';
+                friendItem.innerHTML = `
+                    <div class="friend-info">
+                        <div class="friend-avatar">${user.name.charAt(0).toUpperCase()}</div>
+                        <div class="friend-details">
+                            <h4>${user.name}</h4>
+                            <p>@${user.username}</p>
+                        </div>
+                    </div>
+                    <div class="friend-actions">
+                        ${isFriend ? 
+                            '<span class="status-badge">Friend</span>' : 
+                            hasRequest ? 
+                                '<span class="status-badge">Request Sent</span>' :
+                                `<button class="btn btn-sm" onclick="sendFriendRequest('${user.id}')">Add Friend</button>`
+                        }
+                    </div>
+                `;
+                friendsList.appendChild(friendItem);
+            });
+        }
+
+        function loadFriends() {
+            const friendsList = document.getElementById('friendsList');
+            friendsList.innerHTML = '';
+
+            if (friends.length === 0) {
+                friendsList.innerHTML = '<p style="text-align: center; color: #64748b; padding: 1rem;">No friends yet. Search for users to add friends!</p>';
+                return;
+            }
+
+            friends.forEach(friend => {
+                const friendItem = document.createElement('div');
+                friendItem.className = 'friend-item';
+                friendItem.innerHTML = `
+                    <div class="friend-info">
+                        <div class="friend-avatar">${friend.name.charAt(0).toUpperCase()}</div>
+                        <div class="friend-details">
+                            <h4>${friend.name}</h4>
+                            <p>@${friend.username}</p>
+                        </div>
+                    </div>
+                    <div class="friend-actions">
+                        <span class="status-badge">Friend</span>
+                        <button class="btn btn-sm btn-secondary" onclick="removeFriend('${friend.id}')">Remove</button>
+                    </div>
+                `;
+                friendsList.appendChild(friendItem);
+            });
+        }
+
+        function sendFriendRequest(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            const request = {
+                id: Date.now(),
+                fromId: currentUser.id,
+                toId: userId,
+                fromName: currentUser.name,
+                toName: user.name,
+                timestamp: new Date().toISOString()
+            };
+
+            friendRequests.push(request);
+            localStorage.setItem('friendRequests', JSON.stringify(friendRequests));
+
+            // Show notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #00bfff, #007bff);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1001;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(0, 191, 255, 0.3);
+            `;
+            notification.textContent = `👥 Friend request sent to ${user.name}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+
+            searchFriends(); // Refresh the list
+        }
+
+        function removeFriend(friendId) {
+            friends = friends.filter(f => f.id !== friendId);
+            localStorage.setItem('friends', JSON.stringify(friends));
+            loadFriends();
+        }
+
+        function loadMyPosts() {
+            const myPostsContainer = document.getElementById('myPosts');
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            const userPosts = posts.filter(post => post.userId === currentUser.id);
+
+            if (userPosts.length === 0) {
+                myPostsContainer.innerHTML = '<p style="text-align: center; color: #64748b; padding: 2rem;">No posts yet. Share your driving experiences!</p>';
+                return;
+            }
+
+            myPostsContainer.innerHTML = userPosts.map(post => `
+                <div class="feed-post">
+                    <div class="post-header">
+                        <div class="post-avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
+                        <div class="post-info">
+                            <div class="post-username">${currentUser.name}</div>
+                            <div class="post-time">${new Date(post.timestamp).toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    ${post.photos && post.photos.length > 0 ? `
+                        <div class="post-photos">
+                            ${post.photos.map(photo => `<img src="${photo}" alt="Post photo" class="post-photo">`).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="post-actions">
+                        <button class="post-action" onclick="likePost('${post.id}')">
+                            👍 ${post.likes || 0}
+                        </button>
+                        <button class="post-action" onclick="deletePost('${post.id}')">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
         }
         
         function viewRoute(routeId) {
@@ -9569,7 +9839,7 @@
                             <h3 style="color: #f59e0b; margin-bottom: 0.5rem;">🏅 Achievements</h3>
                             <p style="margin: 0 0 0.5rem 0;">Unlock special achievements for:</p>
                             <ul style="margin: 0; padding-left: 1.5rem;">
-                                <li><strong>Speed Demon:</strong> Drive over 80 mph</li>
+                                <li><strong>Speed Demon:</strong> Drive over 100 mph</li>
                                 <li><strong>Road Warrior:</strong> Complete 100 drives</li>
                                 <li><strong>Social Butterfly:</strong> Share 50 photos</li>
                                 <li><strong>Explorer:</strong> Drive 1000+ miles</li>
