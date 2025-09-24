@@ -4,10 +4,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Production builds
-build/
-dist/
-
 # Environment variables
 .env
 .env.local
@@ -62,34 +58,26 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
+# dotenv environment variables file
+.env
 
-# next.js build output
-.next
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
 
-# nuxt.js build output
-.nuxt
+# Build outputs
+dist/
+build/
 
-# vuepress build output
-.vuepress/dist
+# Temporary files
+*.tmp
+*.temp
 
-# Serverless directories
-.serverless
+# Backup files
+*.bak
+*.backup
 
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
-
-# Temporary folders
-tmp/
-temp/
+# Local development files
+local-config.js
+dev-config.js
