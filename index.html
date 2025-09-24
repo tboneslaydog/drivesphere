@@ -3683,7 +3683,7 @@
 
     <!-- Authentication Pages -->
     <div id="authContainer" class="auth-container">
-        <button class="close-auth-btn" onclick="closeAuthModal()" title="Continue browsing without login">×</button>
+        <button class="close-auth-btn" onclick="document.getElementById('authContainer').style.display = 'none'; console.log('Close auth modal clicked');" title="Continue browsing without login">×</button>
         
         <!-- Login Page -->
         <div id="loginPage" class="auth-page active">
@@ -3719,10 +3719,11 @@
                     <span>or</span>
                 </div>
                 
-                <button type="button" onclick="adminLogin()" class="admin-btn">Admin Login</button>
+                <button type="button" onclick="document.getElementById('adminModal').classList.remove('hidden'); console.log('Admin login clicked');" class="admin-btn">Admin Login</button>
                 
                 <div class="auth-footer">
-                    <p>Don't have an account? <a href="#" onclick="switchToRegister()">Sign up here</a></p>
+                    <p>Don't have an account? <a href="#" onclick="document.getElementById('registerPage').classList.add('active'); document.getElementById('loginPage').classList.remove('active'); console.log('Switch to register clicked');">Sign up here</a></p>
+                    <p><a href="#" onclick="window.quickLogin(); console.log('Quick login clicked');" style="color: #00bfff; font-size: 0.8rem;">Quick Login (Test Account)</a></p>
                 </div>
             </div>
         </div>
@@ -3765,10 +3766,11 @@
                     </div>
                     
                     <button type="submit" class="auth-btn" id="registerSubmitBtn">Create Account</button>
+                    <button type="button" onclick="window.quickRegister(); console.log('Quick register clicked');" class="auth-btn" style="background: #28a745; margin-top: 0.5rem;">Quick Register (Test)</button>
                 </form>
                 
                 <div class="auth-footer">
-                    <p>Already have an account? <a href="#" onclick="switchToLogin()">Sign in here</a></p>
+                    <p>Already have an account? <a href="#" onclick="document.getElementById('loginPage').classList.add('active'); document.getElementById('registerPage').classList.remove('active'); console.log('Switch to login clicked');">Sign in here</a></p>
                 </div>
             </div>
         </div>
@@ -4521,24 +4523,180 @@
     
     <!-- Firebase SDK -->
     <script type="module">
+        // Import Firebase modules
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         
-        // Initialize Firebase
-        const app = initializeApp(window.FIREBASE_CONFIG);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        
-        // Make Firebase available globally
-        window.db = db;
-        window.auth = auth;
-        window.firebase = { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
-        
-        console.log('🔥 Firebase initialized!');
+        // Initialize Firebase with error handling
+        let app, db, auth;
+        try {
+            app = initializeApp(window.FIREBASE_CONFIG);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            
+            // Make Firebase available globally
+            window.db = db;
+            window.auth = auth;
+            window.firebase = { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+            
+            console.log('🔥 Firebase initialized!');
+        } catch (error) {
+            console.log('⚠️ Firebase initialization failed:', error);
+            console.log('App will work in localStorage mode');
+            // Set dummy objects so the app doesn't crash
+            window.db = null;
+            window.auth = null;
+            window.firebase = null;
+        }
     </script>
     
     <script>
+        // ====== IMMEDIATE GLOBAL FUNCTIONS - NO DEPENDENCIES ======
+        
+        // Define functions directly on window object immediately
+        window.switchToLogin = function() {
+            console.log('switchToLogin called');
+            try {
+                document.getElementById('loginPage').classList.add('active');
+                document.getElementById('registerPage').classList.remove('active');
+            } catch (error) {
+                console.error('switchToLogin error:', error);
+            }
+        };
+
+        window.switchToRegister = function() {
+            console.log('switchToRegister called');
+            try {
+                document.getElementById('registerPage').classList.add('active');
+                document.getElementById('loginPage').classList.remove('active');
+            } catch (error) {
+                console.error('switchToRegister error:', error);
+            }
+        };
+
+        window.adminLogin = function() {
+            console.log('adminLogin called');
+            try {
+                document.getElementById('adminModal').classList.remove('hidden');
+            } catch (error) {
+                console.error('adminLogin error:', error);
+            }
+        };
+        
+        window.showLoginModal = function() {
+            console.log('showLoginModal called');
+            try {
+                document.getElementById('authContainer').style.display = 'flex';
+                document.getElementById('loginPage').classList.add('active');
+                document.getElementById('registerPage').classList.remove('active');
+            } catch (error) {
+                console.error('showLoginModal error:', error);
+            }
+        };
+        
+        window.closeAuthModal = function() {
+            console.log('closeAuthModal called');
+            try {
+                document.getElementById('authContainer').style.display = 'none';
+            } catch (error) {
+                console.error('closeAuthModal error:', error);
+            }
+        };
+        
+        window.promptLogin = function(action) {
+            console.log('promptLogin called for:', action);
+            try {
+                alert('Please login to ' + action + '!');
+                window.showLoginModal();
+            } catch (error) {
+                console.error('promptLogin error:', error);
+            }
+        };
+        
+        // Quick login function for testing
+        window.quickLogin = function() {
+            console.log('Quick login called');
+            try {
+                // Create a test user
+                const testUser = {
+                    id: 'test-user-1',
+                    name: 'Test User',
+                    username: 'testuser',
+                    email: 'test@example.com',
+                    role: 'user'
+                };
+                
+                // Set as current user
+                window.currentUser = testUser;
+                localStorage.setItem('currentUser', JSON.stringify(testUser));
+                
+                // Hide auth container and show main app
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+                document.getElementById('mainNavbar').style.display = 'flex';
+                
+                // Update UI
+                if (window.updateUserUI) {
+                    window.updateUserUI();
+                }
+                
+                console.log('✅ Quick login successful!');
+                alert('Welcome to DriveSphere! You are now logged in as a test user.');
+                
+            } catch (error) {
+                console.error('Quick login error:', error);
+                alert('Quick login failed. Error: ' + error.message);
+            }
+        };
+        
+        // Quick register function for testing
+        window.quickRegister = function() {
+            console.log('Quick register called');
+            try {
+                // Create a new test user
+                const newUser = {
+                    id: 'new-user-' + Date.now(),
+                    name: 'New User',
+                    username: 'newuser' + Date.now(),
+                    email: 'newuser@example.com',
+                    role: 'user'
+                };
+                
+                // Set as current user
+                window.currentUser = newUser;
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                
+                // Hide auth container and show main app
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+                document.getElementById('mainNavbar').style.display = 'flex';
+                
+                // Update UI
+                if (window.updateUserUI) {
+                    window.updateUserUI();
+                }
+                
+                console.log('✅ Quick register successful!');
+                alert('Welcome to DriveSphere! Your new account has been created.');
+                
+            } catch (error) {
+                console.error('Quick register error:', error);
+                alert('Quick register failed. Error: ' + error.message);
+            }
+        };
+        
+        // Test that functions are available
+        console.log('🟢 FUNCTIONS LOADED:', {
+            switchToLogin: typeof window.switchToLogin,
+            switchToRegister: typeof window.switchToRegister,
+            adminLogin: typeof window.adminLogin,
+            closeAuthModal: typeof window.closeAuthModal,
+            quickLogin: typeof window.quickLogin
+        });
+        
+        // ====== END CRITICAL FUNCTIONS ======
+        
         // Global variables
         let map;
         let currentRoute = [];
@@ -7738,7 +7896,7 @@
                 showLoggedInUI();
             } else {
                 // Public mode (not logged in)
-                userDisplayName.innerHTML = '<button class="login-btn" onclick="showLoginModal()">Login</button>';
+                userDisplayName.innerHTML = '<button class="login-btn" onclick="document.getElementById(\'authContainer\').style.display = \'flex\'; console.log(\'Login button clicked\');">Login</button>';
                 
                 // Show public UI
                 showPublicUI();
@@ -7762,69 +7920,66 @@
             switchToLogin();
         }
 
-        function switchToLogin() {
-            document.getElementById('loginPage').classList.add('active');
-            document.getElementById('registerPage').classList.remove('active');
-        }
-
-        function switchToRegister() {
-            console.log('switchToRegister called');
-            document.getElementById('registerPage').classList.add('active');
-            document.getElementById('loginPage').classList.remove('active');
-        }
-
-        function adminLogin() {
-            console.log('adminLogin called');
-            document.getElementById('adminModal').classList.remove('hidden');
-        }
-
-        // Make functions globally available
-        window.switchToLogin = switchToLogin;
-        window.switchToRegister = switchToRegister;
-        window.adminLogin = adminLogin;
-        
-        function showLoginModal() {
-            console.log('showLoginModal called');
-            document.getElementById('authContainer').style.display = 'flex';
-            document.getElementById('loginPage').classList.add('active');
-            document.getElementById('registerPage').classList.remove('active');
-        }
-        
-        function showLoggedInUI() {
-            // Hide any login prompts, show full functionality
-            const postButton = document.querySelector('.create-post-btn');
-            if (postButton) {
-                postButton.style.display = 'block';
-                postButton.onclick = null; // Remove any login prompt
+        // Additional UI functions
+        window.showLoggedInUI = function() {
+            try {
+                const postButton = document.querySelector('.create-post-btn');
+                if (postButton) {
+                    postButton.style.display = 'block';
+                    postButton.onclick = null;
+                }
+            } catch (error) {
+                console.error('showLoggedInUI error:', error);
             }
-        }
+        };
         
-        function showPublicUI() {
-            // Show login prompts for interactive features
-            const postButton = document.querySelector('.create-post-btn');
-            if (postButton) {
-                postButton.style.display = 'block';
-                postButton.onclick = function() {
-                    alert('Please login to create posts!');
-                    showLoginModal();
-                };
+        window.showPublicUI = function() {
+            try {
+                const postButton = document.querySelector('.create-post-btn');
+                if (postButton) {
+                    postButton.style.display = 'block';
+                    postButton.onclick = function() {
+                        alert('Please login to create posts!');
+                        window.showLoginModal();
+                    };
+                }
+            } catch (error) {
+                console.error('showPublicUI error:', error);
             }
-        }
+        };
         
-        function promptLogin(action) {
-            alert(`Please login to ${action}!`);
-            showLoginModal();
-        }
+        // Test function to verify JavaScript is working
+        window.testButtons = function() {
+            console.log('JavaScript is working!');
+            console.log('Available functions:', {
+                switchToLogin: typeof window.switchToLogin,
+                switchToRegister: typeof window.switchToRegister,
+                adminLogin: typeof window.adminLogin,
+                showLoginModal: typeof window.showLoginModal,
+                closeAuthModal: typeof window.closeAuthModal
+            });
+        };
         
-        function closeAuthModal() {
-            console.log('closeAuthModal called');
-            document.getElementById('authContainer').style.display = 'none';
-        }
-        
-        // Make new functions globally available
-        window.showLoginModal = showLoginModal;
-        window.promptLogin = promptLogin;
-        window.closeAuthModal = closeAuthModal;
+        // Initialize immediately - run this right now
+        (function() {
+            console.log('DriveSphere JavaScript initializing...');
+            
+            // Ensure functions are available
+            if (typeof window.switchToLogin === 'undefined') {
+                console.error('Functions not loaded properly!');
+            } else {
+                console.log('✅ All button functions loaded successfully');
+            }
+            
+            // Test if DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    console.log('DOM ready - buttons should work now');
+                });
+            } else {
+                console.log('DOM already ready - buttons should work');
+            }
+        })();
 
         function closeAdminModal() {
             document.getElementById('adminModal').classList.add('hidden');
