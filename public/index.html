@@ -732,6 +732,402 @@
             color: #00ffff;
             font-weight: 500;
         }
+
+        .post-card {
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 12px 40px rgba(0, 255, 255, 0.1),
+                0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-card:hover::before {
+            opacity: 1;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-avatar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .user-avatar:hover::before {
+            animation: shimmer 0.6s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .username {
+            margin: 0;
+            color: #e2e8f0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        .post-time {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.875rem;
+            font-weight: 400;
+        }
+
+        .delete-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            transform: scale(1.05);
+        }
+
+        .post-content {
+            margin-bottom: 1.5rem;
+        }
+
+        .post-text {
+            margin: 0;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .post-image {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 16px;
+            margin-top: 1.25rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            loading: lazy;
+        }
+
+        .post-image:hover {
+            transform: scale(1.02);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.3),
+                0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 0.625rem 1rem;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .like-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .comment-btn:hover {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+
+        .share-btn:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+
+        .action-btn svg {
+            transition: transform 0.2s ease;
+        }
+
+        .action-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .page-header h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .post-composer {
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .composer-header {
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 1rem;
+        }
+
+        .composer-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .composer-info h3 {
+            margin: 0 0 0.25rem 0;
+            color: #e2e8f0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .composer-hint {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.875rem;
+        }
+
+        .composer-content textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            resize: vertical;
+            font-size: 1rem;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .composer-content textarea:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .composer-content textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .composer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .composer-tools {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .composer-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .composer-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .photo-preview {
+            color: #22c55e;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .welcome-card {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .welcome-content {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .welcome-icon {
+            color: rgba(102, 126, 234, 0.6);
+            margin-bottom: 1.5rem;
+        }
+
+        .welcome-content h4 {
+            margin: 0 0 1rem 0;
+            color: #e2e8f0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .welcome-content p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -875,24 +1271,63 @@
 
             <!-- Feed Page -->
             <div id="feed" class="page">
-                <h2>Social Feed</h2>
-                <div class="card">
-                    <h3>Share Your Drive</h3>
-                    <textarea id="postContent" placeholder="Share your driving experience..." style="width: 100%; height: 100px; padding: 1rem; border: none; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; resize: vertical;"></textarea>
-                    
-                    <!-- Photo Upload Section -->
-                    <div style="margin: 1rem 0;">
-                        <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoSelect(event)">
-                        <button class="btn secondary" onclick="document.getElementById('photoInput').click()" style="margin-right: 0.5rem;">📷 Add Photo</button>
-                        <span id="photoPreview" style="display: none; color: #51cf66;">✓ Photo selected</span>
+                <div class="page-header">
+                    <h2>Community Feed</h2>
+                    <p class="page-subtitle">Share your driving experiences and connect with fellow drivers</p>
+                </div>
+                
+                <div class="card post-composer">
+                    <div class="composer-header">
+                        <div class="composer-user">
+                            <div class="user-avatar" id="composerAvatar">U</div>
+                            <div class="composer-info">
+                                <h3>Share Your Experience</h3>
+                                <span class="composer-hint">What's on your mind?</span>
+                            </div>
+                        </div>
                     </div>
                     
-                    <button class="btn" onclick="createPost()" style="margin-top: 1rem;">Share Post</button>
+                    <div class="composer-content">
+                        <textarea id="postContent" placeholder="Share your driving experience, route insights, or tips with the community..." rows="4"></textarea>
+                        
+                        <div class="composer-actions">
+                            <div class="composer-tools">
+                                <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoSelect(event)">
+                                <button class="composer-btn" onclick="document.getElementById('photoInput').click()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                        <polyline points="21,15 16,10 5,21"></polyline>
+                                    </svg>
+                                    <span>Photo</span>
+                                </button>
+                                <span id="photoPreview" class="photo-preview">Photo selected</span>
+                            </div>
+                            
+                            <button class="btn primary" onclick="createPost()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22,2 15,22 11,13 2,9 22,2"></polygon>
+                                </svg>
+                                <span>Share Post</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
+                
                 <div id="feedContent">
-                    <div class="card">
-                        <h4>Welcome to DriveSphere!</h4>
-                        <p>Start sharing your driving experiences with the community.</p>
+                    <div class="card welcome-card">
+                        <div class="welcome-content">
+                            <div class="welcome-icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                            </div>
+                            <h4>Welcome to DriveSphere</h4>
+                            <p>Connect with fellow drivers and share your experiences on the road. Start by creating your first post!</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1221,6 +1656,57 @@
         let trackingInterval = null;
         let currentRoute = [];
         let watchId = null;
+
+        // Utility functions for safe localStorage operations
+        function safeSetItem(key, value) {
+            try {
+                if (!key || value === undefined) {
+                    console.error('Invalid key or value for localStorage');
+                    return false;
+                }
+                localStorage.setItem(key, JSON.stringify(value));
+                return true;
+            } catch (error) {
+                console.error('❌ Error saving to localStorage:', error);
+                // Try to clear some space if quota exceeded
+                if (error.name === 'QuotaExceededError') {
+                    console.warn('⚠️ localStorage quota exceeded, attempting to clear old data...');
+                    try {
+                        // Clear old posts and routes to make space
+                        const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+                        const routes = JSON.parse(localStorage.getItem('routes') || '[]');
+                        
+                        if (posts.length > 50) {
+                            localStorage.setItem('posts', JSON.stringify(posts.slice(-50)));
+                        }
+                        if (routes.length > 20) {
+                            localStorage.setItem('routes', JSON.stringify(routes.slice(-20)));
+                        }
+                        
+                        // Try again
+                        localStorage.setItem(key, JSON.stringify(value));
+                        return true;
+                    } catch (retryError) {
+                        console.error('❌ Failed to clear space and retry:', retryError);
+                    }
+                }
+                return false;
+            }
+        }
+
+        function safeGetItem(key) {
+            try {
+                if (!key) {
+                    console.error('❌ Invalid key for localStorage');
+                    return null;
+                }
+                const item = localStorage.getItem(key);
+                return item ? JSON.parse(item) : null;
+            } catch (error) {
+                console.error('❌ Error reading from localStorage:', error);
+                return null;
+            }
+        }
         let lastPosition = null;
         let totalDistance = 0;
         let sessionStartTime = null;
@@ -1265,56 +1751,77 @@
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 DriveSphere starting...');
+            console.log('DriveSphere starting...');
             checkAuthStatus();
             initializeEventListeners();
         });
 
         function checkAuthStatus() {
-            console.log('🔍 Checking auth status...');
+            console.log('Checking auth status...');
             
             // Check if user is logged in from localStorage
-            const savedUser = localStorage.getItem('currentUser');
-            const rememberMe = localStorage.getItem('rememberMe') === 'true';
+            const savedUser = safeGetItem('currentUser');
+            const rememberMe = safeGetItem('rememberMe') === true;
             
             if (savedUser && rememberMe) {
                 try {
-                    currentUser = JSON.parse(savedUser);
-                    console.log('✅ User found in localStorage:', currentUser.email);
+                    currentUser = savedUser;
+                    console.log('User found in localStorage:', currentUser.email);
                     showMainApp();
                     updateUserUI();
                     initializeApp();
                 } catch (error) {
-                    console.error('❌ Error parsing saved user:', error);
+                    console.error('❌ Error loading saved user:', error);
                     showAuthContainer();
                 }
             } else {
-                console.log('❌ No saved user or remember me not set');
+                console.log('No saved user or remember me not set');
                 showAuthContainer();
             }
         }
 
         function initializeEventListeners() {
             // Login form
-            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
             
             // Register form
-            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', handleRegister);
+            }
             
             // Admin login form
-            document.getElementById('adminLoginForm').addEventListener('submit', handleAdminLogin);
+            const adminLoginForm = document.getElementById('adminLoginForm');
+            if (adminLoginForm) {
+                adminLoginForm.addEventListener('submit', handleAdminLogin);
+            }
             
-            // Username availability check
-            document.getElementById('registerUsername').addEventListener('input', checkUsernameAvailability);
+            // Username availability check with debouncing
+            const registerUsername = document.getElementById('registerUsername');
+            if (registerUsername) {
+                registerUsername.addEventListener('input', debounce(checkUsernameAvailability, 300));
+            }
         }
 
         async function handleLogin(event) {
             event.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
+            const emailInput = document.getElementById('loginEmail');
+            const passwordInput = document.getElementById('loginPassword');
+            const rememberMeInput = document.getElementById('rememberMe');
+            
+            if (!emailInput || !passwordInput || !rememberMeInput) {
+                console.error('Login form elements not found');
+                return;
+            }
+            
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            const rememberMe = rememberMeInput.checked;
 
-            console.log('🔐 Attempting login for:', email);
+            console.log('Attempting login for:', email);
 
             // Simple validation
             if (!email || !password) {
@@ -1323,7 +1830,7 @@
             }
 
             // Check if user exists in localStorage
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const users = safeGetItem('users') || [];
             const user = users.find(u => u.email === email && u.password === password);
 
             if (user) {
@@ -1332,12 +1839,12 @@
                 
                 // Save login state
                 if (rememberMe) {
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    localStorage.setItem('rememberMe', 'true');
+                    safeSetItem('currentUser', user);
+                    safeSetItem('rememberMe', true);
                     console.log('💾 User saved for persistence');
                 } else {
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    localStorage.setItem('rememberMe', 'false');
+                    safeSetItem('currentUser', user);
+                    safeSetItem('rememberMe', false);
                     console.log('💾 User saved for session only');
                 }
 
@@ -1351,15 +1858,25 @@
 
         async function handleRegister(event) {
             event.preventDefault();
-            const name = document.getElementById('registerName').value;
-            const username = document.getElementById('registerUsername').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
+            const nameInput = document.getElementById('registerName');
+            const usernameInput = document.getElementById('registerUsername');
+            const emailInput = document.getElementById('registerEmail');
+            const passwordInput = document.getElementById('registerPassword');
+            
+            if (!nameInput || !usernameInput || !emailInput || !passwordInput) {
+                console.error('❌ Registration form elements not found');
+                return;
+            }
+            
+            const name = nameInput.value;
+            const username = usernameInput.value;
+            const email = emailInput.value;
+            const password = passwordInput.value;
 
             console.log('📝 Attempting registration for:', email);
 
             // Check if username is available
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const users = safeGetItem('users') || [];
             const usernameTaken = users.some(u => u.username && u.username.toLowerCase() === username.toLowerCase());
             
             if (usernameTaken) {
@@ -1385,12 +1902,15 @@
 
             // Save user
             users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
+            if (!safeSetItem('users', users)) {
+                alert('Failed to save user data. Please try again.');
+                return;
+            }
 
             console.log('✅ Registration successful');
             currentUser = newUser;
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
-            localStorage.setItem('rememberMe', 'true');
+            safeSetItem('currentUser', newUser);
+            safeSetItem('rememberMe', true);
 
             showMainApp();
             updateUserUI();
@@ -1399,7 +1919,14 @@
 
         function handleAdminLogin(event) {
             event.preventDefault();
-            const adminKey = document.getElementById('adminKey').value;
+            const adminKeyInput = document.getElementById('adminKey');
+            
+            if (!adminKeyInput) {
+                console.error('❌ Admin key input not found');
+                return;
+            }
+            
+            const adminKey = adminKeyInput.value;
 
             if (adminKey === '5478') {
                 console.log('✅ Admin login successful');
@@ -1422,10 +1949,31 @@
             }
         }
 
+        // Debounce function for performance
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         function checkUsernameAvailability() {
-            const username = document.getElementById('registerUsername').value.trim();
+            const usernameInput = document.getElementById('registerUsername');
             const statusDiv = document.getElementById('usernameStatus');
-            const registerBtn = document.getElementById('registerForm').querySelector('button[type="submit"]');
+            const registerForm = document.getElementById('registerForm');
+            
+            if (!usernameInput || !statusDiv || !registerForm) {
+                console.error('❌ Username availability check elements not found');
+                return;
+            }
+            
+            const username = usernameInput.value.trim();
+            const registerBtn = registerForm.querySelector('button[type="submit"]');
 
             if (!username) {
                 statusDiv.innerHTML = '';
@@ -1455,7 +2003,7 @@
             document.getElementById('adminLoginModal').classList.add('hidden');
             document.getElementById('registerContainer').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
-            console.log('🚀 Main app shown');
+            console.log('Main app shown');
         }
 
         function showAuthContainer() {
@@ -1487,14 +2035,33 @@
         }
 
         function updateUserUI() {
-            if (currentUser) {
-                document.getElementById('userDisplayName').textContent = `@${currentUser.username}`;
-                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-                document.getElementById('profileName').textContent = currentUser.name;
-                document.getElementById('profileUsername').textContent = currentUser.username;
-                document.getElementById('profileEmail').textContent = currentUser.email;
-                document.getElementById('profileJoinDate').textContent = new Date(currentUser.createdAt).toLocaleDateString();
-                document.getElementById('profileAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            if (!currentUser) {
+                console.warn('⚠️ No current user to update UI');
+                return;
+            }
+            
+            try {
+                const userDisplayName = document.getElementById('userDisplayName');
+                const userAvatar = document.getElementById('userAvatar');
+                const profileName = document.getElementById('profileName');
+                const profileUsername = document.getElementById('profileUsername');
+                const profileEmail = document.getElementById('profileEmail');
+                const profileJoinDate = document.getElementById('profileJoinDate');
+                const profileAvatar = document.getElementById('profileAvatar');
+                
+                if (userDisplayName) userDisplayName.textContent = `@${currentUser.username}`;
+                if (userAvatar) userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+                if (profileName) profileName.textContent = currentUser.name;
+                if (profileUsername) profileUsername.textContent = currentUser.username;
+                if (profileEmail) profileEmail.textContent = currentUser.email;
+                if (profileJoinDate) profileJoinDate.textContent = new Date(currentUser.createdAt).toLocaleDateString();
+                if (profileAvatar) profileAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+                
+                // Update composer avatar
+                const composerAvatar = document.getElementById('composerAvatar');
+                if (composerAvatar) {
+                    composerAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+                }
                 
                 // Update profile stats
                 updateProfileStats();
@@ -1511,6 +2078,9 @@
                         navLinks.appendChild(adminLi);
                     }
                 }
+            }
+            } catch (error) {
+                console.error('❌ Error updating user UI:', error);
             }
         }
 
@@ -1804,40 +2374,109 @@
         }
 
         function loadFeed() {
-            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-            const feedContent = document.getElementById('feedContent');
+            try {
+                const posts = safeGetItem('posts') || [];
+                const feedContent = document.getElementById('feedContent');
+                
+                if (!feedContent) {
+                    console.error('❌ Feed content container not found');
+                    return;
+                }
             
             if (posts.length === 0) {
-                feedContent.innerHTML = '<div class="card"><h4>Welcome to DriveSphere!</h4><p>Start sharing your driving experiences with the community.</p></div>';
+                feedContent.innerHTML = `
+                    <div class="card welcome-card">
+                        <div class="welcome-content">
+                            <div class="welcome-icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                            </div>
+                            <h4>Welcome to DriveSphere</h4>
+                            <p>Connect with fellow drivers and share your experiences on the road. Start by creating your first post!</p>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
             let feedHTML = '';
             posts.reverse().forEach(post => {
                 const canDelete = currentUser && (currentUser.id === post.userId || currentUser.isAdmin);
+                const timeAgo = getTimeAgo(new Date(post.timestamp));
+                
                 feedHTML += `
-                    <div class="card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                            <div style="display: flex; align-items: center;">
-                                <div class="user-avatar" style="width: 30px; height: 30px; font-size: 0.8rem; margin-right: 0.5rem;">${post.username.charAt(0).toUpperCase()}</div>
-                                <div>
-                                    <h4 style="margin: 0;">@${post.username}</h4>
-                                    <small style="opacity: 0.7;">${new Date(post.timestamp).toLocaleString()}</small>
+                    <div class="card post-card">
+                        <div class="post-header">
+                            <div class="post-user">
+                                <div class="user-avatar">${post.username.charAt(0).toUpperCase()}</div>
+                                <div class="user-info">
+                                    <h4 class="username">${post.username}</h4>
+                                    <span class="post-time">${timeAgo}</span>
                                 </div>
                             </div>
                             ${canDelete ? `
-                                <button class="btn admin" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; background: #dc3545; border-color: #dc3545;" onclick="deletePost('${post.id}')">
-                                    🗑️ Delete
+                                <button class="delete-btn" onclick="deletePost('${post.id}')" title="Delete post">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3,6 5,6 21,6"></polyline>
+                                        <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                                    </svg>
                                 </button>
                             ` : ''}
                         </div>
-                        ${post.content ? `<p style="margin: 0.5rem 0;">${post.content}</p>` : ''}
-                        ${post.photo ? `<img src="${post.photo}" style="width: 100%; max-width: 400px; border-radius: 8px; margin: 0.5rem 0;" alt="Post photo">` : ''}
+                        <div class="post-content">
+                            ${post.content ? `<p class="post-text">${post.content}</p>` : ''}
+                            ${post.photo ? `<img src="${post.photo}" class="post-image" alt="Post photo">` : ''}
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-btn like-btn" onclick="toggleLike('${post.id}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                                <span>Like</span>
+                            </button>
+                            <button class="action-btn comment-btn" onclick="toggleComments('${post.id}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <span>Comment</span>
+                            </button>
+                            <button class="action-btn share-btn" onclick="sharePost('${post.id}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="18" cy="5" r="3"></circle>
+                                    <circle cx="6" cy="12" r="3"></circle>
+                                    <circle cx="18" cy="19" r="3"></circle>
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                                </svg>
+                                <span>Share</span>
+                            </button>
+                        </div>
                     </div>
                 `;
             });
             
             feedContent.innerHTML = feedHTML;
+            } catch (error) {
+                console.error('❌ Error loading feed:', error);
+                const feedContent = document.getElementById('feedContent');
+                if (feedContent) {
+                    feedContent.innerHTML = '<div class="card"><p>Error loading feed. Please refresh the page.</p></div>';
+                }
+            }
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+            return date.toLocaleDateString();
         }
 
         let selectedPhoto = null;
@@ -1853,7 +2492,9 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     selectedPhoto = e.target.result;
-                    document.getElementById('photoPreview').style.display = 'inline';
+                    const photoPreview = document.getElementById('photoPreview');
+                    photoPreview.style.display = 'inline';
+                    photoPreview.textContent = `Photo selected: ${file.name}`;
                     console.log('📷 Photo selected:', file.name);
                 };
                 reader.readAsDataURL(file);
@@ -1861,13 +2502,20 @@
         }
 
         function createPost() {
-            const content = document.getElementById('postContent').value.trim();
-            if (!content && !selectedPhoto) {
-                alert('Please enter some content or select a photo');
-                return;
-            }
+            try {
+                const postContentInput = document.getElementById('postContent');
+                if (!postContentInput) {
+                    console.error('❌ Post content input not found');
+                    return;
+                }
+                
+                const content = postContentInput.value.trim();
+                if (!content && !selectedPhoto) {
+                    alert('Please enter some content or select a photo');
+                    return;
+                }
 
-            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+                const posts = safeGetItem('posts') || [];
             const newPost = {
                 id: Date.now().toString(),
                 userId: currentUser.id,
@@ -1878,24 +2526,34 @@
             };
 
             posts.push(newPost);
-            localStorage.setItem('posts', JSON.stringify(posts));
+            if (!safeSetItem('posts', posts)) {
+                alert('Failed to save post. Please try again.');
+                return;
+            }
             
             // Clear form
-            document.getElementById('postContent').value = '';
+            postContentInput.value = '';
             selectedPhoto = null;
-            document.getElementById('photoPreview').style.display = 'none';
-            document.getElementById('photoInput').value = '';
+            const photoPreview = document.getElementById('photoPreview');
+            const photoInput = document.getElementById('photoInput');
+            if (photoPreview) photoPreview.style.display = 'none';
+            if (photoInput) photoInput.value = '';
             
             // Add XP for sharing
             addXP(XP_CONFIG.XP_SOURCES.POST_SHARED, 'post_shared');
             
             loadFeed();
+            } catch (error) {
+                console.error('❌ Error creating post:', error);
+                alert('Failed to create post. Please try again.');
+            }
         }
 
         function deletePost(postId) {
             if (!currentUser) return;
             
-            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            try {
+                const posts = safeGetItem('posts') || [];
             const post = posts.find(p => p.id === postId);
             
             if (!post) {
@@ -1911,13 +2569,35 @@
             }
             
             if (confirm(`Are you sure you want to delete this post?\n\n"${post.content.substring(0, 50)}${post.content.length > 50 ? '...' : ''}"`)) {
-                const updatedPosts = posts.filter(p => p.id !== postId);
-                localStorage.setItem('posts', JSON.stringify(updatedPosts));
-                
-                console.log('🗑️ Post deleted:', postId);
-                loadFeed();
-                loadUserPosts(); // Refresh user's posts in profile
+            const updatedPosts = posts.filter(p => p.id !== postId);
+            if (!safeSetItem('posts', updatedPosts)) {
+                alert('Failed to delete post. Please try again.');
+                return;
             }
+            
+            console.log('🗑️ Post deleted:', postId);
+            loadFeed();
+            loadUserPosts(); // Refresh user's posts in profile
+            } catch (error) {
+                console.error('❌ Error deleting post:', error);
+                alert('Failed to delete post. Please try again.');
+            }
+            }
+        }
+
+        function toggleLike(postId) {
+            // Placeholder for like functionality
+            console.log('Like toggled for post:', postId);
+        }
+
+        function toggleComments(postId) {
+            // Placeholder for comment functionality
+            console.log('Comments toggled for post:', postId);
+        }
+
+        function sharePost(postId) {
+            // Placeholder for share functionality
+            console.log('Share post:', postId);
         }
 
         function initializeMap() {
@@ -2009,13 +2689,22 @@
         function startTracking() {
             if (isTracking) return;
             
-            console.log('🚀 Starting tracking...');
+            console.log('Starting tracking...');
             
-            // Update UI
-            document.getElementById('trackingBtn').textContent = '⏹️ Stop Tracking';
-            document.getElementById('trackingBtn').classList.add('secondary');
-            document.getElementById('trackingStatusText').textContent = 'Requesting location permission...';
-            document.getElementById('trackingStatusText').style.color = '#ffd93d';
+            try {
+                // Update UI
+                const trackingBtn = document.getElementById('trackingBtn');
+                const statusText = document.getElementById('trackingStatusText');
+                
+                if (!trackingBtn || !statusText) {
+                    console.error('❌ Tracking UI elements not found');
+                    return;
+                }
+                
+                trackingBtn.textContent = '⏹️ Stop Tracking';
+                trackingBtn.classList.add('secondary');
+                statusText.textContent = 'Requesting location permission...';
+                statusText.style.color = '#ffd93d';
             
             if (!navigator.geolocation) {
                 alert('Geolocation is not supported by this browser.');
@@ -2057,11 +2746,23 @@
                     maximumAge: 0
                 }
             );
+            } catch (error) {
+                console.error('❌ Error starting tracking:', error);
+                resetTrackingButton();
+                const statusText = document.getElementById('trackingStatusText');
+                if (statusText) {
+                    statusText.textContent = 'Error starting tracking';
+                    statusText.style.color = '#ef4444';
+                }
+            }
         }
 
         function resetTrackingButton() {
-            document.getElementById('trackingBtn').textContent = '🚀 Start Tracking';
-            document.getElementById('trackingBtn').classList.remove('secondary');
+            const trackingBtn = document.getElementById('trackingBtn');
+            if (trackingBtn) {
+                trackingBtn.textContent = '🚀 Start Tracking';
+                trackingBtn.classList.remove('secondary');
+            }
         }
 
         function startActualTracking() {
@@ -2362,13 +3063,23 @@
         }
 
         function showPage(pageId) {
+            if (!pageId) {
+                console.error('❌ No page ID provided to showPage');
+                return;
+            }
+            
             // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
             
             // Show selected page
-            document.getElementById(pageId).classList.add('active');
+            const targetPage = document.getElementById(pageId);
+            if (!targetPage) {
+                console.error('❌ Page not found:', pageId);
+                return;
+            }
+            targetPage.classList.add('active');
             
             // Update navigation
             document.querySelectorAll('.nav-links li').forEach(li => {

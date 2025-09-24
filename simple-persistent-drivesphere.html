@@ -1661,7 +1661,7 @@
         function safeSetItem(key, value) {
             try {
                 if (!key || value === undefined) {
-                    console.error('❌ Invalid key or value for localStorage');
+                    console.error('Invalid key or value for localStorage');
                     return false;
                 }
                 localStorage.setItem(key, JSON.stringify(value));
@@ -1813,7 +1813,7 @@
             const rememberMeInput = document.getElementById('rememberMe');
             
             if (!emailInput || !passwordInput || !rememberMeInput) {
-                console.error('❌ Login form elements not found');
+                console.error('Login form elements not found');
                 return;
             }
             
