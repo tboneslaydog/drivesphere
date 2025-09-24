@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DriveSphere - Social GPS Tracking & Route Sharing</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
@@ -1131,84 +1134,8 @@
     </style>
 </head>
 <body>
-    <!-- Auth Container -->
-    <div id="authContainer" class="auth-container">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h1>🚗 DriveSphere</h1>
-            <p>Welcome back! Sign in to continue your driving journey.</p>
-        </div>
-
-        <!-- Login Form -->
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="loginEmail">Email</label>
-                <input type="email" id="loginEmail" required placeholder="Enter your email">
-            </div>
-            <div class="form-group">
-                <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" required placeholder="Enter your password">
-            </div>
-            <div class="remember-me">
-                <input type="checkbox" id="rememberMe">
-                <label for="rememberMe">Remember me</label>
-            </div>
-            <button type="submit" class="btn">Sign In</button>
-        </form>
-
-        <div style="text-align: center; margin: 1rem 0;">
-            <button class="btn secondary" onclick="switchToRegister()">Create New Account</button>
-        </div>
-
-        <div style="text-align: center;">
-            <button class="btn admin" onclick="showAdminLogin()">Admin Login</button>
-        </div>
-    </div>
-
-    <!-- Admin Login Modal -->
-    <div id="adminLoginModal" class="auth-container hidden">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h2>🔐 Admin Login</h2>
-        </div>
-        <form id="adminLoginForm">
-            <div class="form-group">
-                <label for="adminKey">Admin Key</label>
-                <input type="password" id="adminKey" required placeholder="Enter admin key">
-            </div>
-            <button type="submit" class="btn admin">Admin Login</button>
-            <button type="button" class="btn secondary" onclick="hideAdminLogin()">Back to Login</button>
-        </form>
-    </div>
-
-    <!-- Register Form -->
-    <div id="registerContainer" class="auth-container hidden">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h2>Create Account</h2>
-        </div>
-        <form id="registerForm">
-            <div class="form-group">
-                <label for="registerName">Full Name</label>
-                <input type="text" id="registerName" required placeholder="Enter your full name">
-            </div>
-            <div class="form-group">
-                <label for="registerUsername">Username</label>
-                <input type="text" id="registerUsername" required placeholder="Choose a username">
-                <div id="usernameStatus" style="font-size: 0.8rem; margin-top: 0.25rem;"></div>
-            </div>
-            <div class="form-group">
-                <label for="registerEmail">Email</label>
-                <input type="email" id="registerEmail" required placeholder="Enter your email">
-            </div>
-            <div class="form-group">
-                <label for="registerPassword">Password</label>
-                <input type="password" id="registerPassword" required placeholder="Create a password">
-            </div>
-            <button type="submit" class="btn">Create Account</button>
-            <button type="button" class="btn secondary" onclick="switchToLogin()">Back to Login</button>
-        </form>
-    </div>
-
     <!-- Main App -->
-    <div id="mainApp" class="hidden">
+    <div id="mainApp">
         <div class="container">
             <nav class="navbar">
                 <div class="logo" onclick="showPage('dashboard')">🚗 DriveSphere</div>
@@ -1218,12 +1145,8 @@
                     <li onclick="showPage('routes')">Routes</li>
                     <li onclick="showPage('analytics')">Analytics</li>
                     <li onclick="showPage('profile')">Profile</li>
+                    <li onclick="showPage('admin')">Admin</li>
                 </ul>
-                <div class="user-info">
-                    <div class="user-avatar" id="userAvatar">U</div>
-                    <span id="userDisplayName">User</span>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
-                </div>
             </nav>
 
             <!-- Dashboard Page -->
@@ -1649,8 +1572,73 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // Page navigation function - must be defined first
+        function showPage(pageId) {
+            if (!pageId) {
+                console.error('No page ID provided to showPage');
+                return;
+            }
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            const targetPage = document.getElementById(pageId);
+            if (!targetPage) {
+                console.error('Page not found:', pageId);
+                return;
+            }
+            targetPage.classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-links li').forEach(li => {
+                li.classList.remove('active');
+            });
+            
+            // Find and activate the corresponding nav item
+            const navItem = document.querySelector(`[onclick*="${pageId}"]`);
+            if (navItem) {
+                navItem.classList.add('active');
+            }
+            
+            // Load page-specific content
+            if (pageId === 'dashboard') {
+                updateDashboard();
+            } else if (pageId === 'feed') {
+                loadFeed();
+            } else if (pageId === 'routes') {
+                initializeMap();
+                loadRouteHistory();
+                loadSharedRoutes();
+            } else if (pageId === 'analytics') {
+                loadAnalytics();
+            } else if (pageId === 'profile') {
+                loadProfile();
+            } else if (pageId === 'admin') {
+                loadAdminPanel();
+            }
+        }
+
         // Global variables
-        let currentUser = null;
+        let currentUser = {
+            id: 'default-user',
+            name: 'DriveSphere User',
+            username: 'user',
+            email: 'user@drivesphere.com',
+            isAdmin: true,
+            stats: {
+                totalDistance: 0,
+                totalRoutes: 0,
+                avgSpeed: 0,
+                maxSpeed: 0
+            },
+            xp: 0,
+            level: 1,
+            achievements: [],
+            createdAt: new Date().toISOString()
+        };
         let isTracking = false;
         let map = null;
         let trackingInterval = null;
@@ -1749,11 +1737,12 @@
             }
         };
 
+
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DriveSphere starting...');
-            checkAuthStatus();
-            initializeEventListeners();
+            console.log('DriveSphere starting... v2.0 - No Login System');
+            showMainApp();
+            initializeApp();
         });
 
         function checkAuthStatus() {
@@ -1817,40 +1806,47 @@
                 return;
             }
             
-            const email = emailInput.value;
+            const emailOrUsername = emailInput.value;
             const password = passwordInput.value;
             const rememberMe = rememberMeInput.checked;
 
-            console.log('Attempting login for:', email);
+            console.log('Attempting login for:', emailOrUsername);
 
             // Simple validation
-            if (!email || !password) {
+            if (!emailOrUsername || !password) {
                 alert('Please fill in all fields');
                 return;
             }
 
-            // Check if user exists in localStorage
+            // Check if user exists in localStorage (support both email and username)
             const users = safeGetItem('users') || [];
-            const user = users.find(u => u.email === email && u.password === password);
+            const user = users.find(u => 
+                (u.email === emailOrUsername || u.username === emailOrUsername) && 
+                u.password === password
+            );
 
             if (user) {
-                console.log('✅ Login successful');
+                console.log('Login successful');
                 currentUser = user;
                 
                 // Save login state
                 if (rememberMe) {
                     safeSetItem('currentUser', user);
                     safeSetItem('rememberMe', true);
-                    console.log('💾 User saved for persistence');
+                    console.log('User saved for persistence');
                 } else {
                     safeSetItem('currentUser', user);
                     safeSetItem('rememberMe', false);
-                    console.log('💾 User saved for session only');
+                    console.log('User saved for session only');
                 }
 
+                console.log('About to show main app...');
                 showMainApp();
+                console.log('Main app shown, updating UI...');
                 updateUserUI();
+                console.log('UI updated, initializing app...');
                 initializeApp();
+                console.log('App initialized successfully');
             } else {
                 alert('Invalid email or password');
             }
@@ -1999,11 +1995,8 @@
         }
 
         function showMainApp() {
-            document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('adminLoginModal').classList.add('hidden');
-            document.getElementById('registerContainer').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
             console.log('Main app shown');
+            // App is always visible now, no authentication needed
         }
 
         function showAuthContainer() {
@@ -2173,11 +2166,14 @@
         }
 
         function initializeApp() {
-            console.log('🔧 Initializing app...');
+            console.log('Initializing app...');
             loadUserStats();
             loadFeed();
             loadXPData();
             initializeGForceMonitoring();
+            
+            // Show dashboard by default
+            showPage('dashboard');
             
             // Initialize map with a delay to ensure DOM is ready
             setTimeout(() => {
@@ -2574,13 +2570,12 @@
                 return;
             }
             
-            console.log('🗑️ Post deleted:', postId);
+            console.log('Post deleted:', postId);
             loadFeed();
             loadUserPosts(); // Refresh user's posts in profile
             } catch (error) {
-                console.error('❌ Error deleting post:', error);
+                console.error('Error deleting post:', error);
                 alert('Failed to delete post. Please try again.');
-            }
             }
         }
 
@@ -3061,50 +3056,7 @@
             }
         }
 
-        function showPage(pageId) {
-            if (!pageId) {
-                console.error('❌ No page ID provided to showPage');
-                return;
-            }
-            
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Show selected page
-            const targetPage = document.getElementById(pageId);
-            if (!targetPage) {
-                console.error('❌ Page not found:', pageId);
-                return;
-            }
-            targetPage.classList.add('active');
-            
-            // Update navigation
-            document.querySelectorAll('.nav-links li').forEach(li => {
-                li.classList.remove('active');
-            });
-            
-            // Special handling for different pages
-            if (pageId === 'admin') {
-                if (currentUser && currentUser.isAdmin) {
-                    loadAdminStats();
-                } else {
-                    alert('Admin access required');
-                    showPage('dashboard');
-                    return;
-                }
-            } else if (pageId === 'routes') {
-                // Initialize map if not already done
-                if (!map) {
-                    setTimeout(() => {
-                        initializeMap();
-                    }, 100);
-                }
-                loadRouteHistory();
-                loadSharedRoutes();
-            }
-        }
+        // showPage function moved to top of script section
 
         // Route Tab Functions
         function showRouteTab(tabId) {
