@@ -3276,13 +3276,51 @@
                 min-width: 160px;
             }
 
-            .nav-link {
-                padding: 0.75rem 1rem;
-                font-size: 0.8rem;
+            .navbar {
+                padding: 0.5rem 0.5rem;
+            }
+
+            .nav-container {
+                position: relative;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.4rem;
+                padding-right: 5rem;
             }
 
             .logo {
-                font-size: 1.125rem;
+                font-size: 1.05rem;
+                text-align: left;
+            }
+
+            .nav-links {
+                width: 100%;
+                gap: 0.25rem;
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                align-items: center;
+            }
+
+            .nav-links > .nav-link {
+                flex: 1 1 0;
+                min-width: 0 !important;
+                padding: 0.45rem 0.2rem;
+                font-size: 0.7rem;
+                text-align: center;
+                white-space: nowrap;
+                line-height: 1.2;
+            }
+
+            .nav-links > .user-menu {
+                position: absolute;
+                top: 0;
+                right: 0;
+                flex: 0 0 auto;
+            }
+
+            .login-btn {
+                padding: 0.35rem 0.7rem;
+                font-size: 0.75rem;
             }
         }
 
