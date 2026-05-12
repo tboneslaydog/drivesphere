@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <title>DriveSphere - Social GPS Tracking & Route Sharing 🚀</title>
+        <title>DriveSphere - Social GPS Tracking & Route Sharing </title>
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="DriveSphere - The ultimate social GPS tracking app. Share routes, track drives, earn XP, and connect with friends. Real-time location sharing and advanced analytics.">
@@ -1990,15 +1990,15 @@
         }
         
         .username-validation.valid .validation-message::before {
-            content: '✅';
+            content: '';
         }
         
         .username-validation.invalid .validation-message::before {
-            content: '❌';
+            content: '';
         }
         
         .username-validation.checking .validation-message::before {
-            content: '⏳';
+            content: '';
         }
         
         /* Remember Me Checkbox Styles */
@@ -3695,6 +3695,268 @@
                 padding: 0.375rem;
             }
         }
+
+        /* =====================================================================
+           LIGHT THEME OVERRIDE
+           White background, black text, single blue accent used sparingly.
+           Placed last so all rules win the cascade; !important is used to
+           defeat inline color/background styles scattered through the markup.
+           ===================================================================== */
+        html, body {
+            background: #ffffff !important;
+            background-image: none !important;
+            color: #111111 !important;
+        }
+
+        body::before, body::after {
+            display: none !important;
+        }
+
+        * {
+            text-shadow: none !important;
+        }
+
+        .navbar, .navbar::before, .navbar::after {
+            background: #ffffff !important;
+            background-image: none !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        .logo, .logo:hover {
+            background: none !important;
+            background-image: none !important;
+            -webkit-background-clip: initial !important;
+            background-clip: initial !important;
+            -webkit-text-fill-color: #111111 !important;
+            color: #111111 !important;
+            animation: none !important;
+        }
+
+        .logo::after, .logo:hover::after {
+            display: none !important;
+        }
+
+        h1, h2, h3, h4, h5, h6, p, label {
+            color: #111111 !important;
+            background: none !important;
+            background-image: none !important;
+            -webkit-background-clip: initial !important;
+            background-clip: initial !important;
+            -webkit-text-fill-color: #111111 !important;
+        }
+
+        .nav-link {
+            color: #111111 !important;
+            background: #ffffff !important;
+            background-image: none !important;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        .nav-link:hover {
+            background: #f3f4f6 !important;
+            color: #111111 !important;
+            border-color: #d1d5db !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .nav-link.active {
+            background: #2563eb !important;
+            color: #ffffff !important;
+            border-color: #2563eb !important;
+            box-shadow: none !important;
+        }
+
+        .card, .auth-card, .modal-content,
+        [class$="-card"], [class*=" card "],
+        .user-dropdown, .dropdown-menu {
+            background: #ffffff !important;
+            background-image: none !important;
+            color: #111111 !important;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        .card-title, .auth-card h1, .auth-card h2 {
+            color: #111111 !important;
+        }
+
+        .btn, .auth-btn, .track-button, .login-btn {
+            background: #2563eb !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            border: 1px solid #2563eb !important;
+            box-shadow: none !important;
+        }
+
+        .btn:hover, .auth-btn:hover, .track-button:hover, .login-btn:hover {
+            background: #1d4ed8 !important;
+            border-color: #1d4ed8 !important;
+            color: #ffffff !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-secondary, .btn-outline, .admin-btn,
+        .btn.btn-secondary, .btn.btn-outline {
+            background: #ffffff !important;
+            background-image: none !important;
+            color: #111111 !important;
+            border: 1px solid #d1d5db !important;
+            box-shadow: none !important;
+        }
+
+        .btn-secondary:hover, .btn-outline:hover, .admin-btn:hover {
+            background: #f3f4f6 !important;
+            border-color: #9ca3af !important;
+            color: #111111 !important;
+        }
+
+        .btn-danger {
+            background: #dc2626 !important;
+            color: #ffffff !important;
+            border-color: #dc2626 !important;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c !important;
+            border-color: #b91c1c !important;
+        }
+
+        .btn-success {
+            background: #10b981 !important;
+            color: #ffffff !important;
+            border-color: #10b981 !important;
+        }
+
+        .btn-success:hover {
+            background: #059669 !important;
+            border-color: #059669 !important;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"],
+        input[type="number"], input[type="search"], input[type="tel"],
+        input[type="url"], textarea, select {
+            background: #ffffff !important;
+            color: #111111 !important;
+            border: 1px solid #d1d5db !important;
+            box-shadow: none !important;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #9ca3af !important;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #2563eb !important;
+            outline: 2px solid rgba(37, 99, 235, 0.2) !important;
+            outline-offset: 0 !important;
+        }
+
+        .auth-container {
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(2px) !important;
+            -webkit-backdrop-filter: blur(2px) !important;
+        }
+
+        .close-auth-btn {
+            background: #f3f4f6 !important;
+            color: #111111 !important;
+            border: 1px solid #e5e7eb !important;
+        }
+
+        .close-auth-btn:hover {
+            background: #e5e7eb !important;
+            transform: none !important;
+        }
+
+        a:not(.nav-link):not(.btn):not(.auth-btn):not(.login-btn):not(.admin-btn) {
+            color: #2563eb !important;
+        }
+
+        a:not(.nav-link):not(.btn):not(.auth-btn):not(.login-btn):not(.admin-btn):hover {
+            color: #1d4ed8 !important;
+        }
+
+        .user-dropdown a {
+            color: #111111 !important;
+        }
+
+        .user-dropdown a:hover {
+            background: #f3f4f6 !important;
+            color: #111111 !important;
+        }
+
+        .notification, .alert, .toast {
+            background: #ffffff !important;
+            color: #111111 !important;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .notification.success, .alert.success, .toast.success {
+            background: #ecfdf5 !important;
+            color: #065f46 !important;
+            border-color: #10b981 !important;
+        }
+
+        .notification.error, .alert.error, .toast.error {
+            background: #fef2f2 !important;
+            color: #991b1b !important;
+            border-color: #dc2626 !important;
+        }
+
+        .notification.warning, .alert.warning, .toast.warning {
+            background: #fffbeb !important;
+            color: #92400e !important;
+            border-color: #f59e0b !important;
+        }
+
+        hr, .divider {
+            border-color: #e5e7eb !important;
+            background: #e5e7eb !important;
+        }
+
+        .map-container, .leaflet-container {
+            background: #f3f4f6 !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f3f4f6;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        .container, main, section, .page, .dashboard-grid, .routes-grid,
+        .status-grid, .route-stats, .feed-container, .analytics-page,
+        .profile-page, .admin-page, .settings-page {
+            background: transparent !important;
+            background-image: none !important;
+        }
+
+        body, body * {
+            scrollbar-color: #d1d5db #f3f4f6;
+        }
     </style>
 </head>
 <body>
@@ -3710,9 +3972,9 @@
                 <div class="user-menu">
                     <span id="userDisplayName">User</span>
                     <div class="user-dropdown">
-                        <a href="#" onclick="showProfile()">👤 Profile</a>
-                        <a href="#" onclick="showAdminPanel()" id="adminLink" style="display: none;">⚙️ Admin</a>
-                        <a href="#" onclick="logout()">🚪 Logout</a>
+                        <a href="#" onclick="showProfile()"> Profile</a>
+                        <a href="#" onclick="showAdminPanel()" id="adminLink" style="display: none;"> Admin</a>
+                        <a href="#" onclick="logout()"> Logout</a>
                     </div>
                 </div>
             </div>
@@ -3727,7 +3989,7 @@
         <div id="loginPage" class="auth-page active">
             <div class="auth-card">
                 <div class="auth-header">
-                    <h1>🚗 DriveSphere</h1>
+                    <h1> DriveSphere</h1>
                     <p>Welcome back! Sign in to continue your driving journey.</p>
                 </div>
                 
@@ -3770,7 +4032,7 @@
         <div id="registerPage" class="auth-page">
             <div class="auth-card">
                 <div class="auth-header">
-                    <h1>🚗 Join DriveSphere</h1>
+                    <h1> Join DriveSphere</h1>
                     <p>Create your account and start tracking your drives!</p>
                 </div>
                 
@@ -3817,7 +4079,7 @@
         <div id="adminModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>⚙️ Admin Access</h3>
+                    <h3> Admin Access</h3>
                     <button onclick="closeAdminModal()" class="close-btn">×</button>
                 </div>
                 
@@ -3877,15 +4139,15 @@
                     <!-- Live Sharing Controls -->
                     <div class="live-sharing-section">
                         <div class="live-sharing-header">
-                            <h4>🔴 Live Drive Mode</h4>
+                            <h4> Live Drive Mode</h4>
                             <div class="live-status" id="liveStatus">Offline</div>
                         </div>
                         <div class="live-controls">
                             <button id="liveModeBtn" class="btn live-btn" onclick="toggleLiveMode()">
-                                📡 Start Live Sharing
+                                 Start Live Sharing
                             </button>
                             <button class="btn btn-secondary" onclick="openPrivacySettings()">
-                                🔒 Privacy
+                                 Privacy
                             </button>
                         </div>
                         <div class="live-info" id="liveInfo" style="display: none;">
@@ -3901,25 +4163,25 @@
                 <h3 class="card-title">Live Map</h3>
                 <div class="map-controls">
                     <button class="btn btn-sm" onclick="toggleMapLayer('traffic')" id="trafficBtn">
-                        🚦 Traffic
+                         Traffic
                     </button>
                     <button class="btn btn-sm" onclick="toggleMapLayer('satellite')" id="satelliteBtn">
-                        🛰️ Satellite
+                         Satellite
                     </button>
                     <button class="btn btn-sm" onclick="toggleMapLayer('terrain')" id="terrainBtn">
-                        🏔️ Terrain
+                         Terrain
                     </button>
                 </div>
                 <div id="map" class="map-container"></div>
                 <div class="route-overlay" id="routeOverlay">
                     <button class="btn btn-sm" onclick="toggleRouteComparison()" id="compareBtn">
-                        📊 Compare Routes
+                         Compare Routes
                     </button>
                     <button class="btn btn-sm" onclick="shareCurrentRoute()" id="shareBtn">
-                        📤 Share Route
+                         Share Route
                     </button>
                     <button class="btn btn-sm" onclick="suggestAlternativeRoute()" id="suggestBtn">
-                        🔄 Find Alternative
+                         Find Alternative
                     </button>
                 </div>
             </div>
@@ -3940,7 +4202,7 @@
                 <div style="display: flex; gap: 1rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 1rem;">
                     <button class="route-tab active" onclick="showRouteTab('my-routes')">My Routes</button>
                     <button class="route-tab" onclick="showRouteTab('friends-routes')">Friends' Routes</button>
-                    <button class="route-tab" onclick="showRouteTab('live-friends')">🔴 Live Friends</button>
+                    <button class="route-tab" onclick="showRouteTab('live-friends')"> Live Friends</button>
                     <button class="route-tab" onclick="showRouteTab('public-routes')">Public Routes</button>
                 </div>
                 
@@ -3983,7 +4245,7 @@
             <!-- Live Friends Tab -->
             <div id="live-friends" class="route-tab-content hidden">
                 <div class="card">
-                    <h3 class="card-title">🔴 Live Friends Activity</h3>
+                    <h3 class="card-title"> Live Friends Activity</h3>
                     <div class="live-friends-header">
                         <div class="live-stats">
                             <div class="live-stat">
@@ -3995,7 +4257,7 @@
                                 <span class="live-label">Currently Driving</span>
                             </div>
                         </div>
-                        <button class="btn btn-primary" onclick="refreshLiveFriends()">🔄 Refresh</button>
+                        <button class="btn btn-primary" onclick="refreshLiveFriends()"> Refresh</button>
                     </div>
                     <div class="live-friends-grid" id="liveFriendsGrid">
                         <!-- Live friends will be populated here -->
@@ -4010,8 +4272,8 @@
                             <!-- Live map will be rendered here -->
                         </div>
                         <div class="live-map-controls">
-                            <button class="btn btn-secondary" onclick="focusOnFriends()">📍 Focus All</button>
-                            <button class="btn btn-secondary" onclick="toggleMapMode()">🗺️ Toggle View</button>
+                            <button class="btn btn-secondary" onclick="focusOnFriends()"> Focus All</button>
+                            <button class="btn btn-secondary" onclick="toggleMapMode()"> Toggle View</button>
                         </div>
                     </div>
                 </div>
@@ -4022,7 +4284,7 @@
         <div id="analytics" class="page hidden">
             <!-- Weekly Summary -->
             <div class="card">
-                <h3 class="card-title">📊 Weekly Summary</h3>
+                <h3 class="card-title"> Weekly Summary</h3>
                 <div class="analytics-grid">
                     <div class="analytics-item">
                         <div class="analytics-value" id="weeklyDistance">0</div>
@@ -4049,10 +4311,10 @@
 
             <!-- Driving Insights -->
             <div class="card">
-                <h3 class="card-title">🎯 Driving Insights</h3>
+                <h3 class="card-title"> Driving Insights</h3>
                 <div class="insights-grid">
                     <div class="insight-card">
-                        <div class="insight-icon">🏆</div>
+                        <div class="insight-icon"></div>
                         <div class="insight-content">
                             <h4>Best Route This Week</h4>
                             <p id="bestRoute">Highway 101 - 45.2 mi in 38 min</p>
@@ -4063,7 +4325,7 @@
                         </div>
                     </div>
                     <div class="insight-card">
-                        <div class="insight-icon">⏰</div>
+                        <div class="insight-icon"></div>
                         <div class="insight-content">
                             <h4>Peak Driving Time</h4>
                             <p id="peakTime">7:30 AM - 9:00 AM</p>
@@ -4074,7 +4336,7 @@
                         </div>
                     </div>
                     <div class="insight-card">
-                        <div class="insight-icon">🌱</div>
+                        <div class="insight-icon"></div>
                         <div class="insight-content">
                             <h4>Eco Score</h4>
                             <p id="ecoscore">85/100</p>
@@ -4085,7 +4347,7 @@
                         </div>
                     </div>
                     <div class="insight-card">
-                        <div class="insight-icon">🚗</div>
+                        <div class="insight-icon"></div>
                         <div class="insight-content">
                             <h4>Route Variety</h4>
                             <p id="routeVariety">12 unique routes</p>
@@ -4100,7 +4362,7 @@
 
             <!-- Speed Analysis -->
             <div class="card">
-                <h3 class="card-title">⚡ Speed Analysis</h3>
+                <h3 class="card-title"> Speed Analysis</h3>
                 <div class="speed-chart-container">
                     <canvas id="speedChart" width="400" height="200"></canvas>
                 </div>
@@ -4122,10 +4384,10 @@
 
             <!-- Achievements -->
             <div class="card">
-                <h3 class="card-title">🏅 Achievements</h3>
+                <h3 class="card-title"> Achievements</h3>
                 <div class="achievements-grid">
                     <div class="achievement earned">
-                        <div class="achievement-icon">🚀</div>
+                        <div class="achievement-icon"></div>
                         <div class="achievement-content">
                             <h4>Speed Demon</h4>
                             <p>Reached 100+ mph</p>
@@ -4133,7 +4395,7 @@
                         </div>
                     </div>
                     <div class="achievement earned">
-                        <div class="achievement-icon">🛣️</div>
+                        <div class="achievement-icon"></div>
                         <div class="achievement-content">
                             <h4>Road Warrior</h4>
                             <p>500+ miles driven</p>
@@ -4141,7 +4403,7 @@
                         </div>
                     </div>
                     <div class="achievement earned">
-                        <div class="achievement-icon">🌍</div>
+                        <div class="achievement-icon"></div>
                         <div class="achievement-content">
                             <h4>Explorer</h4>
                             <p>10+ unique routes</p>
@@ -4149,7 +4411,7 @@
                         </div>
                     </div>
                     <div class="achievement locked">
-                        <div class="achievement-icon">⏱️</div>
+                        <div class="achievement-icon"></div>
                         <div class="achievement-content">
                             <h4>Early Bird</h4>
                             <p>Drive before 6 AM (5/10)</p>
@@ -4157,7 +4419,7 @@
                         </div>
                     </div>
                     <div class="achievement locked">
-                        <div class="achievement-icon">🌱</div>
+                        <div class="achievement-icon"></div>
                         <div class="achievement-content">
                             <h4>Eco Driver</h4>
                             <p>90+ efficiency score (85/90)</p>
@@ -4165,7 +4427,7 @@
                         </div>
                     </div>
                     <div class="achievement locked">
-                        <div class="achievement-icon">🏁</div>
+                        <div class="achievement-icon"></div>
                         <div class="achievement-content">
                             <h4>Marathon Driver</h4>
                             <p>1000+ miles in a month</p>
@@ -4177,7 +4439,7 @@
 
             <!-- Leaderboard -->
             <div class="card">
-                <h3 class="card-title">🏆 Leaderboard</h3>
+                <h3 class="card-title"> Leaderboard</h3>
                 <div class="leaderboard-tabs">
                     <button class="leaderboard-tab active" onclick="showLeaderboard('distance')">Distance</button>
                     <button class="leaderboard-tab" onclick="showLeaderboard('speed')">Speed</button>
@@ -4235,7 +4497,7 @@
                         <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)">
                         <div class="upload-actions">
                             <button class="btn btn-secondary btn-sm" onclick="document.getElementById('photoUpload').click()">
-                                📷 Add Photos
+                                 Add Photos
                             </button>
                             <button class="btn btn-primary btn-sm" onclick="createPost()" style="margin-left: auto;">
                                 Post
@@ -4255,10 +4517,10 @@
         <!-- Profile Page -->
         <div id="profile" class="page hidden">
             <div class="card">
-                <h3 class="card-title">👤 Driver Profile</h3>
+                <h3 class="card-title"> Driver Profile</h3>
                 <div class="profile-info">
                     <div class="profile-header">
-                        <div class="avatar-circle">👤</div>
+                        <div class="avatar-circle"></div>
                         <div class="profile-details">
                             <h2 id="profileName">User</h2>
                             <p><strong>@<span id="profileUsername">username</span></strong></p>
@@ -4285,11 +4547,11 @@
 
             <!-- Friends Section -->
             <div class="card">
-                <h3 class="card-title">👥 Friends</h3>
+                <h3 class="card-title"> Friends</h3>
                 <div class="friends-section">
                     <div class="search-friends">
                         <input type="text" id="friendSearch" placeholder="Search for friends..." class="form-input" style="margin-bottom: 1rem;">
-                        <button class="btn" onclick="searchFriends()">🔍 Search</button>
+                        <button class="btn" onclick="searchFriends()"> Search</button>
                     </div>
                     <div class="friends-list" id="friendsList">
                         <!-- Friends will be populated here -->
@@ -4299,7 +4561,7 @@
 
             <!-- My Posts Section -->
             <div class="card">
-                <h3 class="card-title">📝 My Posts</h3>
+                <h3 class="card-title"> My Posts</h3>
                 <div class="my-posts" id="myPosts">
                     <!-- User's posts will be populated here -->
                 </div>
@@ -4311,7 +4573,7 @@
             <div class="admin-grid">
                 <!-- Enhanced Dashboard Overview -->
                 <div class="card admin-overview">
-                    <h3 class="card-title">⚙️ Admin Dashboard</h3>
+                    <h3 class="card-title"> Admin Dashboard</h3>
                     <div class="admin-stats">
                         <div class="stat-item">
                             <div class="stat-value" id="totalUsers">1</div>
@@ -4342,7 +4604,7 @@
                 
                 <!-- Enhanced User Management -->
                 <div class="card">
-                    <h3 class="card-title">👥 User Management</h3>
+                    <h3 class="card-title"> User Management</h3>
                     <div class="user-controls">
                         <input type="text" id="userSearch" placeholder="Search users..." class="form-input" style="margin-bottom: 1rem;">
                         <div class="user-filters">
@@ -4355,40 +4617,40 @@
                         <!-- Users will be populated here -->
                     </div>
                     <div class="user-actions">
-                        <button class="btn" onclick="createUser()">➕ Add User</button>
-                        <button class="btn btn-secondary" onclick="exportUsers()">📤 Export Users</button>
+                        <button class="btn" onclick="createUser()"> Add User</button>
+                        <button class="btn btn-secondary" onclick="exportUsers()"> Export Users</button>
                     </div>
                 </div>
                 
                 <!-- Advanced System Management -->
                 <div class="card">
-                    <h3 class="card-title">🗺️ System Management</h3>
+                    <h3 class="card-title"> System Management</h3>
                     <div class="admin-actions">
                         <div class="action-group">
                             <h4>Data Management</h4>
-                            <button class="btn" onclick="clearAllRoutes()">🗑️ Clear All Routes</button>
-                            <button class="btn" onclick="clearAllPosts()">🧹 Clear All Posts</button>
-                            <button class="btn" onclick="clearAllUsers()">👥 Clear All Users</button>
-                            <button class="btn" onclick="exportDataForSync()">📱 Sync Data</button>
+                            <button class="btn" onclick="clearAllRoutes()"> Clear All Routes</button>
+                            <button class="btn" onclick="clearAllPosts()"> Clear All Posts</button>
+                            <button class="btn" onclick="clearAllUsers()"> Clear All Users</button>
+                            <button class="btn" onclick="exportDataForSync()"> Sync Data</button>
                         </div>
                         <div class="action-group">
                             <h4>Analytics & Reports</h4>
-                            <button class="btn" onclick="exportData()">📤 Export All Data</button>
-                            <button class="btn" onclick="generateReport()">📊 Generate Report</button>
-                            <button class="btn btn-secondary" onclick="resetAnalytics()">🔄 Reset Analytics</button>
+                            <button class="btn" onclick="exportData()"> Export All Data</button>
+                            <button class="btn" onclick="generateReport()"> Generate Report</button>
+                            <button class="btn btn-secondary" onclick="resetAnalytics()"> Reset Analytics</button>
                         </div>
                         <div class="action-group">
                             <h4>System Maintenance</h4>
-                            <button class="btn" onclick="optimizeStorage()">⚡ Optimize Storage</button>
-                            <button class="btn" onclick="clearCache()">🧹 Clear Cache</button>
-                            <button class="btn" onclick="validateData()">✅ Validate Data</button>
+                            <button class="btn" onclick="optimizeStorage()"> Optimize Storage</button>
+                            <button class="btn" onclick="clearCache()"> Clear Cache</button>
+                            <button class="btn" onclick="validateData()"> Validate Data</button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Enhanced Backup & Restore -->
                 <div class="card">
-                    <h3 class="card-title">💾 Data Backup & Restore</h3>
+                    <h3 class="card-title"> Data Backup & Restore</h3>
                     <div class="backup-status" id="backupStatus">
                         <div class="status-row">
                             <span class="status-label">Last Backup:</span>
@@ -4408,17 +4670,17 @@
                         </div>
                     </div>
                     <div class="backup-actions">
-                        <button class="btn" onclick="createBackup()">💾 Create Backup</button>
-                        <button class="btn btn-secondary" onclick="restoreFromFile()">📂 Restore from File</button>
+                        <button class="btn" onclick="createBackup()"> Create Backup</button>
+                        <button class="btn btn-secondary" onclick="restoreFromFile()"> Restore from File</button>
                         <input type="file" id="restoreFile" accept=".json" style="display: none;" onchange="handleRestore(event)">
-                        <button class="btn btn-secondary" onclick="toggleAutoBackup()">⚙️ Toggle Auto Backup</button>
-                        <button class="btn" onclick="scheduleBackup()">⏰ Schedule Backup</button>
+                        <button class="btn btn-secondary" onclick="toggleAutoBackup()"> Toggle Auto Backup</button>
+                        <button class="btn" onclick="scheduleBackup()"> Schedule Backup</button>
                     </div>
                 </div>
                 
                 <!-- Real-time Monitoring -->
                 <div class="card">
-                    <h3 class="card-title">📊 Real-time Monitoring</h3>
+                    <h3 class="card-title"> Real-time Monitoring</h3>
                     <div class="monitoring-grid">
                         <div class="monitor-item">
                             <div class="monitor-label">CPU Usage</div>
@@ -4450,7 +4712,7 @@
                 
                 <!-- Enhanced System Info -->
                 <div class="card">
-                    <h3 class="card-title">📊 System Information</h3>
+                    <h3 class="card-title"> System Information</h3>
                     <div class="system-info">
                         <div class="info-section">
                             <h4>Application</h4>
@@ -4482,12 +4744,12 @@
                 
                 <!-- Security & Logs -->
                 <div class="card">
-                    <h3 class="card-title">🔒 Security & Logs</h3>
+                    <h3 class="card-title"> Security & Logs</h3>
                     <div class="security-section">
                         <div class="security-actions">
-                            <button class="btn" onclick="viewSecurityLogs()">🔍 View Security Logs</button>
-                            <button class="btn" onclick="viewActivityLogs()">📋 View Activity Logs</button>
-                            <button class="btn btn-secondary" onclick="clearLogs()">🧹 Clear Logs</button>
+                            <button class="btn" onclick="viewSecurityLogs()"> View Security Logs</button>
+                            <button class="btn" onclick="viewActivityLogs()"> View Activity Logs</button>
+                            <button class="btn btn-secondary" onclick="clearLogs()"> Clear Logs</button>
                         </div>
                         <div class="log-preview" id="logPreview">
                             <h4>Recent Activity</h4>
@@ -4500,7 +4762,7 @@
                 
                 <!-- Advanced Settings -->
                 <div class="card">
-                    <h3 class="card-title">⚙️ Advanced Settings</h3>
+                    <h3 class="card-title"> Advanced Settings</h3>
                     <div class="settings-grid">
                         <div class="setting-item">
                             <label class="setting-label">
@@ -4528,8 +4790,8 @@
                         </div>
                     </div>
                     <div class="setting-actions">
-                        <button class="btn" onclick="saveSettings()">💾 Save Settings</button>
-                        <button class="btn btn-secondary" onclick="resetSettings()">🔄 Reset Settings</button>
+                        <button class="btn" onclick="saveSettings()"> Save Settings</button>
+                        <button class="btn btn-secondary" onclick="resetSettings()"> Reset Settings</button>
                     </div>
                 </div>
             </div>
@@ -4578,9 +4840,9 @@
             window.auth = auth;
             window.firebase = { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
             
-            console.log('🔥 Firebase initialized!');
+            console.log(' Firebase initialized!');
         } catch (error) {
-            console.log('⚠️ Firebase initialization failed:', error);
+            console.log(' Firebase initialization failed:', error);
             console.log('App will work in localStorage mode');
             // Set dummy objects so the app doesn't crash
             window.db = null;
@@ -4679,7 +4941,7 @@
                     window.updateUserUI();
                 }
                 
-                console.log('✅ Quick login successful!');
+                console.log(' Quick login successful!');
                 alert('Welcome to DriveSphere! You are now logged in as a test user.');
                 
             } catch (error) {
@@ -4715,7 +4977,7 @@
                     window.updateUserUI();
                 }
                 
-                console.log('✅ Quick register successful!');
+                console.log(' Quick register successful!');
                 alert('Welcome to DriveSphere! Your new account has been created.');
                 
             } catch (error) {
@@ -4725,7 +4987,7 @@
         };
         
         // Test that functions are available
-        console.log('🟢 FUNCTIONS LOADED:', {
+        console.log(' FUNCTIONS LOADED:', {
             switchToLogin: typeof window.switchToLogin,
             switchToRegister: typeof window.switchToRegister,
             adminLogin: typeof window.adminLogin,
@@ -4818,13 +5080,13 @@
                     throw new Error('Data verification failed');
                 }
                 
-                console.log(`✅ Data saved successfully: ${key}`);
+                console.log(` Data saved successfully: ${key}`);
                 return true;
             } catch (error) {
-                console.error(`❌ Failed to save data: ${key}`, error);
+                console.error(` Failed to save data: ${key}`, error);
                 
                 if (retries > 0) {
-                    console.log(`🔄 Retrying save for ${key}... (${retries} attempts left)`);
+                    console.log(` Retrying save for ${key}... (${retries} attempts left)`);
                     setTimeout(() => {
                         safeSetItem(key, value, retries - 1);
                     }, DATA_CONFIG.RETRY_DELAY);
@@ -4846,13 +5108,13 @@
                 
                 // Validate data integrity
                 if (!validateDataIntegrity(key, parsed)) {
-                    console.warn(`⚠️ Data integrity check failed for ${key}, using backup`);
+                    console.warn(` Data integrity check failed for ${key}, using backup`);
                     return getBackupData(key, defaultValue);
                 }
                 
                 return parsed;
             } catch (error) {
-                console.error(`❌ Failed to load data: ${key}`, error);
+                console.error(` Failed to load data: ${key}`, error);
                 return getBackupData(key, defaultValue);
             }
         }
@@ -4884,7 +5146,7 @@
                 if (backup) {
                     const backupData = JSON.parse(backup);
                     if (backupData.userData && backupData.userData[key]) {
-                        console.log(`🔄 Restored ${key} from backup`);
+                        console.log(` Restored ${key} from backup`);
                         return backupData.userData[key];
                     }
                 }
@@ -4914,10 +5176,10 @@
                 backupSettings.lastBackup = new Date().toISOString();
                 safeSetItem('backupSettings', backupSettings);
                 
-                console.log('✅ Data backup created successfully');
+                console.log(' Data backup created successfully');
                 return true;
             } catch (error) {
-                console.error('❌ Failed to create backup:', error);
+                console.error(' Failed to create backup:', error);
                 return false;
             }
         }
@@ -4935,13 +5197,13 @@
             criticalData.forEach(key => {
                 const data = safeGetItem(key);
                 if (!validateDataIntegrity(key, data)) {
-                    console.error(`❌ Data validation failed for ${key}`);
+                    console.error(` Data validation failed for ${key}`);
                     hasErrors = true;
                 }
             });
             
             if (hasErrors) {
-                console.log('🔄 Attempting data recovery...');
+                console.log(' Attempting data recovery...');
                 attemptDataRecovery();
             }
         }
@@ -4950,7 +5212,7 @@
             // Try to restore from backup
             const backup = safeGetItem('driverhub_backup');
             if (backup && backup.userData) {
-                console.log('🔄 Restoring data from backup...');
+                console.log(' Restoring data from backup...');
                 
                 if (backup.userData.posts) safeSetItem('posts', backup.userData.posts);
                 if (backup.userData.routes) safeSetItem('routes', backup.userData.routes);
@@ -4959,7 +5221,7 @@
                 
                 showDataRecoveryNotification();
             } else {
-                console.error('❌ No backup available for recovery');
+                console.error(' No backup available for recovery');
                 showDataLossWarning();
             }
         }
@@ -4980,7 +5242,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
             `;
-            notification.innerHTML = `⚠️ ${message}`;
+            notification.innerHTML = ` ${message}`;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -5005,7 +5267,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
             `;
-            notification.innerHTML = '✅ Data recovered from backup successfully';
+            notification.innerHTML = ' Data recovered from backup successfully';
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -5030,7 +5292,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
             `;
-            notification.innerHTML = '⚠️ Data integrity issues detected. Please refresh the page.';
+            notification.innerHTML = ' Data integrity issues detected. Please refresh the page.';
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -5094,21 +5356,21 @@
             
             // Achievements
             ACHIEVEMENTS: {
-                'first_drive': { name: 'First Steps', description: 'Complete your first drive', xp: 100, icon: '🚗' },
-                'distance_10': { name: 'Explorer', description: 'Drive 10 miles total', xp: 150, icon: '🗺️' },
-                'distance_50': { name: 'Road Warrior', description: 'Drive 50 miles total', xp: 300, icon: '⚔️' },
-                'distance_100': { name: 'Century Club', description: 'Drive 100 miles total', xp: 500, icon: '💯' },
-                'distance_500': { name: 'Highway Hero', description: 'Drive 500 miles total', xp: 1000, icon: '🦸' },
-                'drives_10': { name: 'Regular Driver', description: 'Complete 10 drives', xp: 200, icon: '🔄' },
-                'drives_50': { name: 'Veteran Driver', description: 'Complete 50 drives', xp: 750, icon: '🎖️' },
-                'safe_driver': { name: 'Safety First', description: 'Complete 10 drives without hard events', xp: 400, icon: '🛡️' },
-                'speed_demon': { name: 'Speed Demon', description: 'Reach 100+ mph', xp: 500, icon: '⚡' },
-                'photographer': { name: 'Photographer', description: 'Share 10 photos', xp: 300, icon: '📸' },
-                'social_butterfly': { name: 'Social Butterfly', description: 'Get 50 likes total', xp: 350, icon: '🦋' },
-                'streak_7': { name: 'Weekly Warrior', description: 'Drive 7 days in a row', xp: 600, icon: '🔥' },
+                'first_drive': { name: 'First Steps', description: 'Complete your first drive', xp: 100, icon: '' },
+                'distance_10': { name: 'Explorer', description: 'Drive 10 miles total', xp: 150, icon: '' },
+                'distance_50': { name: 'Road Warrior', description: 'Drive 50 miles total', xp: 300, icon: '' },
+                'distance_100': { name: 'Century Club', description: 'Drive 100 miles total', xp: 500, icon: '' },
+                'distance_500': { name: 'Highway Hero', description: 'Drive 500 miles total', xp: 1000, icon: '' },
+                'drives_10': { name: 'Regular Driver', description: 'Complete 10 drives', xp: 200, icon: '' },
+                'drives_50': { name: 'Veteran Driver', description: 'Complete 50 drives', xp: 750, icon: '' },
+                'safe_driver': { name: 'Safety First', description: 'Complete 10 drives without hard events', xp: 400, icon: '' },
+                'speed_demon': { name: 'Speed Demon', description: 'Reach 100+ mph', xp: 500, icon: '' },
+                'photographer': { name: 'Photographer', description: 'Share 10 photos', xp: 300, icon: '' },
+                'social_butterfly': { name: 'Social Butterfly', description: 'Get 50 likes total', xp: 350, icon: '' },
+                'streak_7': { name: 'Weekly Warrior', description: 'Drive 7 days in a row', xp: 600, icon: '' },
                 'level_10': { name: 'Rising Star', description: 'Reach level 10', xp: 1000, icon: '⭐' },
-                'level_25': { name: 'Elite Driver', description: 'Reach level 25', xp: 2500, icon: '👑' },
-                'gforce_master': { name: 'G-Force Master', description: 'Experience 3.0+ G-force', xp: 400, icon: '🚀' }
+                'level_25': { name: 'Elite Driver', description: 'Reach level 25', xp: 2500, icon: '' },
+                'gforce_master': { name: 'G-Force Master', description: 'Experience 3.0+ G-force', xp: 400, icon: '' }
             }
         };
 
@@ -5318,12 +5580,12 @@
             modal.className = 'sync-modal';
             modal.innerHTML = `
                 <div class="sync-modal-content">
-                    <h3>📱 Sync Data Between Devices</h3>
+                    <h3> Sync Data Between Devices</h3>
                     <p>Scan this QR code with another device to sync data:</p>
                     <div id="qrCode" style="text-align: center; margin: 1rem 0;"></div>
                     <div class="sync-actions">
-                        <button class="btn" onclick="copySyncData()">📋 Copy Data</button>
-                        <button class="btn" onclick="importSyncData()">📥 Import Data</button>
+                        <button class="btn" onclick="copySyncData()"> Copy Data</button>
+                        <button class="btn" onclick="importSyncData()"> Import Data</button>
                         <button class="btn btn-secondary" onclick="this.closest('.sync-modal').remove()">Close</button>
                     </div>
                 </div>
@@ -5620,13 +5882,13 @@
                 {
                     id: 'mock-1',
                     username: 'SpeedRacer',
-                    text: 'Epic highway run today! Hit a new top speed of 87 mph on the freeway 🏎️',
+                    text: 'Epic highway run today! Hit a new top speed of 87 mph on the freeway ',
                     photos: [],
                     timestamp: Date.now() - 3600000,
                     likes: 8,
                     liked: false,
                     comments: [
-                        { id: 'c1', username: 'RoadWarrior', text: 'Wow! That\'s impressive! Stay safe out there 🚗', timestamp: Date.now() - 3000000 },
+                        { id: 'c1', username: 'RoadWarrior', text: 'Wow! That\'s impressive! Stay safe out there ', timestamp: Date.now() - 3000000 },
                         { id: 'c2', username: 'UrbanDriver', text: 'Nice speed! What car were you driving?', timestamp: Date.now() - 2700000 }
                     ]
                 },
@@ -5665,7 +5927,7 @@
             const routePosts = friendsRoutes.map(route => ({
                 id: `route-${route.id}`,
                 username: route.username || 'Friend',
-                text: `🗺️ Shared a new route: "${route.name}" - ${route.distance.toFixed(1)} miles in ${route.duration} minutes`,
+                text: ` Shared a new route: "${route.name}" - ${route.distance.toFixed(1)} miles in ${route.duration} minutes`,
                 photos: route.photos || [],
                 timestamp: route.timestamp || Date.now() - Math.random() * 86400000, // Random time in last 24 hours
                 likes: Math.floor(Math.random() * 20) + 5,
@@ -5681,7 +5943,7 @@
                 .map(friend => ({
                     id: `live-${friend.userId}-${Date.now()}`,
                     username: friend.userId,
-                    text: `🔴 Currently driving live! ${friend.speed || 0} mph - ${friend.distance || 0} miles traveled`,
+                    text: ` Currently driving live! ${friend.speed || 0} mph - ${friend.distance || 0} miles traveled`,
                     photos: [],
                     timestamp: Date.now() - Math.random() * 3600000, // Random time in last hour
                     likes: Math.floor(Math.random() * 15) + 3,
@@ -5747,9 +6009,9 @@
                             <div class="post-time">${formatPostTime(post.timestamp)}</div>
                         </div>
                         ${isRoutePost ? `
-                            <div class="post-type-badge route-badge">🗺️ Route</div>
+                            <div class="post-type-badge route-badge"> Route</div>
                         ` : isLivePost ? `
-                            <div class="post-type-badge live-badge">🔴 Live</div>
+                            <div class="post-type-badge live-badge"> Live</div>
                         ` : ''}
                         ${post.username === 'You' ? `
                             <button class="post-delete-btn" onclick="deletePost('${post.id}')" title="Delete Post">
@@ -5764,15 +6026,15 @@
                         <div class="route-info">
                             <div class="route-stats">
                                 <div class="route-stat">
-                                    <span class="stat-icon">📏</span>
+                                    <span class="stat-icon"></span>
                                     <span class="stat-value">${post.routeData.distance.toFixed(1)} mi</span>
                                 </div>
                                 <div class="route-stat">
-                                    <span class="stat-icon">⏱️</span>
+                                    <span class="stat-icon"></span>
                                     <span class="stat-value">${post.routeData.duration} min</span>
                                 </div>
                                 <div class="route-stat">
-                                    <span class="stat-icon">🚗</span>
+                                    <span class="stat-icon"></span>
                                     <span class="stat-value">${post.routeData.avgSpeed || 0} mph</span>
                                 </div>
                             </div>
@@ -5786,15 +6048,15 @@
                         <div class="live-info">
                             <div class="live-stats">
                                 <div class="live-stat">
-                                    <span class="stat-icon">🚗</span>
+                                    <span class="stat-icon"></span>
                                     <span class="stat-value">${post.liveData.speed || 0} mph</span>
                                 </div>
                                 <div class="live-stat">
-                                    <span class="stat-icon">📍</span>
+                                    <span class="stat-icon"></span>
                                     <span class="stat-value">${post.liveData.distance || 0} mi</span>
                                 </div>
                                 <div class="live-stat">
-                                    <span class="stat-icon">🕐</span>
+                                    <span class="stat-icon"></span>
                                     <span class="stat-value">${post.liveData.duration || '0:00'}</span>
                                 </div>
                             </div>
@@ -5816,15 +6078,15 @@
                     
                     <div class="post-actions">
                         <button class="post-action ${post.liked ? 'liked' : ''}" onclick="toggleLike('${post.id}')" id="like-btn-${post.id}">
-                            <span>${post.liked ? '❤️' : '🤍'}</span>
+                            <span>${post.liked ? '' : ''}</span>
                             <span>${post.likes} ${post.likes === 1 ? 'like' : 'likes'}</span>
                         </button>
                         <button class="post-action" onclick="toggleComments('${post.id}')">
-                            <span>💬</span>
+                            <span></span>
                             <span>${commentCount} ${commentCount === 1 ? 'comment' : 'comments'}</span>
                         </button>
                         <button class="post-action" onclick="sharePost('${post.id}')">
-                            <span>📤</span>
+                            <span></span>
                             <span>Share</span>
                         </button>
                     </div>
@@ -5864,7 +6126,7 @@
                                     id="comment-submit-${post.id}"
                                     disabled
                                 >
-                                    ➤
+                                    
                                 </button>
                             </div>
                         </div>
@@ -5922,13 +6184,13 @@
                 
                 if (isLiked) {
                     likeBtn.classList.remove('liked');
-                    heartSpan.textContent = '🤍';
+                    heartSpan.textContent = '';
                     const currentCount = parseInt(countSpan.textContent);
                     const newCount = currentCount - 1;
                     countSpan.textContent = `${newCount} ${newCount === 1 ? 'like' : 'likes'}`;
                 } else {
                     likeBtn.classList.add('liked');
-                    heartSpan.textContent = '❤️';
+                    heartSpan.textContent = '';
                     const currentCount = parseInt(countSpan.textContent);
                     const newCount = currentCount + 1;
                     countSpan.textContent = `${newCount} ${newCount === 1 ? 'like' : 'likes'}`;
@@ -6197,11 +6459,11 @@
             
             // Simulate nearby POIs
             const pois = [
-                { lat: lat + 0.003, lng: lng + 0.002, name: 'Gas Station', type: '⛽', distance: '0.2 mi' },
-                { lat: lat - 0.004, lng: lng + 0.003, name: 'Restaurant', type: '🍔', distance: '0.3 mi' },
-                { lat: lat + 0.006, lng: lng - 0.002, name: 'Hospital', type: '🏥', distance: '0.4 mi' },
-                { lat: lat - 0.002, lng: lng - 0.004, name: 'Parking', type: '🅿️', distance: '0.1 mi' },
-                { lat: lat + 0.008, lng: lng + 0.005, name: 'Hotel', type: '🏨', distance: '0.6 mi' }
+                { lat: lat + 0.003, lng: lng + 0.002, name: 'Gas Station', type: '', distance: '0.2 mi' },
+                { lat: lat - 0.004, lng: lng + 0.003, name: 'Restaurant', type: '', distance: '0.3 mi' },
+                { lat: lat + 0.006, lng: lng - 0.002, name: 'Hospital', type: '', distance: '0.4 mi' },
+                { lat: lat - 0.002, lng: lng - 0.004, name: 'Parking', type: '', distance: '0.1 mi' },
+                { lat: lat + 0.008, lng: lng + 0.005, name: 'Hotel', type: '', distance: '0.6 mi' }
             ];
             
             pois.forEach(poi => {
@@ -6356,19 +6618,19 @@
                 <div class="stat-comparison ${distance1 < distance2 ? 'better' : distance1 > distance2 ? 'worse' : ''}">
                     <div style="font-size: 1.5rem; font-weight: bold;">${route.distance}</div>
                     <div style="font-size: 0.875rem;">Distance (mi)</div>
-                    ${distance1 < distance2 ? '<div style="font-size: 0.75rem; color: #22c55e;">Shorter! ✓</div>' : 
+                    ${distance1 < distance2 ? '<div style="font-size: 0.75rem; color: #22c55e;">Shorter! </div>' : 
                       distance1 > distance2 ? '<div style="font-size: 0.75rem; color: #ef4444;">Longer</div>' : ''}
                 </div>
                 <div class="stat-comparison ${duration1 < duration2 ? 'better' : duration1 > duration2 ? 'worse' : ''}">
                     <div style="font-size: 1.5rem; font-weight: bold;">${route.duration}</div>
                     <div style="font-size: 0.875rem;">Duration (min)</div>
-                    ${duration1 < duration2 ? '<div style="font-size: 0.75rem; color: #22c55e;">Faster! ✓</div>' : 
+                    ${duration1 < duration2 ? '<div style="font-size: 0.75rem; color: #22c55e;">Faster! </div>' : 
                       duration1 > duration2 ? '<div style="font-size: 0.75rem; color: #ef4444;">Slower</div>' : ''}
                 </div>
                 <div class="stat-comparison ${speed1 > speed2 ? 'better' : speed1 < speed2 ? 'worse' : ''}">
                     <div style="font-size: 1.5rem; font-weight: bold;">${speed1 || 'N/A'}</div>
                     <div style="font-size: 0.875rem;">Top Speed (mph)</div>
-                    ${speed1 > speed2 ? '<div style="font-size: 0.75rem; color: #22c55e;">Faster! ✓</div>' : 
+                    ${speed1 > speed2 ? '<div style="font-size: 0.75rem; color: #22c55e;">Faster! </div>' : 
                       speed1 < speed2 ? '<div style="font-size: 0.75rem; color: #ef4444;">Slower</div>' : ''}
                 </div>
             `;
@@ -6451,14 +6713,14 @@
             modal.className = 'route-comparison-modal';
             modal.innerHTML = `
                 <div class="route-comparison-content">
-                    <h3 style="color: #f1f5f9; margin-bottom: 1rem;">🔄 Alternative Routes</h3>
+                    <h3 style="color: #f1f5f9; margin-bottom: 1rem;"> Alternative Routes</h3>
                     <p style="color: #94a3b8; margin-bottom: 2rem;">Based on current traffic and conditions</p>
                     
                     <div class="route-comparison-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                         ${alternatives.map(route => `
                             <div class="route-comparison-item">
                                 <h4 style="color: ${route.type === 'fast' ? '#22c55e' : route.type === 'scenic' ? '#3b82f6' : '#f59e0b'}; margin-bottom: 1rem;">
-                                    ${route.type === 'fast' ? '⚡' : route.type === 'scenic' ? '🌲' : '🍃'} ${route.name}
+                                    ${route.type === 'fast' ? '' : route.type === 'scenic' ? '' : ''} ${route.name}
                                 </h4>
                                 <div class="route-stats-comparison">
                                     <div class="stat-comparison">
@@ -6974,13 +7236,13 @@
                     ` : ''}
                     <div class="post-actions">
                         <button class="post-action" onclick="toggleLike('${mockPost.id}')">
-                            ❤️ ${mockPost.likes}
+                             ${mockPost.likes}
                         </button>
                         <button class="post-action" onclick="toggleComments('${mockPost.id}')">
-                            💬 ${mockPost.comments.length}
+                             ${mockPost.comments.length}
                         </button>
                         <button class="post-action" onclick="sharePost('${mockPost.id}')">
-                            📤 Share
+                             Share
                         </button>
                     </div>
                     <div class="comments-section" id="comments-${mockPost.id}" style="display: none;">
@@ -7002,16 +7264,16 @@
 
         function getRandomPostText() {
             const texts = [
-                "Just completed an amazing 45-mile drive through the mountains! 🏔️",
-                "New personal best: 127 mph on the highway! 🚀",
-                "Found this beautiful scenic route today - perfect for a Sunday drive 🌅",
-                "Eco-driving mode activated! 95% efficiency score today 🌱",
-                "Traffic was terrible but made it through with some great music 🎵",
-                "Early morning drive before sunrise - so peaceful 🌅",
-                "Just hit 1000 miles this month! Road warrior status unlocked 🏆",
-                "Beautiful sunset drive along the coast 🌊",
-                "New route discovered - 12 miles in 15 minutes! ⚡",
-                "Driving in the rain today - extra careful and safe ☔"
+                "Just completed an amazing 45-mile drive through the mountains! ",
+                "New personal best: 127 mph on the highway! ",
+                "Found this beautiful scenic route today - perfect for a Sunday drive ",
+                "Eco-driving mode activated! 95% efficiency score today ",
+                "Traffic was terrible but made it through with some great music ",
+                "Early morning drive before sunrise - so peaceful ",
+                "Just hit 1000 miles this month! Road warrior status unlocked ",
+                "Beautiful sunset drive along the coast ",
+                "New route discovered - 12 miles in 15 minutes! ",
+                "Driving in the rain today - extra careful and safe "
             ];
             return texts[Math.floor(Math.random() * texts.length)];
         }
@@ -7168,7 +7430,7 @@
                 const gForceCard = document.createElement('div');
                 gForceCard.className = 'card';
                 gForceCard.innerHTML = `
-                    <h3 class="card-title">🚀 G-Force Monitor</h3>
+                    <h3 class="card-title"> G-Force Monitor</h3>
                     <div class="gforce-container">
                         <div class="gforce-main">
                             <div class="gforce-value" id="currentGForce">0.00</div>
@@ -7304,22 +7566,22 @@
         function detectDrivingEvents(gForce) {
             // Detect hard braking (negative Y acceleration)
             if (accelerometerData.y < -1.5) {
-                showDrivingEvent('Hard Braking', '⚠️', '#ef4444');
+                showDrivingEvent('Hard Braking', '', '#ef4444');
             }
             
             // Detect hard acceleration (positive Y acceleration)
             if (accelerometerData.y > 1.5) {
-                showDrivingEvent('Hard Acceleration', '🚀', '#f59e0b');
+                showDrivingEvent('Hard Acceleration', '', '#f59e0b');
             }
             
             // Detect sharp turns (high X acceleration)
             if (Math.abs(accelerometerData.x) > 1.5) {
-                showDrivingEvent('Sharp Turn', '🔄', '#8b5cf6');
+                showDrivingEvent('Sharp Turn', '', '#8b5cf6');
             }
             
             // Detect high G-force events
             if (gForce > 2.0) {
-                showDrivingEvent('High G-Force', '⚡', '#ef4444');
+                showDrivingEvent('High G-Force', '', '#ef4444');
             }
         }
 
@@ -7362,9 +7624,9 @@
                 const gForceCard = document.createElement('div');
                 gForceCard.className = 'card';
                 gForceCard.innerHTML = `
-                    <h3 class="card-title">🚀 G-Force Monitor</h3>
+                    <h3 class="card-title"> G-Force Monitor</h3>
                     <div class="desktop-gforce-message">
-                        <div class="desktop-message-icon">📱</div>
+                        <div class="desktop-message-icon"></div>
                         <div class="desktop-message-content">
                             <h4>Mobile Feature</h4>
                             <p>G-Force monitoring is available on mobile devices with accelerometer sensors.</p>
@@ -7418,7 +7680,7 @@
         }
         
         function initializeDataPersistence() {
-            console.log('🔄 Initializing data persistence system...');
+            console.log(' Initializing data persistence system...');
             
             // Load data using safe methods
             users = safeGetItem('users', []);
@@ -7432,7 +7694,7 @@
             
             // Create initial backup if none exists
             if (!localStorage.getItem('driverhub_backup')) {
-                console.log('🔄 Creating initial data backup...');
+                console.log(' Creating initial data backup...');
                 createDataBackup();
             }
             
@@ -7441,7 +7703,7 @@
             
             // Set up periodic backups
             setInterval(() => {
-                console.log('🔄 Creating periodic backup...');
+                console.log(' Creating periodic backup...');
                 createDataBackup();
             }, DATA_CONFIG.BACKUP_FREQUENCY);
             
@@ -7450,7 +7712,7 @@
                 createDataBackup();
             });
             
-            console.log('✅ Data persistence system initialized');
+            console.log(' Data persistence system initialized');
         }
         
         function checkAuthStatus() {
@@ -7533,7 +7795,7 @@
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(16, 185, 129, 0.2);
             `;
-            notification.innerHTML = '⚡ Just enter your password to continue';
+            notification.innerHTML = ' Just enter your password to continue';
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -7560,7 +7822,7 @@
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(59, 130, 246, 0.2);
             `;
-            notification.innerHTML = '🔐 Login form auto-filled from Remember Me';
+            notification.innerHTML = ' Login form auto-filled from Remember Me';
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -7786,7 +8048,7 @@
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(16, 185, 129, 0.2);
             `;
-            notification.innerHTML = '🔐 Remember Me enabled - you\'ll stay logged in';
+            notification.innerHTML = ' Remember Me enabled - you\'ll stay logged in';
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -8007,7 +8269,7 @@
             if (typeof window.switchToLogin === 'undefined') {
                 console.error('Functions not loaded properly!');
             } else {
-                console.log('✅ All button functions loaded successfully');
+                console.log(' All button functions loaded successfully');
             }
             
             // Test if DOM is ready
@@ -8075,7 +8337,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
             `;
-            successToast.textContent = 'Welcome to DriveSphere! 🚗';
+            successToast.textContent = 'Welcome to DriveSphere! ';
             document.body.appendChild(successToast);
             
             setTimeout(() => {
@@ -8099,7 +8361,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
             `;
-            successToast.textContent = 'Account created successfully! 🎉';
+            successToast.textContent = 'Account created successfully! ';
             document.body.appendChild(successToast);
             
             setTimeout(() => {
@@ -8245,7 +8507,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
             `;
-            notification.textContent = `⚙️ ${message}`;
+            notification.textContent = ` ${message}`;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -8338,7 +8600,7 @@
                         userId: 'demo-user-1',
                         username: 'Alex Johnson',
                         userUsername: 'alex_driver',
-                        text: 'Just completed an amazing road trip through the mountains! The views were incredible and the driving was smooth. Highly recommend this route! 🏔️🚗',
+                        text: 'Just completed an amazing road trip through the mountains! The views were incredible and the driving was smooth. Highly recommend this route! ',
                         photos: [],
                         timestamp: Date.now() - 2 * 60 * 60 * 1000, // 2 hours ago
                         likes: 12,
@@ -8349,7 +8611,7 @@
                         userId: 'demo-user-2',
                         username: 'Sarah Chen',
                         userUsername: 'sarah_speed',
-                        text: 'New personal best on the highway today! Hit 95 mph safely on the open road. The car handled beautifully! 🏎️💨',
+                        text: 'New personal best on the highway today! Hit 95 mph safely on the open road. The car handled beautifully! ',
                         photos: [],
                         timestamp: Date.now() - 4 * 60 * 60 * 1000, // 4 hours ago
                         likes: 8,
@@ -8360,7 +8622,7 @@
                         userId: 'demo-user-3',
                         username: 'Mike Rodriguez',
                         userUsername: 'mike_road',
-                        text: 'City driving can be challenging but I love the challenge! Found some great shortcuts today that saved me 15 minutes. 🏙️🚦',
+                        text: 'City driving can be challenging but I love the challenge! Found some great shortcuts today that saved me 15 minutes. ',
                         photos: [],
                         timestamp: Date.now() - 6 * 60 * 60 * 1000, // 6 hours ago
                         likes: 5,
@@ -8371,7 +8633,7 @@
                         userId: 'demo-user-1',
                         username: 'Alex Johnson',
                         userUsername: 'alex_driver',
-                        text: 'Sharing my favorite route for weekend drives. Perfect for a relaxing Sunday morning! 🛣️☀️',
+                        text: 'Sharing my favorite route for weekend drives. Perfect for a relaxing Sunday morning! ',
                         photos: [],
                         timestamp: Date.now() - 24 * 60 * 60 * 1000, // 1 day ago
                         likes: 15,
@@ -8775,11 +9037,11 @@
                 URL.revokeObjectURL(url);
                 
                 updateBackupStatus();
-                showBackupNotification('Backup created successfully! 💾');
+                showBackupNotification('Backup created successfully! ');
                 
             } catch (error) {
                 console.error('Backup failed:', error);
-                showBackupNotification('Backup failed! ❌', 'error');
+                showBackupNotification('Backup failed! ', 'error');
             }
         }
 
@@ -8801,7 +9063,7 @@
                     }
                     
                     // Confirm restoration
-                    if (!confirm('⚠️ This will replace ALL your current data with the backup. Are you sure?')) {
+                    if (!confirm(' This will replace ALL your current data with the backup. Are you sure?')) {
                         return;
                     }
                     
@@ -8838,7 +9100,7 @@
                         localStorage.setItem('backupSettings', JSON.stringify(backupSettings));
                     }
                     
-                    showBackupNotification('Data restored successfully! Refreshing app... 🔄');
+                    showBackupNotification('Data restored successfully! Refreshing app... ');
                     
                     // Refresh the app after 2 seconds
                     setTimeout(() => {
@@ -8847,7 +9109,7 @@
                     
                 } catch (error) {
                     console.error('Restore failed:', error);
-                    showBackupNotification('Restore failed! Invalid backup file ❌', 'error');
+                    showBackupNotification('Restore failed! Invalid backup file ', 'error');
                 }
             };
             reader.readAsText(file);
@@ -8862,10 +9124,10 @@
             
             if (backupSettings.autoBackup) {
                 startAutoBackup();
-                showBackupNotification('Auto backup enabled ✅');
+                showBackupNotification('Auto backup enabled ');
             } else {
                 stopAutoBackup();
-                showBackupNotification('Auto backup disabled ❌');
+                showBackupNotification('Auto backup disabled ');
             }
             
             updateBackupStatus();
@@ -9015,7 +9277,7 @@
                     // Load friend list for sharing permissions
                     loadSharingPermissions();
                     
-                    showLiveNotification('Live tracking started! 📡', 'success');
+                    showLiveNotification('Live tracking started! ', 'success');
                     
                     // Add XP for starting live mode
                     addXP(XP_CONFIG.SOCIAL_INTERACTION, 'Started live sharing');
@@ -9138,7 +9400,7 @@
             if (liveTracking.isActive) {
                 liveStatusEl.textContent = 'Live';
                 liveStatusEl.classList.add('active');
-                liveBtnEl.textContent = '🔴 Stop Live Sharing';
+                liveBtnEl.textContent = ' Stop Live Sharing';
                 liveBtnEl.classList.add('active');
                 liveInfoEl.style.display = 'block';
                 
@@ -9157,7 +9419,7 @@
             } else {
                 liveStatusEl.textContent = 'Offline';
                 liveStatusEl.classList.remove('active');
-                liveBtnEl.textContent = '📡 Start Live Sharing';
+                liveBtnEl.textContent = ' Start Live Sharing';
                 liveBtnEl.classList.remove('active');
                 liveInfoEl.style.display = 'none';
             }
@@ -9192,7 +9454,7 @@
             emergencyAlerts.push(emergencyData);
             localStorage.setItem('emergencyAlerts', JSON.stringify(emergencyAlerts));
             
-            showLiveNotification('🚨 Emergency detected! Location shared with all contacts', 'error');
+            showLiveNotification(' Emergency detected! Location shared with all contacts', 'error');
             
             console.log('Emergency sharing activated:', emergencyData);
         }
@@ -9204,7 +9466,7 @@
             modal.innerHTML = `
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3>🔒 Live Sharing Privacy</h3>
+                        <h3> Live Sharing Privacy</h3>
                         <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
                     </div>
                     <div class="modal-body">
@@ -9356,7 +9618,7 @@
             `;
             errorToast.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="font-size: 1.2rem;">⚠️</span>
+                    <span style="font-size: 1.2rem;"></span>
                     <div>
                         <div style="font-size: 0.9rem;">Storage Full</div>
                         <div style="font-size: 0.75rem; opacity: 0.9;">Please clear some data in admin panel</div>
@@ -9384,8 +9646,8 @@
                 xpCard.className = 'card xp-card';
                 xpCard.innerHTML = `
                     <div class="card-header">
-                        <h3 class="card-title">🎮 Player Progress</h3>
-                        <button class="help-btn" onclick="showXPExplanation()" title="How does XP work?">❓</button>
+                        <h3 class="card-title"> Player Progress</h3>
+                        <button class="help-btn" onclick="showXPExplanation()" title="How does XP work?"></button>
                     </div>
                     <div class="xp-container">
                         <div class="level-display">
@@ -9423,7 +9685,7 @@
                         </div>
                         
                         <div class="recent-achievements" id="recentAchievements">
-                            <h4>🏆 Recent Achievements</h4>
+                            <h4> Recent Achievements</h4>
                             <div class="achievement-list" id="achievementList"></div>
                         </div>
                     </div>
@@ -9508,15 +9770,15 @@
         }
 
         function getLevelTitle(level) {
-            if (level >= 50) return "🏆 Legend";
-            if (level >= 40) return "👑 Elite Master";
+            if (level >= 50) return " Legend";
+            if (level >= 40) return " Elite Master";
             if (level >= 30) return "⭐ Elite Driver";
-            if (level >= 25) return "🎖️ Master Driver";
-            if (level >= 20) return "🦸 Hero Driver";
-            if (level >= 15) return "⚔️ Veteran Driver";
-            if (level >= 10) return "🛡️ Experienced Driver";
-            if (level >= 5) return "🚗 Skilled Driver";
-            return "🔰 Novice Driver";
+            if (level >= 25) return " Master Driver";
+            if (level >= 20) return " Hero Driver";
+            if (level >= 15) return " Veteran Driver";
+            if (level >= 10) return " Experienced Driver";
+            if (level >= 5) return " Skilled Driver";
+            return " Novice Driver";
         }
 
         function showXPGain(amount, reason) {
@@ -9577,7 +9839,7 @@
                     animation: levelUpBounce 0.6s ease;
                     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
                 ">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                    <div style="font-size: 4rem; margin-bottom: 1rem;"></div>
                     <h2 style="margin: 0 0 0.5rem 0; font-size: 2rem;">LEVEL UP!</h2>
                     <div style="font-size: 3rem; font-weight: bold; margin: 1rem 0;">${newLevel}</div>
                     <div style="font-size: 1.2rem; margin-bottom: 2rem;">${getLevelTitle(newLevel)}</div>
@@ -9861,7 +10123,7 @@
                             
                             // Warn if accuracy is poor
                             if (accuracy > 100) {
-                                console.warn('⚠️ POOR ACCURACY: Location may be inaccurate. Try going outside or near a window for better GPS signal.');
+                                console.warn(' POOR ACCURACY: Location may be inaccurate. Try going outside or near a window for better GPS signal.');
                                 locationStatusEl.innerHTML += '<br><small style="color: #ef4444;">Poor signal - go outside</small>';
                             }
                             
@@ -9882,7 +10144,7 @@
                                 <strong>Your Location</strong><br>
                                 Accuracy: ±${Math.round(accuracy)}m<br>
                                 Source: ${locationSource}<br>
-                                ${accuracy > 50 ? '<span style="color: #ef4444;">⚠️ Go outside for better accuracy</span>' : '<span style="color: #22c55e;">✓ Good accuracy</span>'}
+                                ${accuracy > 50 ? '<span style="color: #ef4444;"> Go outside for better accuracy</span>' : '<span style="color: #22c55e;"> Good accuracy</span>'}
                             `;
                             L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
                         },
@@ -10376,7 +10638,7 @@
                 liveFriendsGrid.innerHTML = `
                     <div class="no-live-friends" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
                         <div class="no-content-message">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">📡</div>
+                            <div style="font-size: 3rem; margin-bottom: 1rem;"></div>
                             <h3 style="color: #f1f5f9; margin-bottom: 0.5rem;">No friends are live sharing</h3>
                             <p style="color: #94a3b8; margin-bottom: 1.5rem;">When your friends start live sharing, you'll see them here!</p>
                             <button class="btn btn-primary" onclick="toggleLiveMode()">Start Live Sharing</button>
@@ -10418,9 +10680,9 @@
                     </div>
                 </div>
                 <div class="live-friend-actions">
-                    <button class="btn btn-sm btn-primary" onclick="focusOnFriend('${friend.userId}')">📍 Locate</button>
-                    <button class="btn btn-sm btn-secondary" onclick="followFriend('${friend.userId}')">🚗 Follow</button>
-                    ${friend.status === 'emergency' ? '<button class="btn btn-sm" style="background: #ef4444;" onclick="respondToEmergency(\'' + friend.userId + '\')">🚨 Emergency</button>' : ''}
+                    <button class="btn btn-sm btn-primary" onclick="focusOnFriend('${friend.userId}')"> Locate</button>
+                    <button class="btn btn-sm btn-secondary" onclick="followFriend('${friend.userId}')"> Follow</button>
+                    ${friend.status === 'emergency' ? '<button class="btn btn-sm" style="background: #ef4444;" onclick="respondToEmergency(\'' + friend.userId + '\')"> Emergency</button>' : ''}
                 </div>
             `;
             
@@ -10705,15 +10967,15 @@
                             </div>
                             <div class="route-stats">
                                 <div class="route-stat">
-                                    <span class="stat-icon">📏</span>
+                                    <span class="stat-icon"></span>
                                     <span class="stat-value">${route.distance ? route.distance.toFixed(1) : '0'} miles</span>
                                 </div>
                                 <div class="route-stat">
-                                    <span class="stat-icon">⏱️</span>
+                                    <span class="stat-icon"></span>
                                     <span class="stat-value">${route.duration || '0'} min</span>
                                 </div>
                                 <div class="route-stat">
-                                    <span class="stat-icon">🚗</span>
+                                    <span class="stat-icon"></span>
                                     <span class="stat-value">${route.avgSpeed ? route.avgSpeed.toFixed(0) : '0'} mph</span>
                                 </div>
                             </div>
@@ -10745,7 +11007,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 8px 25px rgba(0, 191, 255, 0.3);
             `;
-            notification.textContent = `🗺️ Route loaded on map`;
+            notification.textContent = ` Route loaded on map`;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -10867,7 +11129,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 8px 25px rgba(0, 191, 255, 0.3);
             `;
-            notification.textContent = `👥 Friend request sent to ${user.name}`;
+            notification.textContent = ` Friend request sent to ${user.name}`;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -10911,10 +11173,10 @@
                     ` : ''}
                     <div class="post-actions">
                         <button class="post-action" onclick="likePost('${post.id}')">
-                            👍 ${post.likes || 0}
+                             ${post.likes || 0}
                         </button>
                         <button class="post-action" onclick="deletePost('${post.id}')">
-                            🗑️ Delete
+                             Delete
                         </button>
                     </div>
                 </div>
@@ -10957,7 +11219,7 @@
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
             `;
-            notification.innerHTML = `🔴 Now following ${userId}'s live drive`;
+            notification.innerHTML = ` Now following ${userId}'s live drive`;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -10997,7 +11259,7 @@
                     animation: slideInUp 0.3s ease;
                 ">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h2 style="color: #f1f5f9; margin: 0; font-size: 1.5rem;">🎮 XP System Guide</h2>
+                        <h2 style="color: #f1f5f9; margin: 0; font-size: 1.5rem;"> XP System Guide</h2>
                         <button onclick="this.closest('.modal').remove()" style="
                             background: rgba(239, 68, 68, 0.2);
                             border: 1px solid rgba(239, 68, 68, 0.3);
@@ -11012,7 +11274,7 @@
                     
                     <div style="color: #cbd5e1; line-height: 1.6;">
                         <div style="margin-bottom: 1.5rem;">
-                            <h3 style="color: #3b82f6; margin-bottom: 0.5rem;">🏆 How to Earn XP</h3>
+                            <h3 style="color: #3b82f6; margin-bottom: 0.5rem;"> How to Earn XP</h3>
                             <ul style="margin: 0; padding-left: 1.5rem;">
                                 <li><strong>Complete Drives:</strong> +50 XP per drive</li>
                                 <li><strong>Distance Bonus:</strong> +1 XP per mile driven</li>
@@ -11023,7 +11285,7 @@
                         </div>
                         
                         <div style="margin-bottom: 1.5rem;">
-                            <h3 style="color: #10b981; margin-bottom: 0.5rem;">📈 Leveling Up</h3>
+                            <h3 style="color: #10b981; margin-bottom: 0.5rem;"> Leveling Up</h3>
                             <p style="margin: 0 0 0.5rem 0;">Each level requires more XP than the last:</p>
                             <ul style="margin: 0; padding-left: 1.5rem;">
                                 <li><strong>Level 1-5:</strong> 100 XP per level</li>
@@ -11034,7 +11296,7 @@
                         </div>
                         
                         <div style="margin-bottom: 1.5rem;">
-                            <h3 style="color: #f59e0b; margin-bottom: 0.5rem;">🏅 Achievements</h3>
+                            <h3 style="color: #f59e0b; margin-bottom: 0.5rem;"> Achievements</h3>
                             <p style="margin: 0 0 0.5rem 0;">Unlock special achievements for:</p>
                             <ul style="margin: 0; padding-left: 1.5rem;">
                                 <li><strong>Speed Demon:</strong> Drive over 100 mph</li>
@@ -11046,7 +11308,7 @@
                         
                         <div style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
                             <p style="margin: 0; font-weight: 500; color: #3b82f6;">
-                                💡 <strong>Pro Tip:</strong> The more you drive and share, the faster you'll level up! 
+                                 <strong>Pro Tip:</strong> The more you drive and share, the faster you'll level up! 
                                 Check your progress in the Analytics page for detailed stats.
                             </p>
                         </div>
