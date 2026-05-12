@@ -4104,6 +4104,142 @@
             color: #111111 !important;
             border: 1px solid #d1d5db !important;
         }
+
+        /* G-Force, XP bar, level badge: strip dark/gradient surfaces */
+        .gforce-main,
+        .gforce-stat,
+        .gforce-chart,
+        .gforce-axes,
+        .xp-bar-container,
+        .stat-display,
+        .stat-card,
+        .stat-item {
+            background: #f3f4f6 !important;
+            background-image: none !important;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: none !important;
+        }
+
+        .gforce-value,
+        .gforce-stat-value,
+        .gforce-stat-label,
+        .gforce-label,
+        .gforce-axis span,
+        .gforce-axis span:first-child {
+            background: none !important;
+            background-image: none !important;
+            -webkit-background-clip: initial !important;
+            background-clip: initial !important;
+            -webkit-text-fill-color: #111111 !important;
+            color: #111111 !important;
+            text-shadow: none !important;
+        }
+
+        .gforce-stat-label,
+        .gforce-label,
+        .gforce-axis span {
+            color: #6b7280 !important;
+            -webkit-text-fill-color: #6b7280 !important;
+        }
+
+        .level-circle,
+        .level-circle::before {
+            background: #2563eb !important;
+            background-image: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #ffffff !important;
+        }
+
+        .level-circle::before {
+            display: none !important;
+        }
+
+        .level-circle * {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
+        .xp-bar-container {
+            background: #f3f4f6 !important;
+            box-shadow: none !important;
+            border: 1px solid #e5e7eb !important;
+        }
+
+        .xp-bar,
+        .xp-bar::before {
+            background: #2563eb !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            color: #ffffff !important;
+        }
+
+        .xp-bar::before {
+            display: none !important;
+        }
+
+        .xp-bar *, .xp-text {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+
+        /* Catch-all: neutralize any element whose inline style sets a
+           background gradient (but leave images alone) */
+        [style*="linear-gradient"]:not(img):not(.leaflet-tile):not(.leaflet-marker-icon) {
+            background-image: none !important;
+        }
+
+        /* .mobile-ui needs the two-row nav too: the original
+           .mobile-ui .nav-container forces a single horizontal row that
+           overflows on iPhone 11 Pro Max width (414px). Make it stack like
+           the earlier @media (max-width: 480px) fix. */
+        @media (max-width: 480px) {
+            .mobile-ui .nav-container,
+            body.mobile-ui .nav-container {
+                position: relative !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 0.4rem !important;
+                padding: 0.5rem 0.5rem !important;
+                padding-right: 5rem !important;
+                overflow: visible !important;
+            }
+
+            .mobile-ui .nav-links,
+            body.mobile-ui .nav-links {
+                width: 100% !important;
+                gap: 0.25rem !important;
+                justify-content: space-between !important;
+                flex-wrap: nowrap !important;
+                align-items: center !important;
+                overflow-x: visible !important;
+            }
+
+            .mobile-ui .nav-links > .nav-link,
+            body.mobile-ui .nav-links > .nav-link {
+                flex: 1 1 0 !important;
+                min-width: 0 !important;
+                padding: 0.45rem 0.2rem !important;
+                font-size: 0.7rem !important;
+                text-align: center !important;
+                white-space: nowrap !important;
+                line-height: 1.2 !important;
+            }
+
+            .mobile-ui .nav-links > .user-menu,
+            body.mobile-ui .nav-links > .user-menu {
+                position: absolute !important;
+                top: 0 !important;
+                right: 0 !important;
+                flex: 0 0 auto !important;
+            }
+
+            .mobile-ui .logo,
+            body.mobile-ui .logo {
+                font-size: 1.05rem !important;
+                text-align: left !important;
+            }
+        }
     </style>
 </head>
 <body>
