@@ -4194,8 +4194,12 @@
            overflows on iPhone 11 Pro Max width (414px). Make it stack like
            the earlier @media (max-width: 480px) fix. */
         @media (max-width: 480px) {
-            .mobile-ui .nav-container,
-            body.mobile-ui .nav-container {
+            /* Cover every variant: plain selector, .mobile-ui, .tablet-ui,
+               and the body-prefixed forms. Each gets !important so the fix
+               wins regardless of which class JS applied to <body>. */
+            .nav-container,
+            .mobile-ui .nav-container, body.mobile-ui .nav-container,
+            .tablet-ui .nav-container, body.tablet-ui .nav-container {
                 position: relative !important;
                 flex-direction: column !important;
                 align-items: stretch !important;
@@ -4203,10 +4207,19 @@
                 padding: 0.5rem 0.5rem !important;
                 padding-right: 5rem !important;
                 overflow: visible !important;
+                min-width: 0 !important;
             }
 
-            .mobile-ui .nav-links,
-            body.mobile-ui .nav-links {
+            .navbar,
+            .mobile-ui .navbar, body.mobile-ui .navbar,
+            .tablet-ui .navbar, body.tablet-ui .navbar {
+                overflow-x: visible !important;
+                white-space: normal !important;
+            }
+
+            .nav-links,
+            .mobile-ui .nav-links, body.mobile-ui .nav-links,
+            .tablet-ui .nav-links, body.tablet-ui .nav-links {
                 width: 100% !important;
                 gap: 0.25rem !important;
                 justify-content: space-between !important;
@@ -4215,8 +4228,9 @@
                 overflow-x: visible !important;
             }
 
-            .mobile-ui .nav-links > .nav-link,
-            body.mobile-ui .nav-links > .nav-link {
+            .nav-links > .nav-link,
+            .mobile-ui .nav-links > .nav-link, body.mobile-ui .nav-links > .nav-link,
+            .tablet-ui .nav-links > .nav-link, body.tablet-ui .nav-links > .nav-link {
                 flex: 1 1 0 !important;
                 min-width: 0 !important;
                 padding: 0.45rem 0.2rem !important;
@@ -4226,16 +4240,18 @@
                 line-height: 1.2 !important;
             }
 
-            .mobile-ui .nav-links > .user-menu,
-            body.mobile-ui .nav-links > .user-menu {
+            .nav-links > .user-menu,
+            .mobile-ui .nav-links > .user-menu, body.mobile-ui .nav-links > .user-menu,
+            .tablet-ui .nav-links > .user-menu, body.tablet-ui .nav-links > .user-menu {
                 position: absolute !important;
                 top: 0 !important;
                 right: 0 !important;
                 flex: 0 0 auto !important;
             }
 
-            .mobile-ui .logo,
-            body.mobile-ui .logo {
+            .logo,
+            .mobile-ui .logo, body.mobile-ui .logo,
+            .tablet-ui .logo, body.tablet-ui .logo {
                 font-size: 1.05rem !important;
                 text-align: left !important;
             }
