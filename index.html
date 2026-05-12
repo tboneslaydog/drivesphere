@@ -365,99 +365,6 @@
             background: linear-gradient(135deg, #2563eb, #7c3aed);
         }
 
-        /* G-Force Display Styles */
-        .gforce-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .gforce-main {
-            text-align: center;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-            border-radius: 1rem;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        .gforce-value {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            transition: all 0.3s ease;
-        }
-
-        .gforce-label {
-            font-size: 1rem;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        .gforce-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .gforce-stat {
-            text-align: center;
-            padding: 1rem;
-            background: rgba(30, 41, 59, 0.4);
-            border-radius: 0.75rem;
-            border: 1px solid rgba(59, 130, 246, 0.1);
-        }
-
-        .gforce-stat-value {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #3b82f6;
-            margin-bottom: 0.25rem;
-        }
-
-        .gforce-stat-label {
-            font-size: 0.875rem;
-            color: #94a3b8;
-        }
-
-        .gforce-chart {
-            background: rgba(30, 41, 59, 0.3);
-            border-radius: 0.75rem;
-            padding: 1rem;
-            border: 1px solid rgba(59, 130, 246, 0.1);
-        }
-
-        .gforce-chart canvas {
-            width: 100%;
-            height: 100px;
-            border-radius: 0.5rem;
-        }
-
-        .gforce-axes {
-            display: flex;
-            justify-content: space-around;
-            padding: 1rem;
-            background: rgba(30, 41, 59, 0.2);
-            border-radius: 0.75rem;
-            border: 1px solid rgba(59, 130, 246, 0.1);
-        }
-
-        .gforce-axis span {
-            display: block;
-            text-align: center;
-            font-size: 0.875rem;
-            color: #94a3b8;
-        }
-
-        .gforce-axis span:first-child {
-            font-weight: 600;
-            color: #3b82f6;
-            margin-bottom: 0.25rem;
-        }
-
         /* Event Notifications */
         @keyframes slideInRight {
             from {
@@ -497,32 +404,6 @@
             0% { text-shadow: 0 0 4px rgba(0, 191, 255, 0.4); }
             50% { text-shadow: 0 0 12px rgba(0, 191, 255, 0.6), 0 0 20px rgba(0, 123, 255, 0.4); }
             100% { text-shadow: 0 0 4px rgba(0, 191, 255, 0.4); }
-        }
-
-        /* Mobile G-Force Styles */
-        @media (max-width: 480px) {
-            .gforce-value {
-                font-size: 2.5rem;
-            }
-            
-            .gforce-stats {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-            }
-            
-            .gforce-stat {
-                padding: 0.75rem;
-            }
-            
-            .gforce-axes {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .gforce-axis {
-                display: flex;
-                justify-content: space-between;
-            }
         }
 
         /* XP System Styles */
@@ -1680,63 +1561,6 @@
         
         .backup-status strong {
             color: #f1f5f9;
-        }
-        
-        .desktop-gforce-message {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-            border-radius: 1rem;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-        
-        .desktop-message-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.8;
-        }
-        
-        .desktop-message-content h4 {
-            color: #f1f5f9;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-        
-        .desktop-message-content p {
-            color: #94a3b8;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 0.5rem;
-        }
-        
-        .desktop-feature-preview {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
-        }
-        
-        .preview-stat {
-            text-align: center;
-        }
-        
-        .preview-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.25rem;
-        }
-        
-        .preview-label {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            font-weight: 500;
         }
         
         /* Live Tracking Styles */
@@ -4105,11 +3929,7 @@
             border: 1px solid #d1d5db !important;
         }
 
-        /* G-Force, XP bar, level badge: strip dark/gradient surfaces */
-        .gforce-main,
-        .gforce-stat,
-        .gforce-chart,
-        .gforce-axes,
+        /* XP bar / level badge / stat cards: strip dark/gradient surfaces */
         .xp-bar-container,
         .stat-display,
         .stat-card,
@@ -4118,28 +3938,6 @@
             background-image: none !important;
             border: 1px solid #e5e7eb !important;
             box-shadow: none !important;
-        }
-
-        .gforce-value,
-        .gforce-stat-value,
-        .gforce-stat-label,
-        .gforce-label,
-        .gforce-axis span,
-        .gforce-axis span:first-child {
-            background: none !important;
-            background-image: none !important;
-            -webkit-background-clip: initial !important;
-            background-clip: initial !important;
-            -webkit-text-fill-color: #111111 !important;
-            color: #111111 !important;
-            text-shadow: none !important;
-        }
-
-        .gforce-stat-label,
-        .gforce-label,
-        .gforce-axis span {
-            color: #6b7280 !important;
-            -webkit-text-fill-color: #6b7280 !important;
         }
 
         .level-circle,
@@ -5319,16 +5117,6 @@
         };
         let poiMarkers = [];
         let alternativeRoutes = [];
-        let accelerometerData = {
-            x: 0,
-            y: 0,
-            z: 0,
-            totalG: 0,
-            isSupported: false
-        };
-        let gForceHistory = [];
-        let maxGForce = 0;
-        
         // XP and Leveling System
         let playerData = {
             xp: 0,
@@ -5359,7 +5147,6 @@
         let sessionStart = new Date();
         let socialInterval = null;
         let leaderboardInterval = null;
-        let gforceInterval = null;
         
         // Data persistence functions
         function safeSetItem(key, value, retries = DATA_CONFIG.MAX_RETRIES) {
@@ -5668,8 +5455,7 @@
                 'social_butterfly': { name: 'Social Butterfly', description: 'Get 50 likes total', xp: 350, icon: '' },
                 'streak_7': { name: 'Weekly Warrior', description: 'Drive 7 days in a row', xp: 600, icon: '' },
                 'level_10': { name: 'Rising Star', description: 'Reach level 10', xp: 1000, icon: '⭐' },
-                'level_25': { name: 'Elite Driver', description: 'Reach level 25', xp: 2500, icon: '' },
-                'gforce_master': { name: 'G-Force Master', description: 'Experience 3.0+ G-force', xp: 400, icon: '' }
+                'level_25': { name: 'Elite Driver', description: 'Reach level 25', xp: 2500, icon: '' }
             }
         };
 
@@ -6015,7 +5801,6 @@
                 // Initialize mobile features
                 initializeSwipeGestures();
                 initializePullToRefresh();
-                initializeAccelerometer();
                 
                 // Initialize social simulation
                 simulateSocialUpdates();
@@ -7489,10 +7274,6 @@
                 clearInterval(leaderboardInterval);
                 leaderboardInterval = null;
             }
-            if (gforceInterval) {
-                clearInterval(gforceInterval);
-                gforceInterval = null;
-            }
             if (backupSettings.backupInterval) {
                 clearInterval(backupSettings.backupInterval);
                 backupSettings.backupInterval = null;
@@ -7642,314 +7423,6 @@
                     item.classList.remove('glow');
                 });
             });
-        }
-
-        // Accelerometer Functions
-        function initializeAccelerometer() {
-            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-                // iOS 13+ requires permission
-                DeviceMotionEvent.requestPermission()
-                    .then(response => {
-                        if (response === 'granted') {
-                            startAccelerometer();
-                        } else {
-                            console.log('Accelerometer permission denied');
-                            showAccelerometerFallback();
-                        }
-                    })
-                    .catch(console.error);
-            } else if (typeof DeviceMotionEvent !== 'undefined') {
-                // Android and older iOS
-                startAccelerometer();
-            } else {
-                console.log('Accelerometer not supported');
-                showAccelerometerFallback();
-            }
-        }
-
-        function startAccelerometer() {
-            accelerometerData.isSupported = true;
-            
-            window.addEventListener('devicemotion', handleMotionEvent);
-            
-            // Add G-force display to dashboard
-            addGForceDisplay();
-            
-            console.log('Accelerometer started successfully');
-        }
-
-        function handleMotionEvent(event) {
-            const acceleration = event.accelerationIncludingGravity;
-            
-            if (acceleration) {
-                accelerometerData.x = acceleration.x || 0;
-                accelerometerData.y = acceleration.y || 0;
-                accelerometerData.z = acceleration.z || 0;
-                
-                // Calculate total G-force (excluding gravity)
-                const totalG = Math.sqrt(
-                    Math.pow(acceleration.x, 2) + 
-                    Math.pow(acceleration.y, 2) + 
-                    Math.pow(acceleration.z - 9.81, 2)
-                ) / 9.81;
-                
-                accelerometerData.totalG = totalG;
-                
-                // Update max G-force
-                if (totalG > maxGForce) {
-                    maxGForce = totalG;
-                }
-                
-                // Store in history
-                gForceHistory.push({
-                    timestamp: Date.now(),
-                    gForce: totalG,
-                    x: acceleration.x,
-                    y: acceleration.y,
-                    z: acceleration.z
-                });
-                
-                // Keep only last 100 readings
-                if (gForceHistory.length > 100) {
-                    gForceHistory.shift();
-                }
-                
-                // Update UI
-                updateGForceDisplay();
-                updateGForceChart();
-                
-                // Detect driving events
-                detectDrivingEvents(totalG);
-            }
-        }
-
-        function addGForceDisplay() {
-            const dashboard = document.querySelector('#dashboard');
-            if (dashboard) {
-                const gForceCard = document.createElement('div');
-                gForceCard.className = 'card';
-                gForceCard.innerHTML = `
-                    <h3 class="card-title"> G-Force Monitor</h3>
-                    <div class="gforce-container">
-                        <div class="gforce-main">
-                            <div class="gforce-value" id="currentGForce">0.00</div>
-                            <div class="gforce-label">Current G-Force</div>
-                        </div>
-                        <div class="gforce-stats">
-                            <div class="gforce-stat">
-                                <div class="gforce-stat-value" id="maxGForce">0.00</div>
-                                <div class="gforce-stat-label">Max G-Force</div>
-                            </div>
-                            <div class="gforce-stat">
-                                <div class="gforce-stat-value" id="avgGForce">0.00</div>
-                                <div class="gforce-stat-label">Average G-Force</div>
-                            </div>
-                        </div>
-                        <div class="gforce-chart">
-                            <canvas id="gForceChart" width="300" height="100"></canvas>
-                        </div>
-                        <div class="gforce-axes">
-                            <div class="gforce-axis">
-                                <span>X: <span id="gForceX">0.00</span></span>
-                                <span>Y: <span id="gForceY">0.00</span></span>
-                                <span>Z: <span id="gForceZ">0.00</span></span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Insert after the first card
-                const firstCard = dashboard.querySelector('.card');
-                if (firstCard) {
-                    firstCard.insertAdjacentElement('afterend', gForceCard);
-                }
-            }
-        }
-
-        function updateGForceDisplay() {
-            const currentGElement = document.getElementById('currentGForce');
-            const maxGElement = document.getElementById('maxGForce');
-            const avgGElement = document.getElementById('avgGForce');
-            const xElement = document.getElementById('gForceX');
-            const yElement = document.getElementById('gForceY');
-            const zElement = document.getElementById('gForceZ');
-            
-            if (currentGElement) {
-                currentGElement.textContent = accelerometerData.totalG.toFixed(2);
-                
-                // Color code based on G-force level
-                const gForce = accelerometerData.totalG;
-                if (gForce > 2.0) {
-                    currentGElement.style.color = '#ef4444'; // Red - High G
-                } else if (gForce > 1.5) {
-                    currentGElement.style.color = '#f59e0b'; // Orange - Medium G
-                } else if (gForce > 1.2) {
-                    currentGElement.style.color = '#eab308'; // Yellow - Low G
-                } else {
-                    currentGElement.style.color = '#22c55e'; // Green - Normal
-                }
-            }
-            
-            if (maxGElement) {
-                maxGElement.textContent = maxGForce.toFixed(2);
-            }
-            
-            if (avgGElement && gForceHistory.length > 0) {
-                const avgG = gForceHistory.reduce((sum, reading) => sum + reading.gForce, 0) / gForceHistory.length;
-                avgGElement.textContent = avgG.toFixed(2);
-            }
-            
-            if (xElement) {
-                xElement.textContent = accelerometerData.x.toFixed(2);
-            }
-            if (yElement) {
-                yElement.textContent = accelerometerData.y.toFixed(2);
-            }
-            if (zElement) {
-                zElement.textContent = accelerometerData.z.toFixed(2);
-            }
-        }
-
-        function updateGForceChart() {
-            const canvas = document.getElementById('gForceChart');
-            if (!canvas || gForceHistory.length < 2) return;
-            
-            const ctx = canvas.getContext('2d');
-            const width = canvas.width;
-            const height = canvas.height;
-            
-            // Clear canvas
-            ctx.clearRect(0, 0, width, height);
-            
-            // Get recent data (last 50 points)
-            const recentData = gForceHistory.slice(-50);
-            const maxG = Math.max(...recentData.map(d => d.gForce));
-            const minG = Math.min(...recentData.map(d => d.gForce));
-            const range = maxG - minG || 1;
-            
-            // Draw chart
-            ctx.strokeStyle = '#3b82f6';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            
-            recentData.forEach((point, index) => {
-                const x = (index / (recentData.length - 1)) * width;
-                const y = height - ((point.gForce - minG) / range) * height;
-                
-                if (index === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            });
-            
-            ctx.stroke();
-            
-            // Draw G-force zones
-            ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)';
-            ctx.lineWidth = 1;
-            const highGLine = height - ((2.0 - minG) / range) * height;
-            ctx.beginPath();
-            ctx.moveTo(0, highGLine);
-            ctx.lineTo(width, highGLine);
-            ctx.stroke();
-            
-            ctx.strokeStyle = 'rgba(34, 197, 94, 0.3)';
-            const normalGLine = height - ((1.0 - minG) / range) * height;
-            ctx.beginPath();
-            ctx.moveTo(0, normalGLine);
-            ctx.lineTo(width, normalGLine);
-            ctx.stroke();
-        }
-
-        function detectDrivingEvents(gForce) {
-            // Detect hard braking (negative Y acceleration)
-            if (accelerometerData.y < -1.5) {
-                showDrivingEvent('Hard Braking', '', '#ef4444');
-            }
-            
-            // Detect hard acceleration (positive Y acceleration)
-            if (accelerometerData.y > 1.5) {
-                showDrivingEvent('Hard Acceleration', '', '#f59e0b');
-            }
-            
-            // Detect sharp turns (high X acceleration)
-            if (Math.abs(accelerometerData.x) > 1.5) {
-                showDrivingEvent('Sharp Turn', '', '#8b5cf6');
-            }
-            
-            // Detect high G-force events
-            if (gForce > 2.0) {
-                showDrivingEvent('High G-Force', '', '#ef4444');
-            }
-        }
-
-        function showDrivingEvent(type, icon, color) {
-            // Create event notification
-            const eventToast = document.createElement('div');
-            eventToast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${color};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 0.75rem;
-                font-weight: 600;
-                z-index: 1000;
-                animation: slideInRight 0.3s ease;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            `;
-            eventToast.textContent = `${icon} ${type}`;
-            document.body.appendChild(eventToast);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                eventToast.style.animation = 'slideOutRight 0.3s ease';
-                setTimeout(() => eventToast.remove(), 300);
-            }, 3000);
-        }
-
-        function showAccelerometerFallback() {
-            console.log('Accelerometer not available - showing desktop message');
-            
-            // Add desktop-friendly G-force display
-            addDesktopGForceDisplay();
-        }
-        
-        function addDesktopGForceDisplay() {
-            const dashboard = document.querySelector('#dashboard');
-            if (dashboard) {
-                const gForceCard = document.createElement('div');
-                gForceCard.className = 'card';
-                gForceCard.innerHTML = `
-                    <h3 class="card-title"> G-Force Monitor</h3>
-                    <div class="desktop-gforce-message">
-                        <div class="desktop-message-icon"></div>
-                        <div class="desktop-message-content">
-                            <h4>Mobile Feature</h4>
-                            <p>G-Force monitoring is available on mobile devices with accelerometer sensors.</p>
-                            <p>Open this app on your phone to track acceleration forces while driving!</p>
-                        </div>
-                        <div class="desktop-feature-preview">
-                            <div class="preview-stat">
-                                <div class="preview-value">2.5G</div>
-                                <div class="preview-label">Max G-Force</div>
-                            </div>
-                            <div class="preview-stat">
-                                <div class="preview-value">1.2G</div>
-                                <div class="preview-label">Avg G-Force</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Insert after the first card
-                const firstCard = dashboard.querySelector('.card');
-                if (firstCard) {
-                    firstCard.insertAdjacentElement('afterend', gForceCard);
-                }
-            }
         }
 
         // Authentication Functions
@@ -9570,7 +9043,6 @@
                     liveTracking.interval = setInterval(() => {
                         updateCurrentLocation();
                         broadcastLocation();
-                        checkForEmergency();
                     }, 30000); // Update every 30 seconds
                     
                     // Load friend list for sharing permissions
@@ -9722,40 +9194,6 @@
                 liveBtnEl.classList.remove('active');
                 liveInfoEl.style.display = 'none';
             }
-        }
-        
-        function checkForEmergency() {
-            // Check G-force data for potential crash
-            if (accelerometerData && accelerometerData.totalG > 4.0) {
-                if (!liveTracking.emergencyMode) {
-                    liveTracking.emergencyMode = true;
-                    triggerEmergencySharing();
-                }
-            }
-        }
-        
-        function triggerEmergencySharing() {
-            // Override privacy settings in emergency
-            liveTracking.sharingWith = ['all'];
-            
-            // Broadcast emergency location
-            const emergencyData = {
-                userId: currentUser.username,
-                location: liveTracking.currentLocation,
-                status: 'emergency',
-                emergencyType: 'high_gforce',
-                timestamp: Date.now(),
-                message: 'Emergency detected - High G-force impact'
-            };
-            
-            // Store emergency data
-            const emergencyAlerts = JSON.parse(localStorage.getItem('emergencyAlerts') || '[]');
-            emergencyAlerts.push(emergencyData);
-            localStorage.setItem('emergencyAlerts', JSON.stringify(emergencyAlerts));
-            
-            showLiveNotification(' Emergency detected! Location shared with all contacts', 'error');
-            
-            console.log('Emergency sharing activated:', emergencyData);
         }
         
         function openPrivacySettings() {
