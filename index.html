@@ -5824,11 +5824,33 @@
                     updateAnalytics();
                 }, 1000);
                 
-                // Register service worker for PWA
+                // Register service worker for PWA. When a new SW activates
+                // (after we bumped CACHE_NAME), the controller changes; force
+                // one reload so the page actually picks up the fresh HTML
+                // instead of continuing to render the old cached version.
                 if ('serviceWorker' in navigator) {
+                    let reloadingForNewSW = false;
+                    navigator.serviceWorker.addEventListener('controllerchange', () => {
+                        if (reloadingForNewSW) return;
+                        reloadingForNewSW = true;
+                        window.location.reload();
+                    });
+
                     navigator.serviceWorker.register('./sw.js')
                         .then((registration) => {
                             console.log('Service Worker registered successfully:', registration);
+                            if (registration.waiting) {
+                                registration.waiting.postMessage('SKIP_WAITING');
+                            }
+                            registration.addEventListener('updatefound', () => {
+                                const installing = registration.installing;
+                                if (!installing) return;
+                                installing.addEventListener('statechange', () => {
+                                    if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                                        installing.postMessage('SKIP_WAITING');
+                                    }
+                                });
+                            });
                         })
                         .catch((error) => {
                             console.log('Service Worker registration failed:', error);
@@ -7423,6 +7445,314 @@
                     item.classList.remove('glow');
                 });
             });
+        }
+
+        // Accelerometer Functions
+        function initializeAccelerometer() {
+            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                // iOS 13+ requires permission
+                DeviceMotionEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            startAccelerometer();
+                        } else {
+                            console.log('Accelerometer permission denied');
+                            showAccelerometerFallback();
+                        }
+                    })
+                    .catch(console.error);
+            } else if (typeof DeviceMotionEvent !== 'undefined') {
+                // Android and older iOS
+                startAccelerometer();
+            } else {
+                console.log('Accelerometer not supported');
+                showAccelerometerFallback();
+            }
+        }
+
+        function startAccelerometer() {
+            accelerometerData.isSupported = true;
+            
+            window.addEventListener('devicemotion', handleMotionEvent);
+            
+            // Add G-force display to dashboard
+            addGForceDisplay();
+            
+            console.log('Accelerometer started successfully');
+        }
+
+        function handleMotionEvent(event) {
+            const acceleration = event.accelerationIncludingGravity;
+            
+            if (acceleration) {
+                accelerometerData.x = acceleration.x || 0;
+                accelerometerData.y = acceleration.y || 0;
+                accelerometerData.z = acceleration.z || 0;
+                
+                // Calculate total G-force (excluding gravity)
+                const totalG = Math.sqrt(
+                    Math.pow(acceleration.x, 2) + 
+                    Math.pow(acceleration.y, 2) + 
+                    Math.pow(acceleration.z - 9.81, 2)
+                ) / 9.81;
+                
+                accelerometerData.totalG = totalG;
+                
+                // Update max G-force
+                if (totalG > maxGForce) {
+                    maxGForce = totalG;
+                }
+                
+                // Store in history
+                gForceHistory.push({
+                    timestamp: Date.now(),
+                    gForce: totalG,
+                    x: acceleration.x,
+                    y: acceleration.y,
+                    z: acceleration.z
+                });
+                
+                // Keep only last 100 readings
+                if (gForceHistory.length > 100) {
+                    gForceHistory.shift();
+                }
+                
+                // Update UI
+                updateGForceDisplay();
+                updateGForceChart();
+                
+                // Detect driving events
+                detectDrivingEvents(totalG);
+            }
+        }
+
+        function addGForceDisplay() {
+            const dashboard = document.querySelector('#dashboard');
+            if (dashboard) {
+                const gForceCard = document.createElement('div');
+                gForceCard.className = 'card';
+                gForceCard.innerHTML = `
+                    <h3 class="card-title"> G-Force Monitor</h3>
+                    <div class="gforce-container">
+                        <div class="gforce-main">
+                            <div class="gforce-value" id="currentGForce">0.00</div>
+                            <div class="gforce-label">Current G-Force</div>
+                        </div>
+                        <div class="gforce-stats">
+                            <div class="gforce-stat">
+                                <div class="gforce-stat-value" id="maxGForce">0.00</div>
+                                <div class="gforce-stat-label">Max G-Force</div>
+                            </div>
+                            <div class="gforce-stat">
+                                <div class="gforce-stat-value" id="avgGForce">0.00</div>
+                                <div class="gforce-stat-label">Average G-Force</div>
+                            </div>
+                        </div>
+                        <div class="gforce-chart">
+                            <canvas id="gForceChart" width="300" height="100"></canvas>
+                        </div>
+                        <div class="gforce-axes">
+                            <div class="gforce-axis">
+                                <span>X: <span id="gForceX">0.00</span></span>
+                                <span>Y: <span id="gForceY">0.00</span></span>
+                                <span>Z: <span id="gForceZ">0.00</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Insert after the first card
+                const firstCard = dashboard.querySelector('.card');
+                if (firstCard) {
+                    firstCard.insertAdjacentElement('afterend', gForceCard);
+                }
+            }
+        }
+
+        function updateGForceDisplay() {
+            const currentGElement = document.getElementById('currentGForce');
+            const maxGElement = document.getElementById('maxGForce');
+            const avgGElement = document.getElementById('avgGForce');
+            const xElement = document.getElementById('gForceX');
+            const yElement = document.getElementById('gForceY');
+            const zElement = document.getElementById('gForceZ');
+            
+            if (currentGElement) {
+                currentGElement.textContent = accelerometerData.totalG.toFixed(2);
+                
+                // Color code based on G-force level
+                const gForce = accelerometerData.totalG;
+                if (gForce > 2.0) {
+                    currentGElement.style.color = '#ef4444'; // Red - High G
+                } else if (gForce > 1.5) {
+                    currentGElement.style.color = '#f59e0b'; // Orange - Medium G
+                } else if (gForce > 1.2) {
+                    currentGElement.style.color = '#eab308'; // Yellow - Low G
+                } else {
+                    currentGElement.style.color = '#22c55e'; // Green - Normal
+                }
+            }
+            
+            if (maxGElement) {
+                maxGElement.textContent = maxGForce.toFixed(2);
+            }
+            
+            if (avgGElement && gForceHistory.length > 0) {
+                const avgG = gForceHistory.reduce((sum, reading) => sum + reading.gForce, 0) / gForceHistory.length;
+                avgGElement.textContent = avgG.toFixed(2);
+            }
+            
+            if (xElement) {
+                xElement.textContent = accelerometerData.x.toFixed(2);
+            }
+            if (yElement) {
+                yElement.textContent = accelerometerData.y.toFixed(2);
+            }
+            if (zElement) {
+                zElement.textContent = accelerometerData.z.toFixed(2);
+            }
+        }
+
+        function updateGForceChart() {
+            const canvas = document.getElementById('gForceChart');
+            if (!canvas || gForceHistory.length < 2) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Get recent data (last 50 points)
+            const recentData = gForceHistory.slice(-50);
+            const maxG = Math.max(...recentData.map(d => d.gForce));
+            const minG = Math.min(...recentData.map(d => d.gForce));
+            const range = maxG - minG || 1;
+            
+            // Draw chart
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            recentData.forEach((point, index) => {
+                const x = (index / (recentData.length - 1)) * width;
+                const y = height - ((point.gForce - minG) / range) * height;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Draw G-force zones
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)';
+            ctx.lineWidth = 1;
+            const highGLine = height - ((2.0 - minG) / range) * height;
+            ctx.beginPath();
+            ctx.moveTo(0, highGLine);
+            ctx.lineTo(width, highGLine);
+            ctx.stroke();
+            
+            ctx.strokeStyle = 'rgba(34, 197, 94, 0.3)';
+            const normalGLine = height - ((1.0 - minG) / range) * height;
+            ctx.beginPath();
+            ctx.moveTo(0, normalGLine);
+            ctx.lineTo(width, normalGLine);
+            ctx.stroke();
+        }
+
+        function detectDrivingEvents(gForce) {
+            // Detect hard braking (negative Y acceleration)
+            if (accelerometerData.y < -1.5) {
+                showDrivingEvent('Hard Braking', '', '#ef4444');
+            }
+            
+            // Detect hard acceleration (positive Y acceleration)
+            if (accelerometerData.y > 1.5) {
+                showDrivingEvent('Hard Acceleration', '', '#f59e0b');
+            }
+            
+            // Detect sharp turns (high X acceleration)
+            if (Math.abs(accelerometerData.x) > 1.5) {
+                showDrivingEvent('Sharp Turn', '', '#8b5cf6');
+            }
+            
+            // Detect high G-force events
+            if (gForce > 2.0) {
+                showDrivingEvent('High G-Force', '', '#ef4444');
+            }
+        }
+
+        function showDrivingEvent(type, icon, color) {
+            // Create event notification
+            const eventToast = document.createElement('div');
+            eventToast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${color};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            `;
+            eventToast.textContent = `${icon} ${type}`;
+            document.body.appendChild(eventToast);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                eventToast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => eventToast.remove(), 300);
+            }, 3000);
+        }
+
+        function showAccelerometerFallback() {
+            console.log('Accelerometer not available - showing desktop message');
+            
+            // Add desktop-friendly G-force display
+            addDesktopGForceDisplay();
+        }
+        
+        function addDesktopGForceDisplay() {
+            const dashboard = document.querySelector('#dashboard');
+            if (dashboard) {
+                const gForceCard = document.createElement('div');
+                gForceCard.className = 'card';
+                gForceCard.innerHTML = `
+                    <h3 class="card-title"> G-Force Monitor</h3>
+                    <div class="desktop-gforce-message">
+                        <div class="desktop-message-icon"></div>
+                        <div class="desktop-message-content">
+                            <h4>Mobile Feature</h4>
+                            <p>G-Force monitoring is available on mobile devices with accelerometer sensors.</p>
+                            <p>Open this app on your phone to track acceleration forces while driving!</p>
+                        </div>
+                        <div class="desktop-feature-preview">
+                            <div class="preview-stat">
+                                <div class="preview-value">2.5G</div>
+                                <div class="preview-label">Max G-Force</div>
+                            </div>
+                            <div class="preview-stat">
+                                <div class="preview-value">1.2G</div>
+                                <div class="preview-label">Avg G-Force</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Insert after the first card
+                const firstCard = dashboard.querySelector('.card');
+                if (firstCard) {
+                    firstCard.insertAdjacentElement('afterend', gForceCard);
+                }
+            }
         }
 
         // Authentication Functions
@@ -9194,6 +9524,40 @@
                 liveBtnEl.classList.remove('active');
                 liveInfoEl.style.display = 'none';
             }
+        }
+        
+        function checkForEmergency() {
+            // Check G-force data for potential crash
+            if (accelerometerData && accelerometerData.totalG > 4.0) {
+                if (!liveTracking.emergencyMode) {
+                    liveTracking.emergencyMode = true;
+                    triggerEmergencySharing();
+                }
+            }
+        }
+        
+        function triggerEmergencySharing() {
+            // Override privacy settings in emergency
+            liveTracking.sharingWith = ['all'];
+            
+            // Broadcast emergency location
+            const emergencyData = {
+                userId: currentUser.username,
+                location: liveTracking.currentLocation,
+                status: 'emergency',
+                emergencyType: 'high_gforce',
+                timestamp: Date.now(),
+                message: 'Emergency detected - High G-force impact'
+            };
+            
+            // Store emergency data
+            const emergencyAlerts = JSON.parse(localStorage.getItem('emergencyAlerts') || '[]');
+            emergencyAlerts.push(emergencyData);
+            localStorage.setItem('emergencyAlerts', JSON.stringify(emergencyAlerts));
+            
+            showLiveNotification(' Emergency detected! Location shared with all contacts', 'error');
+            
+            console.log('Emergency sharing activated:', emergencyData);
         }
         
         function openPrivacySettings() {
